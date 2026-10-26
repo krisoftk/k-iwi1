@@ -1,0 +1,65 @@
+@CHARSET "ISO-8859-1";
+.menu    {  display: none;}
+.logo    {  display: none;}
+.titolo  {  display: none;}
+.foot    {  display: none;}
+.noprint {  display: none;}
+.info {  display: none;}
+
+.corpo  {
+  overflow: visible;
+  height:auto;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  position: static;
+  width: auto;
+  font-size: 9px;
+  border: none;    
+}
+
+.tabstdini { 
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  color:#000000;   
+  margin: auto;
+}
+
+.tabstdele { 
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 8px;
+  color:#000000;
+  margin: auto;
+}
+
+.tabstdelered { 
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 8px;
+  color:#000000;
+  margin: auto;
+}
+
+.tabstdelerid { 
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  border: none;
+  color:#000000;
+  margin: auto;
+}
+
+.tabbody{
+  overflow: visible;
+  height:auto;
+}
+
+.tdnum {
+ text-align:right;
+}
+.tdcar {
+ text-align:left;
+}
+.tddate {
+ text-align:center;
+}
+.tdinput {
+ text-align:left;
+}

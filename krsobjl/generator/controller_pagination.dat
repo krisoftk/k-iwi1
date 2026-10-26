@@ -1,0 +1,19 @@
+$url = '';
+
+{url_pagination_filters}
+
+${table}_total = $this->model_{module}_{table}->getTotal{Table}($filter_data);
+
+$pagination = new Pagination();
+$pagination->total = ${table}_total;
+$pagination->page = $page;
+$pagination->limit = $limit;
+$pagination->text = $this->language->get('text_pagination');
+$pagination->url = 'javascript:actionKAJAX(\'' . $this->url->link('{module}/{table}', '&page={page}' . $url) . '\')';
+$pagination->theme = $this->config->get('framework.theme');
+$pagination->next = $this->language->get('text_next');
+$pagination->prev = $this->language->get('text_prev');
+$pagination->first = $this->language->get('text_first');
+$pagination->last = $this->language->get('text_last');
+		
+$this->data['pagination'] = $pagination->render();

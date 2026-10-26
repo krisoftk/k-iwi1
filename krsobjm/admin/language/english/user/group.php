@@ -1,0 +1,18 @@
+<?php
+// Generato da Admin > Lingue: per modificarlo scarica il pacchetto, cambialo e ricaricalo.
+$_['heading_title'] = 'User Groups';
+$_['text_success'] = 'Success: The user group has been modified!';
+$_['tab_group'] = 'Group';
+$_['tab_prog'] = 'Programs';
+$_['column_name'] = 'Name';
+$_['column_module_name'] = 'Module Name';
+$_['column_action'] = 'Action';
+$_['column_prog_name'] = 'Function';
+$_['column_prog_menu'] = 'Menu Item';
+$_['entry_name'] = 'Group Name:';
+$_['entry_modules'] = 'Module';
+$_['error_permission'] = 'Warning: You do not have permission to modify the group!';
+$_['error_user'] = 'Warning: This group cannot be deleted because it is currently assigned to %s users!';
+$_['error_name'] = 'The group name must be between 3 and 64 characters!';
+$_['error_progs'] = 'At least one program must be selected!';
+?>

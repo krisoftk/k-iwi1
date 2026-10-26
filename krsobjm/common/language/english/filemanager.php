@@ -1,0 +1,39 @@
+<?php
+// Generato da Admin > Lingue: per modificarlo scarica il pacchetto, cambialo e ricaricalo.
+$_['heading_title'] = 'Image Manager';
+$_['text_uploaded'] = 'Success: Your file has been uploaded!';
+$_['text_file_delete'] = 'The file has been deleted!';
+$_['text_create'] = 'Success: Folder created!';
+$_['text_delete'] = 'Success: Your file or folder has been deleted!';
+$_['text_move'] = 'Success: Your file or folder has been moved!';
+$_['text_copy'] = 'Success: Your file or folder has been copied!';
+$_['text_rename'] = 'Success: Your file or folder has been renamed!';
+$_['entry_folder'] = 'New Folder:';
+$_['entry_move'] = 'Move:';
+$_['entry_copy'] = 'Name:';
+$_['entry_rename'] = 'Name:';
+$_['error_select'] = 'Warning: Please select a folder or file!';
+$_['error_file'] = 'Warning: Please select a file!';
+$_['error_directory'] = 'Warning: Please select a folder!';
+$_['error_default'] = 'Warning: You cannot change the default folder!';
+$_['error_delete'] = 'Warning: You cannot delete this folder!';
+$_['error_filename'] = 'Warning: The file name must be between 3 and 255 characters!';
+$_['error_missing'] = 'Warning: The file or folder does not exist!';
+$_['error_exists'] = 'Warning: A file or folder with the same name already exists!';
+$_['error_name'] = 'Warning: Please enter a new name!';
+$_['error_move'] = 'Warning: The destination folder does not exist!';
+$_['error_copy'] = 'Warning: Cannot copy this file or folder!';
+$_['error_rename'] = 'Warning: Cannot rename this folder!';
+$_['error_file_type'] = 'Warning: Incorrect file type!';
+$_['error_file_size'] = 'Warning: The file is too big: keep it under 300 KB and no more than 1000 px wide or high!';
+$_['error_uploaded'] = 'Warning: The file could not be uploaded for an unknown reason!';
+$_['error_permission'] = 'Warning: Permission denied!';
+$_['button_folder'] = 'New Folder';
+$_['button_delete'] = 'Delete';
+$_['button_move'] = 'Move';
+$_['button_copy'] = 'Copy';
+$_['button_rename'] = 'Rename';
+$_['button_upload'] = 'Upload';
+$_['button_refresh'] = 'Refresh';
+$_['error_login'] = 'Access denied: please log in.';
+?>

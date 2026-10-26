@@ -1,0 +1,59 @@
+#menudinamico ul { /* all lists */
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	float: left;
+	width: 11em;
+}
+
+#menudinamico li { /* all list items */
+	position: relative;
+	float: left;
+	line-height: 1.25em;
+	margin-bottom: -1px;
+	width: 11em;
+}
+
+#menudinamico li ul { /* second-level lists */
+	position: absolute;
+	left: -999em;
+	margin-left: 11.05em;
+	margin-top: -1.4em;
+}
+
+#menudinamico li ul ul { /* third-and-above-level lists */
+	left: -999em;
+}
+
+#menudinamico li a {
+	width: 11em;
+	w\idth: 10em;
+	display: block;
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+	/*background-color : white;*/
+	background-color: #6AB46A;
+	border: 1px solid black;
+	padding: 0 0.5em;
+}
+
+#menudinamico li a:hover {
+	color: white;
+	background-color: #92C892;
+	/*background-color : black;*/
+}
+
+#menudinamico li:hover ul ul,#menudinamico li:hover ul ul ul,#menudinamico li.sfhover ul ul,#menudinamico li.sfhover ul ul ul
+	{
+	left: -999em;
+}
+
+#menudinamico li:hover ul,#menudinamico li li:hover ul,#menudinamico li li li:hover ul,#menudinamico li.sfhover ul,#menudinamico li li.sfhover ul,#menudinamico li li li.sfhover ul
+	{ /* lists nested under hovered list items */
+	left: auto;
+}
+
+#content {
+	margin-left: 12em;
+}

@@ -1,0 +1,32 @@
+public function delete() {
+	$this->load->language('{module}/{table}');
+		
+	$this->load->model('{module}/{table}');
+		
+	if ($this->validateDelete()) {
+		$result = $this->model_{module}_{table}->delete{Table}($this->request->post);
+		
+		$this->session->data['success'] = $this->language->get('success_delete');
+		
+		$url = '';
+		{url_filters}
+		
+		{url_page}
+		
+		$this->redirect($this->url->link('{module}/{table}', $url, 'SSL'));
+	}
+	
+	$this->getList();
+}
+
+private function validateDelete() {
+	if ({test_key}) {
+		$this->error['warning'] = $this->language->get('error_delete');
+	}
+	
+	if (!$this->error) {
+		return true;
+	} else {
+		return false;
+	}
+}

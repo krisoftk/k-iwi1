@@ -1,0 +1,78 @@
+<div class="page-header">
+	<div class="container-fluid">
+		<h1><?php echo $heading_title; ?></h1>
+		<ul class="breadcrumb">
+		<?php foreach ($breadcrumbs as $breadcrumb) { ?>
+			<li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+		<?php } ?>
+		</ul>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<?php if ($error_warning) { ?>
+	<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	<?php } ?>
+	
+	<?php if ($success) { ?>
+	<div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	<?php } ?>
+	
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
+		</div>
+		<div class="panel-body">
+			<?php if (isset($button_filter)) { /* solo se il modulo e' stato generato con la ricerca */ ?>
+			<div class="well" id="form-search">
+				{form_search}
+				<div class="row">
+					<div class="col-sm-12">
+						<button type="button" id="button-reset" class="btn btn-default pull-right"><?php echo $button_reset; ?></button>
+						<button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
+		
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							{head_fields}
+							{head_update}
+							{head_delete}
+						</tr>
+					</thead>
+					<tbody>
+						<?php if ($results) { ?>
+							<?php foreach ($results as ${table}) { ?>
+							<tr>
+								{body_fields}
+								{body_update}
+								{body_delete}
+							</tr>
+							<?php } ?>
+						<?php } else { ?>
+							<tr>
+								<td class="text-center" colspan="{fields_count}"><?php echo $text_no_results; ?></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		
+			<?php if (isset($pagination)) { echo $pagination; } ?>
+		
+		</div>
+	</div>
+</div>
+  
+{script_search}
+{script_delete}
+{script_update}
+{autocomplete_view}

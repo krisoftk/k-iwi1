@@ -1,0 +1,7 @@
+# Qui il file manager salva i file caricati dagli utenti (data/) e le
+# miniature (cache/), dentro la DocumentRoot: nessuno script deve poter essere
+# eseguito, qualunque estensione gli si riesca a dare.
+<FilesMatch "\.(?i:php[0-9]?|phtml|phar|pht|phps|cgi|pl|py|sh|shtml)$">
+	Require all denied
+</FilesMatch>
+Options -ExecCGI

@@ -1,0 +1,28 @@
+public function getAll{Table}($data = array()) {
+	$sql = "SELECT * FROM t:table";
+	
+	$implode = array();
+	$params = array();
+
+	{filters_query}
+
+	if ($implode) {
+		$sql .= " WHERE " . implode(" AND ", $implode);
+	}
+
+	$db = UtilityDB::getDBfromTable('{table}');
+	$stmt = $db->prepare($sql);
+	$stmt->bindTable("table", "{table}");
+
+	foreach (array_keys($params) as $name) {
+		$stmt->bindParam($name, $params[$name], KPDO::TYPE_VARCHAR);
+	}
+	
+	if (isset($data['start']) || isset($data['limit'])) {
+		$stmt->limit($data['start'], $data['limit']);
+	}
+	
+	$stmt->execute();
+				
+	return $stmt->fetchAll();
+}

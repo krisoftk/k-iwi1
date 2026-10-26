@@ -1,0 +1,22 @@
+<?php
+class Controller{Module}{Table} extends Controller {
+	
+	private $error;
+	
+	public function index() {
+		$this->load->language('{module}/{table}');
+
+		$this->load->model('{module}/{table}');
+
+		$this->getList();
+	}
+		
+	{list_controller}
+		
+	{insert_controller}
+	
+	{delete_controller}
+		
+	{autocomplete_controller}
+}
+?>

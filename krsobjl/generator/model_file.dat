@@ -1,0 +1,12 @@
+<?php
+class Model{Module}{Table} extends Model {
+
+	{search_model}
+	
+	{insert_model}
+	
+	{delete_model}
+	
+	{pagination_model}
+}
+?>

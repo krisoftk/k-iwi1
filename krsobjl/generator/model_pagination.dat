@@ -1,0 +1,25 @@
+public function getTotal{Table}($data = array()) {
+	$sql = "SELECT COUNT(*) AS total FROM t:table";
+	
+	$implode = array();
+	$params = array();
+
+	{filters_query}
+
+	if ($implode) {
+		$sql .= " WHERE " . implode(" AND ", $implode);
+	}
+
+	$db = UtilityDB::getDBfromTable('{table}');
+	$stmt = $db->prepare($sql);
+	$stmt->bindTable("table", "{table}");
+
+	foreach (array_keys($params) as $name) {
+		$stmt->bindParam($name, $params[$name], KPDO::TYPE_VARCHAR);
+	}
+	$stmt->execute();
+
+	$row = $stmt->fetch();
+
+	return $row['total'];
+}

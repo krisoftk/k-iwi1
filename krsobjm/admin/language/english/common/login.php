@@ -1,0 +1,12 @@
+<?php
+// Generato da Admin > Lingue: per modificarlo scarica il pacchetto, cambialo e ricaricalo.
+$_['heading_title'] = 'Administration';
+$_['text_heading'] = 'Administration';
+$_['text_login'] = 'Please enter your login details.';
+$_['entry_username'] = 'Username:';
+$_['entry_password'] = 'Password:';
+$_['button_login'] = 'Log in';
+$_['error_login'] = 'Wrong username and/or password.';
+$_['error_attempts'] = 'Too many failed attempts: try again in %d minutes.';
+$_['error_token'] = 'Your session has expired, please log in again.';
+?>

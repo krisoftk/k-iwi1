@@ -1,0 +1,21 @@
+<?php
+// Generato da Admin > Lingue: per modificarlo scarica il pacchetto, cambialo e ricaricalo.
+$_['heading_title'] = 'Import Tables';
+$_['text_type'] = 'Type:';
+$_['text_name'] = 'Name:';
+$_['text_ip'] = 'IP:';
+$_['text_port'] = 'Port:';
+$_['text_username'] = 'Username:';
+$_['text_password'] = 'Password:';
+$_['text_database'] = 'Database:';
+$_['text_module_id'] = 'Module ID:';
+$_['tab_database'] = 'Database Connection';
+$_['tab_table'] = 'Add Table';
+$_['text_success'] = 'Added successfully';
+$_['error_type'] = 'Required field (32 characters max)';
+$_['error_name'] = 'Required field: letters, digits and _ (32 characters max)';
+$_['error_ip'] = 'Required field (32 characters max)';
+$_['error_username'] = 'Required field (32 characters max)';
+$_['error_database_id'] = 'Select a database';
+$_['error_module_id'] = 'Enter the module ID';
+?>

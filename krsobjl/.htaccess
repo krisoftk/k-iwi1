@@ -1,0 +1,3 @@
+# Fuori dalla cartella pubblica: non va mai servito via web, anche se la
+# DocumentRoot punta per errore alla radice del progetto invece che a krsobjp/.
+Require all denied

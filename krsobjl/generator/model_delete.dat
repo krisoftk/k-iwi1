@@ -1,0 +1,8 @@
+public function delete{Table}($data) {	
+	$db = UtilityDB::getDBfromTable('{table}');
+	$stmt = $db->prepare('DELETE FROM t:table
+	WHERE {where}');
+	$stmt->bindTable("table", "{table}");
+	{bind_key}
+	$stmt->execute();
+}

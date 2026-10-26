@@ -1,0 +1,36 @@
+<?php
+// Questo file viene scritto automaticamente dall'installer
+// (krsobjm/install/controller/step_1.php) con i valori reali della tua
+// installazione quando apri http://tuoserver/install/index.php.
+// Questo .example mostra solo il formato atteso: non serve copiarlo a
+// mano, ma puoi usarlo come riferimento se l'installer non può scrivere
+// questi file (permessi del webserver) e li devi creare tu.
+
+// HTTP
+define('HTTP_SERVER', 'http://localhost/');
+define('HTTP_PUBLIC', 'http://localhost/');
+define('HTTP_IMAGE', 'http://localhost/image/');
+define('HTTP_THEMES', 'http://localhost/themes/');
+
+// HTTPS
+define('HTTPS_SERVER', 'https://localhost/');
+define('HTTPS_PUBLIC', 'https://localhost/');
+define('HTTPS_IMAGE', 'https://localhost/image/');
+define('HTTPS_THEMES', 'https://localhost/themes/');
+
+//INDEX
+define('INDEX', 'index.php');
+
+// DIR
+define('DIR_LIBRARY', '/path/to/k-iwi/krsobjl/');
+define('DIR_MODULE', '/path/to/k-iwi/krsobjm/');
+define('DIR_TEMPLATE', '/path/to/k-iwi/krsobjm/standard/view/themes/');
+define('DIR_PUBLIC', '/path/to/k-iwi/krsobjp/');
+define('DIR_JAVASCRIPT', '/path/to/k-iwi/krsobjp/js/');
+define('DIR_CSS', '/path/to/k-iwi/krsobjp/css/');
+define('DIR_IMAGE', '/path/to/k-iwi/krsobjp/image/');
+define('DIR_THEMES', '/path/to/k-iwi/krsobjp/themes/');
+define('DIR_LOGS', '/path/to/k-iwi/logs/');
+define('DIR_CONFIG', '/path/to/k-iwi/config/');
+define('DIR_SESSIONS', '/path/to/k-iwi/sessions/');
+?>

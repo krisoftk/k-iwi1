@@ -1,0 +1,102 @@
+public function insert() {
+	$this->load->language('{module}/{table}');
+		
+	if (isset($this->request->post['submit']) && $this->validateForm()) {
+		$this->load->model('{module}/{table}');
+
+		$this->model_{module}_{table}->add{Table}($this->request->post);
+		
+		$this->session->data['success'] = $this->language->get('success_insert');
+	
+		$url = '';
+		{url_filters}
+
+		{url_page}
+		
+		$this->redirect($this->url->link('{module}/{table}', $url, 'SSL'));
+	}
+	
+	$this->getForm();
+}
+	
+public function update() {
+	$this->load->language('{module}/{table}');
+	
+	$this->load->model('{module}/{table}');
+	
+	if (isset($this->request->post['submit']) && $this->validateForm()) {
+		$this->model_{module}_{table}->update{Table}($this->request->post);
+			
+		$this->session->data['success'] = $this->language->get('success_update');
+		
+		$url = '';
+		{url_filters}
+		
+		{url_page}
+	
+		$this->redirect($this->url->link('{module}/{table}', $url, 'SSL'));
+	}
+	
+	$this->getForm();
+}
+
+private function getForm() {
+	$this->data['heading_title'] = $this->language->get('heading_title');
+	{text_fields_insert}
+	$this->data['button_save'] = $this->language->get('button_save');
+	$this->data['button_cancel'] = $this->language->get('button_cancel');
+	
+	$url = '';
+	{url_filters}
+
+	{url_page}
+	
+	if ({test_key}) {
+		$this->data['action'] = $this->url->link('{module}/{table}/update', $url, 'SSL');
+		$this->data['text_action'] = $this->language->get('button_update');
+		$this->data['text_form'] = $this->language->get('text_edit');
+		{field_key_update}
+		${table} = $this->model_{module}_{table}->get{Table}($this->request->post);
+	} else {
+		$this->data['action'] = $this->url->link('{module}/{table}/insert', $url, 'SSL');
+		$this->data['text_action'] = $this->language->get('button_insert');
+		$this->data['text_form'] = $this->language->get('text_add');
+		{field_key_insert}
+	}
+	
+	if (isset($this->error['warning'])) {
+		$this->data['error_warning'] = $this->error['warning'];
+	} else {
+		$this->data['error_warning'] = '';
+	}
+		
+	{check_field_insert}
+	
+	$this->data['breadcrumbs'] = array();
+
+	$this->data['breadcrumbs'][] = array(
+		'text' => $this->language->get('text_home'),
+		'href' => $this->url->link('standard/home', '', 'SSL')
+	);
+
+	$this->data['breadcrumbs'][] = array(
+		'text' => $this->language->get('heading_title'),
+		'href' => 'javascript:actionKAJAX(\'' . $this->url->link('{module}/{table}', '', 'SSL') . '\')'
+	);
+	
+	{action_autocomplete}
+	
+	$this->data['cancel'] = $this->url->link('{module}/{table}', $url, 'SSL');
+	
+	$this->template = '{module}/view/{table}_form.tpl';
+	
+	$this->response->setOutput($this->render());
+}
+
+private function validateForm() {
+	if (!$this->error) {
+		return true;
+	} else {
+		return false;
+	}
+}

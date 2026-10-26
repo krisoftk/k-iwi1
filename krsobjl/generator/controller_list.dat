@@ -1,0 +1,65 @@
+protected function getList() {
+		
+	{filters_query}
+
+	{page_query}
+
+	$url = '';
+	{url_filters}
+
+	{url_page}
+
+	$this->data['breadcrumbs'] = array();
+
+	$this->data['breadcrumbs'][] = array(
+		'text' => $this->language->get('text_home'),
+		'href' => $this->url->link('standard/home', '', 'SSL')
+	);
+
+	$this->data['breadcrumbs'][] = array(
+		'text' => $this->language->get('heading_title'),
+		'href' => 'javascript:actionKAJAX(\'' . $this->url->link('{module}/{table}', '', 'SSL') . '\')'
+	);
+		
+	{action_update}
+	{action_delete}
+	{action_search}
+
+	{limit}
+	
+	$filter_data = array(
+		{filters_data_filter}
+		{filters_data_page}
+	);
+
+	$this->data['results'] = $this->model_{module}_{table}->getAll{Table}($filter_data);
+
+	{text_fields}
+	{text_search}
+	{text_update}
+	{text_delete}
+	$this->data['heading_title'] = $this->language->get('heading_title');
+	$this->data['text_list'] = $this->language->get('text_list');
+	$this->data['text_no_results'] = $this->language->get('text_no_result');
+	$this->data['text_confirm'] = $this->language->get('text_confirm');
+
+	if (isset($this->error['warning'])) {
+		$this->data['error_warning'] = $this->error['warning'];
+	} else {
+		$this->data['error_warning'] = '';
+	}
+
+	if (isset($this->session->data['success'])) {
+		$this->data['success'] = $this->session->data['success'];
+
+		unset($this->session->data['success']);
+	} else {
+		$this->data['success'] = '';
+	}
+
+	{pagination_controller}
+
+	$this->template = '{module}/view/{table}.tpl';
+
+	$this->response->setOutput($this->render());
+}

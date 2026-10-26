@@ -1,0 +1,44 @@
+<?php
+// Generato da Admin > Lingue: per modificarlo scarica il pacchetto, cambialo e ricaricalo.
+$_['heading_title'] = 'Generator';
+$_['text_database'] = 'Database: ';
+$_['text_table'] = 'Table: ';
+$_['text_module'] = 'Module: ';
+$_['text_delete_table'] = 'Drop the table when the module is uninstalled: ';
+$_['text_search_check'] = 'Show the search panel: ';
+$_['text_insert_check'] = 'Insert and update records: ';
+$_['text_delete_check'] = 'Delete records: ';
+$_['text_pagination_check'] = 'Paginate the table: ';
+$_['text_success'] = 'Module %s created successfully.';
+$_['text_search_description'] = 'Search panel settings.';
+$_['text_insert_description'] = 'Insert form settings.';
+$_['text_relationship_description'] = 'Field relationship settings.';
+$_['text_relationship_one_to_many'] = 'One to Many';
+$_['text_relationship_many_to_one'] = 'Many to One';
+$_['text_relationship_many_to_many'] = 'Many to Many';
+$_['tab_general'] = 'General';
+$_['tab_insert'] = 'Insert';
+$_['tab_delete'] = 'Delete';
+$_['tab_search'] = 'Search';
+$_['tab_relationship'] = 'Relationships';
+$_['button_generator'] = 'Generate';
+$_['error_database_id'] = 'Select the database';
+$_['error_table_id'] = 'You must select a table to generate the program';
+$_['error_module'] = 'The module name must start with a letter and contain only letters, digits and underscores (32 characters at most).';
+$_['error_module_reserved'] = 'This name is used by a framework module (admin, standard, common, install, error): choose another one.';
+$_['error_fields'] = 'You must select at least one field of the table.';
+$_['error_fields_key_insert'] = 'You selected insert and update: this option requires at least one field to be used as key';
+$_['error_fields_key_delete'] = 'You selected delete: this option requires at least one field to be used as key';
+$_['error_fields_insert'] = 'You selected insert and update: this option requires at least one field to be used as input';
+$_['error_fields_search'] = 'You selected the search panel: this option requires at least one field to be used as input';
+$_['error_writable'] = 'The web server can\'t write to %s: the generator needs write access to krsobjm/ (see the readme).';
+$_['column_view'] = 'View';
+$_['column_field'] = 'Field';
+$_['column_type'] = 'Type';
+$_['column_null'] = 'Null';
+$_['column_key'] = 'Key';
+$_['column_default'] = 'Default';
+$_['column_extra'] = 'Extra';
+$_['button_add_relationship'] = 'Add';
+$_['button_remove_relationship'] = 'Remove';
+?>

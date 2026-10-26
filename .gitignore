@@ -1,0 +1,32 @@
+# File generati/scrivibili dal framework a runtime
+logs/*
+!logs/.gitkeep
+!logs/.htaccess
+sessions/*
+!sessions/.gitkeep
+!sessions/.htaccess
+
+# Scritti dall'installer (krsobjm/install/controller/step_1.php) con il
+# percorso reale della singola installazione: non vanno versionati con un
+# valore fisso. Vedi i corrispondenti *.example per il formato.
+krsobjp/globals.php
+krsobjp/admin/globals.php
+
+# Note di lavoro private, non destinate alla pubblicazione
+krsobjd/privati/
+
+# File di sistema/editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Immagini caricate dal file manager e relative miniature (la cartella e il
+# suo .htaccess invece si versionano)
+krsobjp/image/data/*
+!krsobjp/image/data/.gitkeep
+krsobjp/image/cache/
+
+# Copie di config.ini fatte da Admin > Impostazioni prima di ogni salvataggio
+# (contengono la password del database)
+config/backup/

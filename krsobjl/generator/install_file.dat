@@ -1,0 +1,25 @@
+<?php
+	// Installer del modulo, generato dal generatore di K-iwi. Le voci di menu
+	// di ogni tabella generata stanno in installation/menu_<tabella>.php:
+	// cosi' un modulo con piu' tabelle ha un solo installer.
+	class {Module}Install extends Install {
+		
+		public function install() {
+			$this->module = '{module}';
+			
+			$this->menu_items = array();
+			
+			foreach ((array) glob(dirname(__FILE__) . '/menu_*.php') as $file) {
+				$this->menu_items = array_merge($this->menu_items, include $file);
+			}
+			
+			$this->startInstall();
+		}
+		
+		public function uninstall() {
+			$this->module = '{module}';
+			
+			$this->startUninstall({delete.table});
+		}
+	}
+?>

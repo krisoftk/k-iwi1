@@ -1,0 +1,39 @@
+public function get{Table}($data) {
+	$db = UtilityDB::getDBfromTable('{table}');
+	$stmt = $db->prepare('SELECT * FROM t:table WHERE {where}');
+	$stmt->bindTable("table", "{table}");
+	{bind_key}
+	$stmt->execute();
+
+	${table} = array();
+
+	while ($row = $stmt->fetch()) {
+		foreach($row as $key => $value ) {
+			${table}[$key] = $value;
+		}
+	}
+
+	return ${table};
+}
+
+public function add{Table}($data) {
+	$db = UtilityDB::getDBfromTable('{table}');
+	$stmt = $db->prepare('INSERT INTO t:table ({field_insert}) 
+	VALUES 
+	({field_insert_value})');
+	$stmt->bindTable("table", "{table}");
+	{bind_insert}
+	$stmt->execute();
+}
+
+public function update{Table}($data) {
+	$db = UtilityDB::getDBfromTable('{table}');
+	$stmt = $db->prepare('UPDATE t:table
+	SET 
+		{field_update}
+	WHERE {where}');
+	$stmt->bindTable("table", "{table}");
+	{bind_key}
+	{bind_insert}
+	$stmt->execute();
+}

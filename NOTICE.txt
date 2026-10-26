@@ -1,0 +1,134 @@
+K-iwi - Third-Party Notices
+============================
+
+K-iwi is Copyright (C) 2014 Krisoft Srl and is distributed under the GNU
+General Public License v3.0 (see license.txt).
+
+This file lists the third-party software bundled inside this repository,
+under krsobjp/ (public assets) and krsobjl/ (library), together with the
+license each component is distributed under. All of the licenses below are
+compatible with the GPLv3 distribution of K-iwi as a whole.
+
+Frameworks / core libraries
+----------------------------
+
+jQuery (js/jquery-1.11.1.min.js)
+    MIT License. Copyright jQuery Foundation and other contributors.
+
+jQuery UI (js/plugins/ui/*)
+    MIT License. Copyright jQuery Foundation and other contributors.
+
+Bootstrap (js/bootstrap.min.js, css/bootstrap*.css)
+    MIT License. Copyright Twitter, Inc.
+
+Font Awesome 4.0.3 (krsobjp/font-awesome/*)
+    Font: SIL Open Font License 1.1. Code (CSS): MIT License.
+    Copyright Dave Gandy.
+
+Glyphicons Halflings (krsobjp/fonts/glyphicons-halflings-*)
+    MIT License (bundled with Bootstrap).
+
+moment.js (js/moment-with-locales.min.js)
+    MIT License. Copyright JS Foundation and other contributors.
+
+CKEditor 4.4.2 (js/ckeditor/*)
+    Triple-licensed GPL / LGPL / MPL. Copyright CKSource - Frederico
+    Knabben. This distribution uses it under the GPL, consistent with
+    K-iwi's own license.
+
+createjs / SoundJS (js/createjs/*)
+    MIT License. Copyright 2012 gskinner.com, inc.
+
+swfobject.js (js/createjs/swfobject.js)
+    MIT License.
+
+jQuery plugins (all under js/plugins/ and js/jqplot/ unless noted otherwise)
+-----------------------------------------------------------------------------
+
+dataTables (plugins/dataTables)
+    MIT License. Copyright SpryMedia Ltd.
+
+flot + jquery.flot.tooltip (plugins/flot)
+    MIT License. Copyright IOLA and Ole Laursen (core); MIT for the
+    tooltip plugin.
+
+jqPlot (js/jqplot/*)
+    Dual-licensed MIT / GPLv2. Copyright Chris Leonello. Used here under
+    the MIT grant.
+
+jsTree 0.9.9 (plugins/jstree)
+    Dual-licensed MIT / GPL. Copyright Ivan Bozhanov (vakata.com).
+    Bundled libs inside plugins/jstree/lib/:
+      - jquery.cookie.js: dual MIT / GPL, Copyright Klaus Hartl.
+      - jquery.hotkeys.js: same license as jQuery (MIT).
+      - sarissa.js: GPLv2+ / LGPLv2.1+ / Apache License 2.0+, Copyright
+        Manos Batsis.
+
+ColorPicker / jqcolorpicker (plugins/colorpicker)
+    MIT License. Copyright Martijn W. van der Lee.
+
+Superfish + Supersubs (plugins/superfish)
+    Dual-licensed MIT / GPL. Copyright Joel Birch.
+
+jQuery UI Timepicker Addon (plugins/timepicker)
+    Dual-licensed MIT / GPL. Copyright Trent Richardson.
+
+Bootstrap Datetimepicker (plugins/datetimepicker)
+    MIT License. Copyright Jonathan Peterson.
+
+fileTree (plugins/filetree)
+    Dual-licensed MIT / GPL. Copyright 2008 A Beautiful Site, LLC.
+
+jQuery File Upload (plugins/fileupload)
+    MIT License. Copyright Sebastian Tschan (blueimp).
+
+jQuery File Download (plugins/filedownload)
+    MIT License. Copyright John Culviner.
+
+fixedheadertable (plugins/fixedheadertable)
+    MIT License. Copyright Mark Malek.
+
+printElement (plugins/printElement)
+    Dual-licensed MIT / GPL. Copyright Erik Zaadi.
+
+metisMenu (plugins/metisMenu)
+    MIT License (metisMenu by Jonathan Pearson; the bundled copy has no
+    header, license confirmed from the upstream project).
+
+bgiframe (plugins/bgiframe)
+    MIT License. Copyright Brandon Aaron.
+
+morris.js + raphael.js (plugins/morris)
+    MIT License. Copyright Olly Smith (morris.js) and Dmitry Baranovskiy /
+    Sencha Labs (raphael.js).
+
+PHP libraries
+-------------
+
+Spreadsheet_Excel_Reader (krsobjl/misc/kreader/Excel/reader.php)
+    PHP License 3.0. Originally by Vadim Tkachenko, maintained by David
+    Sanders. Note: this is a standalone, complete library and is NOT the
+    same dependency as PHPExcel referenced below.
+
+PHPExcel (referenced by krsobjl/misc/kreader/KReader.php,
+KChunkReadFilter.php, KReadFilter.php)
+    NOT included in this repository. These three files reference the
+    PHPExcel_Reader_IReadFilter interface but the PHPExcel library itself
+    was never part of this distribution. Loading KReader.php is disabled
+    in krsobjl/misc/misc.php until PHPExcel (or an equivalent) is added
+    back by whoever needs the Excel-reading feature. PHPExcel itself is
+    distributed under the LGPL 2.1.
+
+Notes on origin
+---------------
+
+Two files with non-standard / unclear licensing that used to ship in this
+project (krsobjp/js/deprecated/picker.js and
+krsobjp/js/plugins/twosidedmultiselect/jquery.twosidedmultiselect.js) have
+been removed from this repository. If that functionality is needed again,
+replace them with an actively maintained, clearly-licensed alternative.
+
+This list was compiled by inspecting the license header (or accompanying
+README/LICENSE file) of each bundled component as of this repository
+snapshot. If you add, update or remove a bundled library, please keep this
+file in sync.

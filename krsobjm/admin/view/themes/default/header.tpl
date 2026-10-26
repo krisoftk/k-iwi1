@@ -51,7 +51,6 @@
 			}
 		});
 
-		highlightCurrentNavItem();
 	});
 
 	function currentRouteFromUrl() {
@@ -78,7 +77,69 @@
 		var route = currentRouteFromUrl();
 		var section = route ? route.split('/').slice(0, 3).join('/') : 'admin/common/home';
 
-		$('.nav-item[data-route="' + section + '"]').addClass('active');
+		return $('.nav-item[data-route="' + section + '"]').addClass('active');
+	}
+
+	// Sidebar sections that open and close. Closed by default, except the one
+	// holding the current page; the sections the user opens by hand stay open
+	// from page to page (localStorage, only a convenience: without it the
+	// menu still works). The section opened only because it holds the current
+	// page isn't remembered, so it closes again on the next page.
+	var NAV_STORAGE_KEY = 'kiwi.admin.nav.open';
+
+	function savedOpenGroups() {
+		try {
+			return JSON.parse(window.localStorage.getItem(NAV_STORAGE_KEY)) || [];
+		} catch (e) {
+			return [];
+		}
+	}
+
+	function rememberGroup(group, open) {
+		var saved = $.grep(savedOpenGroups(), function (name) { return name !== group; });
+
+		if (open) {
+			saved.push(group);
+		}
+
+		try {
+			window.localStorage.setItem(NAV_STORAGE_KEY, JSON.stringify(saved));
+		} catch (e) {
+		}
+	}
+
+	function setGroupOpen($group, open) {
+		$group.toggleClass('open', open);
+		$group.children('.nav-group-toggle').attr('aria-expanded', open ? 'true' : 'false');
+	}
+
+	function initCollapsibleNav() {
+		var $sidebar = $('.sidebar');
+		var saved = savedOpenGroups();
+		var $active = highlightCurrentNavItem();
+
+		$sidebar.find('.nav-group').each(function () {
+			var $group = $(this);
+			var holdsActive = $group.find($active).length > 0;
+
+			$group.toggleClass('has-active', holdsActive);
+			setGroupOpen($group, holdsActive || $.inArray($group.data('group'), saved) !== -1);
+		});
+
+		$sidebar.addClass('nav-collapsible');
+
+		// transitions only after the first paint, so the initial state doesn't animate
+		window.setTimeout(function () {
+			$sidebar.addClass('nav-animated');
+		}, 0);
+
+		$sidebar.on('click', '.nav-group-toggle', function () {
+			var $group = $(this).closest('.nav-group');
+			var open = !$group.hasClass('open');
+
+			setGroupOpen($group, open);
+			rememberGroup($group.data('group'), open);
+		});
 	}
 	</script>
 </head>
@@ -93,30 +154,52 @@
 
 		<a href="<?php echo $home; ?>" class="nav-item" data-route="admin/common/home"><?php echo $text_dashboard; ?></a>
 
-		<p class="nav-label"><?php echo $text_users; ?></p>
-		<a href="<?php echo $user; ?>" class="nav-item" data-route="admin/user/user"><?php echo $text_user; ?></a>
-		<a href="<?php echo $user_group; ?>" class="nav-item" data-route="admin/user/group"><?php echo $text_user_group; ?></a>
-
-		<p class="nav-label"><?php echo $text_extension; ?></p>
-		<a href="<?php echo $module; ?>" class="nav-item" data-route="admin/extension/module"><?php echo $text_module; ?></a>
-		<a href="<?php echo $report; ?>" class="nav-item" data-route="admin/extension/report"><?php echo $text_report; ?></a>
-
-		<p class="nav-label"><?php echo $text_system; ?></p>
-		<a href="<?php echo $setting; ?>" class="nav-item" data-route="admin/setting/setting"><?php echo $text_setting; ?></a>
-		<a href="<?php echo $layout; ?>" class="nav-item"><?php echo $text_layout; ?></a>
-		<a href="<?php echo $language; ?>" class="nav-item" data-route="admin/localisation/language"><?php echo $text_language; ?></a>
-
-		<p class="nav-label"><?php echo $text_tools; ?></p>
-		<a href="<?php echo $error_log; ?>" class="nav-item" data-route="admin/tool/error_log"><?php echo $text_error_log; ?></a>
-		<a href="<?php echo $import_tables; ?>" class="nav-item" data-route="admin/tool/import_tables"><?php echo $text_import_tables; ?></a>
-		<a href="<?php echo $generator; ?>" class="nav-item" data-route="admin/tool/generator"><?php echo $text_generator; ?></a>
-		<a href="<?php echo $backup; ?>" class="nav-item"><?php echo $text_backup; ?></a>
-
-		<p class="nav-label"><?php echo $text_help; ?></p>
-		<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_framework; ?></a>
-		<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_documentation; ?></a>
-		<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_support; ?></a>
+		<div class="nav-group" data-group="users">
+			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-users"><span><?php echo $text_users; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+			<div class="nav-group-items" id="nav-users"><div class="nav-group-inner">
+				<a href="<?php echo $user; ?>" class="nav-item" data-route="admin/user/user"><?php echo $text_user; ?></a>
+				<a href="<?php echo $user_group; ?>" class="nav-item" data-route="admin/user/group"><?php echo $text_user_group; ?></a>
+			</div></div>
+		</div>
+		<div class="nav-group" data-group="extension">
+			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-extension"><span><?php echo $text_extension; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+			<div class="nav-group-items" id="nav-extension"><div class="nav-group-inner">
+				<a href="<?php echo $module; ?>" class="nav-item" data-route="admin/extension/module"><?php echo $text_module; ?></a>
+				<a href="<?php echo $report; ?>" class="nav-item" data-route="admin/extension/report"><?php echo $text_report; ?></a>
+			</div></div>
+		</div>
+		<div class="nav-group" data-group="system">
+			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-system"><span><?php echo $text_system; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+			<div class="nav-group-items" id="nav-system"><div class="nav-group-inner">
+				<a href="<?php echo $setting; ?>" class="nav-item" data-route="admin/setting/setting"><?php echo $text_setting; ?></a>
+				<a href="<?php echo $layout; ?>" class="nav-item"><?php echo $text_layout; ?></a>
+				<a href="<?php echo $language; ?>" class="nav-item" data-route="admin/localisation/language"><?php echo $text_language; ?></a>
+			</div></div>
+		</div>
+		<div class="nav-group" data-group="tools">
+			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-tools"><span><?php echo $text_tools; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+			<div class="nav-group-items" id="nav-tools"><div class="nav-group-inner">
+				<a href="<?php echo $error_log; ?>" class="nav-item" data-route="admin/tool/error_log"><?php echo $text_error_log; ?></a>
+				<a href="<?php echo $import_tables; ?>" class="nav-item" data-route="admin/tool/import_tables"><?php echo $text_import_tables; ?></a>
+				<a href="<?php echo $generator; ?>" class="nav-item" data-route="admin/tool/generator"><?php echo $text_generator; ?></a>
+				<a href="<?php echo $backup; ?>" class="nav-item"><?php echo $text_backup; ?></a>
+			</div></div>
+		</div>
+		<div class="nav-group" data-group="help">
+			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-help"><span><?php echo $text_help; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+			<div class="nav-group-items" id="nav-help"><div class="nav-group-inner">
+				<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_framework; ?></a>
+				<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_documentation; ?></a>
+				<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_support; ?></a>
+			</div></div>
+		</div>
 	</nav>
+	<script type="text/javascript">
+	// Runs right after the sidebar markup, before the page is painted, so the
+	// closed sections never flash open. Without JavaScript every section stays
+	// open (the collapsing rules only apply under .nav-collapsible).
+	initCollapsibleNav();
+	</script>
 	<?php endif; ?>
 
 	<div class="main">

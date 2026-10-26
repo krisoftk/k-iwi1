@@ -153,16 +153,6 @@ input, select, textarea, button { font-family: var(--font-body); font-size: 13.5
 	margin-top: 1px;
 }
 
-.nav-label {
-	font-family: var(--font-mono);
-	font-size: 10.5px;
-	letter-spacing: 0.07em;
-	text-transform: uppercase;
-	color: var(--sidebar-muted);
-	padding: 14px 10px 6px;
-	margin: 0;
-}
-
 .nav-item {
 	display: block;
 	padding: 8px 10px;
@@ -179,6 +169,79 @@ input, select, textarea, button { font-family: var(--font-body); font-size: 13.5
 	background: var(--sidebar-active);
 	color: #fff;
 	box-shadow: inset 2px 0 0 var(--signal);
+}
+
+/* Collapsible sections: a toggle with the section name, then its items. */
+
+.nav-group { margin-top: 6px; }
+
+.nav-group-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 8px 10px;
+	border: 0;
+	border-radius: var(--radius-input);
+	background: none;
+	font-family: var(--font-mono);
+	font-size: 10.5px;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--sidebar-muted);
+	text-align: left;
+	cursor: pointer;
+}
+
+.nav-group-toggle:hover { background: rgba(255, 255, 255, 0.06); color: var(--sidebar-ink); }
+
+.nav-group-toggle:focus-visible {
+	outline: 2px solid var(--signal);
+	outline-offset: -2px;
+}
+
+/* a closed section holding the current page stays recognisable */
+.nav-group.has-active:not(.open) .nav-group-toggle { color: var(--sidebar-ink); }
+
+.nav-group.has-active:not(.open) .nav-group-toggle span::after {
+	content: '';
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	margin-left: 8px;
+	border-radius: 50%;
+	background: var(--signal);
+	vertical-align: middle;
+}
+
+.nav-chevron { flex: none; transform: rotate(90deg); }
+
+.nav-group-items {
+	display: grid;
+	grid-template-rows: 1fr;
+}
+
+.nav-group-inner {
+	min-height: 0;
+	overflow: hidden;
+	margin-left: 10px;
+	padding-left: 6px;
+	border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* closing only with JavaScript on (see initCollapsibleNav in header.tpl) */
+.nav-collapsible .nav-group:not(.open) .nav-group-items { grid-template-rows: 0fr; }
+.nav-collapsible .nav-group:not(.open) .nav-group-inner { visibility: hidden; }
+.nav-collapsible .nav-group:not(.open) .nav-chevron { transform: rotate(0deg); }
+
+.nav-animated .nav-group-items { transition: grid-template-rows 0.2s ease; }
+.nav-animated .nav-group-inner { transition: visibility 0.2s; }
+.nav-animated .nav-chevron { transition: transform 0.2s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+	.nav-animated .nav-group-items,
+	.nav-animated .nav-group-inner,
+	.nav-animated .nav-chevron { transition: none; }
 }
 
 .main {

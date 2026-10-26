@@ -28,7 +28,7 @@ class ControllerStandardLogin extends Controller {
 			$this->data['logged'] = false;
 			if (isset($this->request->post['user']) && isset($this->request->post['password'])) {
 				$this->data['user'] = $this->request->post['user'];
-				// la password non torna mai nella pagina (resterebbe in cache e cronologia)
+				// the password never goes back into the page (it would stay in cache and history)
 				$this->data['password'] = '';
 			
 				if ($this->user->login($this->request->post['user'], $this->request->post['password'])) {

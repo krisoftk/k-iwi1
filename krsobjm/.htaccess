@@ -1,3 +1,3 @@
-# Fuori dalla cartella pubblica: non va mai servito via web, anche se la
-# DocumentRoot punta per errore alla radice del progetto invece che a krsobjp/.
+# Outside the public folder: never to be served over the web, even if the
+# DocumentRoot points to the project root by mistake instead of krsobjp/.
 Require all denied

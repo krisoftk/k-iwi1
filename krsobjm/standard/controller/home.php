@@ -120,11 +120,11 @@ class ControllerStandardHome extends Controller {
 		$this->response->setOutput($this->render());
 	}
 	
-	// Pre-action registrato in krsobjp/index.php: nega di default ogni route
-	// a chi non e' autenticato (sessione o API key), tranne le poche pagine
-	// che servono per arrivare al login. Stesso schema del lato admin
-	// (ControllerAdminCommonHome::login), cosi' anche i moduli nuovi o
-	// generati dal generatore nascono protetti senza fare nulla.
+	// Pre-action registered in krsobjp/index.php: denies by default every route
+	// to whoever isn't authenticated (session or API key), except the few pages
+	// needed to reach the login. Same scheme as the admin side
+	// (ControllerAdminCommonHome::login), so new modules, or those made by the
+	// generator, are protected from the start without doing anything.
 	public function login() {
 		if ($this->user->hasApiKey() && !$this->user->isApiAuthenticated()) {
 			return $this->forward('standard/home/unauthorized');
@@ -172,9 +172,9 @@ class ControllerStandardHome extends Controller {
 			return;
 		}
 
-		// Le chiamate KAJAX ignorano le risposte con codice d'errore senza
-		// mostrare nulla: per loro il messaggio arriva con un 200, cosi'
-		// compare nel contenuto della pagina come gli altri avvisi.
+		// KAJAX calls ignore responses with an error code without showing
+		// anything: for them the message comes with a 200, so it shows
+		// up in the page content like the other warnings.
 		if (empty($this->request->server['HTTP_X_REQUESTED_WITH'])) {
 			http_response_code(403);
 		}
@@ -182,11 +182,10 @@ class ControllerStandardHome extends Controller {
 		$this->response->setOutput('<div class="alert alert-danger">' . $message . '</div>');
 	}
 
-	// Il menu mostra a ciascun utente solo i programmi su cui ha permesso; qui
-	// lo stesso permesso vale anche per chi apre la route a mano. Le route che
-	// non corrispondono a nessun programma registrato (API, job dello
-	// scheduler, ...) richiedono solo il login, purche' il loro modulo sia
-	// installato.
+	// The menu shows each user only the programs they have permission on; here
+	// the same permission applies also to whoever opens the route by hand.
+	// Routes that don't match any registered program (APIs, scheduler jobs,
+	// ...) only require the login, as long as their module is installed.
 	private function canRunRoute() {
 		if (!isset($this->request->get['route'])) {
 			return true;
@@ -213,9 +212,9 @@ class ControllerStandardHome extends Controller {
 		return false;
 	}
 
-	// Confronta il controller e il metodo che la route risolve davvero, non
-	// la stringa: "standard//login" o "standard/home/REFRESH" arrivano agli
-	// stessi metodi e non devono poter aggirare (o restare fuori da) la lista.
+	// Compares the controller and method the route really resolves to, not
+	// the string: "standard//login" or "standard/home/REFRESH" reach the same
+	// methods and mustn't be able to get around (or stay out of) the list.
 	private function isPublicRoute() {
 		if (!isset($this->request->get['route'])) {
 			return true;
@@ -258,10 +257,10 @@ class ControllerStandardHome extends Controller {
 		$this->response->setOutput($redirect);
 	}
 
-	// Cambio password self-service dell'utente loggato (voce "Cambia Password"
-	// nel menu in alto a destra). La password attuale va verificata con la
-	// stessa logica del login (auth_check_user_login), non solo confrontata
-	// col dato in sessione, cosi' funziona anche se l'hash cambiasse in futuro.
+	// Self-service password change of the logged-in user ("Change password"
+	// item in the top-right menu). The current password is verified with the
+	// same logic as the login (auth_check_user_login), not just compared with
+	// the data in the session, so it keeps working if the hash changes in future.
 	public function changePassword() {
 		$json = array();
 
@@ -281,7 +280,7 @@ class ControllerStandardHome extends Controller {
 					$json['error'] = $this->language->get('error_current_password');
 				}
 			} elseif (utf8_strlen($new_password) < 8 || strlen($new_password) > 72) {
-				// 72 byte: oltre, bcrypt (password_hash) ignora il resto
+				// 72 bytes: beyond that, bcrypt (password_hash) ignores the rest
 				$json['error'] = $this->language->get('error_new_password');
 			} elseif ($new_password != $confirm_password) {
 				$json['error'] = $this->language->get('error_confirm_password');

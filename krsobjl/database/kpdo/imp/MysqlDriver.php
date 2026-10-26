@@ -30,11 +30,10 @@ class MysqlDriver implements iDriverDB {
 		$this->password = $password;
 		$this->database = $database;
 		
-		// Da PHP 8.1 mysqli lancia mysqli_sql_exception a ogni errore invece di
-		// restituire false: i controlli "=== FALSE" di questo driver non
-		// scatterebbero piu' e ogni errore SQL diventerebbe fatale invece di una
-		// KPDOException gestibile dai chiamanti. Si torna al comportamento per
-		// cui il driver e' scritto.
+		// Since PHP 8.1 mysqli throws mysqli_sql_exception on every error instead
+		// of returning false: the "=== FALSE" checks of this driver would no longer
+		// fire and every SQL error would become fatal instead of a KPDOException
+		// the callers can handle. Back to the behaviour the driver is written for.
 		mysqli_report(MYSQLI_REPORT_OFF);
 
 		if ($port != '' && isset($port)) {
@@ -44,9 +43,9 @@ class MysqlDriver implements iDriverDB {
 		}
 		
 		if (mysqli_connect_error()) {
-			// l'oggetto mysqli di una connessione fallita non si puo' piu'
-			// interrogare (PHP 8: "mysqli object is already closed"), che
-			// nasconderebbe il motivo vero: si usano le funzioni connect_*
+			// the mysqli object of a failed connection can no longer be
+			// queried (PHP 8: "mysqli object is already closed"), which would
+			// hide the real reason: the connect_* functions are used instead
 			$this->errorCode = mysqli_connect_errno();
 			$this->errorInfo = array(0, mysqli_connect_errno(), mysqli_connect_error());
 			

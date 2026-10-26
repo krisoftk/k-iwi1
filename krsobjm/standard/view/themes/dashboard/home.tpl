@@ -65,9 +65,9 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- Modal Cambia Password: presente una sola volta nello shell (questo
-         template viene caricato una volta sola per sessione, il contenuto
-         delle pagine sotto viene poi caricato via AJAX in #content) -->
+    <!-- Change Password modal: present only once in the shell (this
+         template is loaded once per session, the content of the pages
+         below is then loaded via AJAX into #content) -->
     <div class="modal fade" id="modal-change-password" tabindex="-1" role="dialog">
     	<div class="modal-dialog" role="document">
     		<div class="modal-content">

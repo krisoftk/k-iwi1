@@ -1,4 +1,4 @@
-# Niente elenco automatico dei file quando si apre una cartella senza index
-# (js/, themes/, downloads/, ...): i file restano scaricabili, ma non si
-# espone la struttura. Richiede AllowOverride Options (o All) nel vhost.
+# No automatic file listing when a folder without an index is opened
+# (js/, themes/, downloads/, ...): the files can still be downloaded, but the
+# structure isn't exposed. Needs AllowOverride Options (or All) in the vhost.
 Options -Indexes

@@ -1,34 +1,33 @@
 <?php
 /**
- * Base per i controller delle API machine-to-machine (nessuna sessione,
- * autenticazione con API key). La chiave viene gia' verificata nel
- * bootstrap pubblico, che autentica l'utente proprietario solo per la
- * richiesta corrente: qui si controlla che la richiesta sia arrivata
- * davvero con una chiave e non con il cookie di sessione di un browser,
- * altrimenti un sito esterno potrebbe chiamare l'API a nome dell'utente
- * loggato (CSRF).
+ * Base for the controllers of machine-to-machine APIs (no session,
+ * authentication with an API key). The key is already verified in the
+ * public bootstrap, which authenticates the owner user for the current
+ * request only: here we check that the request really came with a key and
+ * not with a browser's session cookie, otherwise an external site could
+ * call the API on behalf of the logged-in user (CSRF).
  *
- * Chiave: header X-API-KEY (consigliato), oppure campo POST/GET 'api_key'.
- * Risposta JSON standard:
+ * Key: X-API-KEY header (recommended), or the 'api_key' POST/GET field.
+ * Standard JSON response:
  *   { "result": bool, "stato": "ok|warning|duplicato|errore|auth", "id": int, "msg": string }
  *
- * Uso tipico in un modulo:
+ * Typical use in a module:
  *
- *   class ControllerMiomoduloApiOrdini extends ApiController {
+ *   class ControllerMymoduleApiOrders extends ApiController {
  *       public function insert() {
  *           if (!$this->authorize('POST')) {
  *               return;
  *           }
  *
- *           $this->load->model('miomodulo/ordini');
- *           $this->respond($this->model_miomodulo_ordini->insert($this->user->getId(), $this->request->post));
+ *           $this->load->model('mymodule/orders');
+ *           $this->respond($this->model_mymodule_orders->insert($this->user->getId(), $this->request->post));
  *       }
  *   }
  */
 abstract class ApiController extends Controller {
 
-	// Verifica metodo HTTP e API key; se qualcosa non va ha gia' scritto la
-	// risposta d'errore e il chiamante deve solo fare return.
+	// Checks the HTTP method and the API key; if something is wrong it has
+	// already written the error response and the caller only has to return.
 	protected function authorize($method = 'POST') {
 		$current = isset($this->request->server['REQUEST_METHOD']) ? $this->request->server['REQUEST_METHOD'] : '';
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * Rappresenta l'invocazione risolta di una route: file del controller,
- * classe da istanziare, metodo da chiamare ed eventuali argomenti extra
- * passati esplicitamente (non tramite la route testuale).
+ * Represents the resolved invocation of a route: controller file, class to
+ * instantiate, method to call and any extra arguments passed explicitly
+ * (not through the textual route).
  */
 final class Action {
 	private $file;

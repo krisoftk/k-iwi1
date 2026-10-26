@@ -6,7 +6,7 @@ abstract class Install {
 	protected $databases;
 	protected $tables;
 	protected $module;
-	protected $menu_items;/*deprecato lasciato solo per compatibilità con vecchi installer*/
+	protected $menu_items;/*deprecated, kept only for compatibility with old installers*/
 	protected $users;
 	protected $users_id;
 	protected $groups;
@@ -31,10 +31,10 @@ abstract class Install {
 		return $this->users_id[$nome];
 	}
 	
-	// I nomi dei moduli sono unici: l'accesso all'admin, ad esempio, spetta ai
-	// gruppi del modulo che si chiama "admin", quindi un secondo modulo con lo
-	// stesso nome ne erediterebbe i poteri. Se il nome e' gia' preso
-	// l'installazione si ferma.
+	// Module names are unique: access to the admin, for example, belongs to the
+	// groups of the module called "admin", so a second module with the same
+	// name would inherit its powers. If the name is already taken the
+	// installation stops.
 	protected function createModule($name, $parent = 0) {
 		$stmt = $this->db->prepare("SELECT ID FROM t:krs_modules WHERE NAME = :module_name");
 		$stmt->bindTable("krs_modules", "krs_modules");
@@ -71,9 +71,9 @@ abstract class Install {
 		$stmt->execute();
 	}
 	
-//Funzione modificata per permettere di indicare un database differente alle tabelle.
-//nuova sintassi del nome tabella : nome,database 
-//In questo modo il sistema aggiungerà la tabella anome di database scelto
+//Function changed to allow a different database for the tables.
+//new syntax of the table name: name,database
+//This way the system adds the table to the chosen database name
 	protected function createTable($tables) {
 	
 		foreach ($tables as $table => $instructions) {
@@ -279,7 +279,7 @@ abstract class Install {
 		}
 	}
 		
-/*FUNZIONE crateMenu DEPRECATA lasciata solo perchè utilizzati in alcuni install di moduli*/	
+/*crateMenu FUNCTION DEPRECATED, kept only because some module installers use it*/	
 	protected function createMenu($menu_items) {
 		$stmt = $this->db->prepare("SELECT * FROM t:krs_menu_type WHERE MENUTYPE = 'standard'");
 		$stmt->bindTable("krs_menu_type", "krs_menu_type");
@@ -359,7 +359,7 @@ abstract class Install {
 			$stmt_progs_modules->execute();
 		}
 	}
-/*FUNZIONE crateMenu DEPRECATA lasciata solo perchè utilizzati in alcuni install di moduli*/
+/*crateMenu FUNCTION DEPRECATED, kept only because some module installers use it*/
 	
 	protected function deleteMenu() {
 		$stmt = $this->db->prepare("DELETE FROM t:krs_menuitems WHERE ID IN (SELECT MENUITEMS_ID FROM t:krs_progs_menuitems_map as pm, t:krs_progs_modules_map as pmm WHERE pm.PROG_ID = pmm.PROG_ID AND pmm.MODULE_ID = :module )");
@@ -375,8 +375,8 @@ abstract class Install {
 		$stmt->bindParam("module", $this->module_id, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
 		
-		// permessi dei gruppi sui programmi del modulo: senza questo restavano
-		// righe orfane che puntavano a programmi non piu' esistenti
+		// group permissions on the module's programs: without this, orphan
+		// rows pointing to programs that no longer exist were left behind
 		$stmt = $this->db->prepare("DELETE FROM t:krs_progs_usergroups_map WHERE PROG_ID IN (SELECT PROG_ID FROM t:krs_progs_modules_map as pmm WHERE pmm.MODULE_ID = :module )");
 		$stmt->bindTable("krs_progs_usergroups_map", "krs_progs_usergroups_map");
 		$stmt->bindTable("krs_progs_modules_map", "krs_progs_modules_map");
@@ -451,9 +451,9 @@ abstract class Install {
 		$stmt->bindParam('ee', $execution_enabled, KPDO::TYPE_VARCHAR);
 		
 		foreach ($progsgroups as $pg) {
-			// azzerati a ogni giro: un nome di gruppo o di programma
-			// sbagliato riusava l'id della riga precedente e dava il permesso
-			// al gruppo (o sul programma) sbagliato
+			// reset on every iteration: a wrong group or program name
+			// reused the id of the previous row and gave the permission
+			// to the wrong group (or on the wrong program)
 			$group_id = null;
 			$prog_id = null;
 
@@ -549,11 +549,11 @@ abstract class Install {
 			$user_id = $this->db->lastInsertId();
 			$this->users_id[$username] = $user_id;
 			
-			// Il quinto elemento elenca i gruppi dell'utente. Senza, per
-			// compatibilita' con i moduli scritti prima, si usa il gruppo
-			// "Administrator" DEL MODULO stesso, se l'installer ne crea uno:
-			// i gruppi si cercano solo tra quelli di questo modulo, quindi qui
-			// non si puo' dare accesso all'admin del framework.
+			// The fifth element lists the user's groups. Without it, for
+			// compatibility with modules written earlier, the "Administrator"
+			// group OF THE MODULE itself is used, if the installer creates one:
+			// groups are looked up only among this module's, so this can't
+			// grant access to the framework's admin.
 			$explicit = (count($user) == 5);
 			$krs_ug_array = $explicit ? $user[4] : array('Administrator');
 			
@@ -562,8 +562,8 @@ abstract class Install {
 				$stmt_group->execute();
 				$group = $stmt_group->fetch();
 
-				// gruppo inesistente: prima si scriveva un'associazione senza
-				// gruppo (e un avviso PHP)
+				// unknown group: an association without a group (and a PHP
+				// warning) used to be written
 				if (!$group) {
 					if ($explicit) {
 						trigger_error("Utente '" . $username . "': gruppo '" . $krs_ug_name . "' inesistente nel modulo " . $this->module, E_USER_WARNING);
@@ -617,7 +617,7 @@ abstract class Install {
 			$this->createTable($this->tables);
 		}
 		/*------------------------------------------------------*/
-		/*Deprecata lasciata solo per retrocompatibilità--------*/
+		/*Deprecated, kept only for backward compatibility--------*/
 		if (isset($this->menu_items)) {
 			$this->createMenu($this->menu_items);
 		}

@@ -3,10 +3,10 @@ class ModelAdminExtensionProg extends Model {
 	public function getProgs($data = array()) {
 		$db = UtilityDB::getDBfromTable('krs_progs');
 
-		// MENU_TITLE = testo della voce di menu con cui il programma e'
-		// realmente raggiungibile (krs_menuitems); un prog senza voce di menu
-		// propria (es. le azioni ".../insert", raggiungibili solo da un
-		// bottone dentro un'altra schermata) la ha NULL.
+		// MENU_TITLE = text of the menu item through which the program is
+		// actually reachable (krs_menuitems); a prog without a menu item of
+		// its own (e.g. the ".../insert" actions, reachable only from a
+		// button inside another screen) has it NULL.
 		$sql = 'SELECT p.*, GROUP_CONCAT(DISTINCT mi.TITLE SEPARATOR \', \') AS MENU_TITLE
 			FROM t:progs
 			LEFT JOIN t:progs_menuitems_map ON (pm.PROG_ID = p.ID)

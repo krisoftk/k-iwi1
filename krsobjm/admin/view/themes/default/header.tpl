@@ -32,7 +32,7 @@
 	<?php endforeach; ?>
 	<script type="text/javascript">
 	$(document).ready(function () {
-		// chiede conferma prima di un'azione distruttiva (elimina/disinstalla)
+		// asks for confirmation before a destructive action (delete/uninstall)
 		function needsConfirm(target) {
 			return target && target.indexOf('delete') !== -1;
 		}

@@ -1,7 +1,7 @@
 <?php
 /**
- * Accumula header e corpo della risposta HTTP e li invia in output(),
- * applicando compressione gzip quando richiesta e supportata dal client.
+ * Collects the headers and the body of the HTTP response and sends them in
+ * output(), applying gzip compression when requested and supported by the client.
  */
 class Response {
 	private $headers = array();

@@ -137,7 +137,7 @@ class ControllerAdminToolGenerator extends Controller {
 		return false;
 	}
 
-	// la cartella che il generatore non potrebbe scrivere, o '' se si puo'
+	// the folder the generator couldn't write, or '' if it can
 	private function unwritableDir($module) {
 		$dir = DIR_MODULE . $module;
 
@@ -163,18 +163,18 @@ class ControllerAdminToolGenerator extends Controller {
 			$this->error['table_id'] = $this->language->get('error_table_id');
 		}
 
-		// Il nome del modulo diventa una cartella sotto krsobjm/, parte dei nomi
-		// delle classi e delle route: solo lettere, cifre e underscore, che
-		// inizi con una lettera (niente "../", spazi o trattini).
+		// The module name becomes a folder under krsobjm/ and part of the
+		// class names and routes: only letters, digits and underscores,
+		// starting with a letter (no "../", spaces or dashes).
 		$module = isset($this->request->post['module']) ? $this->request->post['module'] : '';
 
 		if (!preg_match('/^[A-Za-z][A-Za-z0-9_]{0,31}$/', $module)) {
 			$this->error['module'] = $this->language->get('error_module');
 		} elseif (in_array(strtolower($module), array('admin', 'standard', 'common', 'install', 'error'))) {
-			// moduli del framework: il generatore ne sovrascriverebbe i file
+			// framework modules: the generator would overwrite their files
 			$this->error['module'] = $this->language->get('error_module_reserved');
 		} elseif ($blocked = $this->unwritableDir($module)) {
-			// meglio dirlo qui che lasciare il modulo scritto a meta' e un errore 500
+			// better to say it here than to leave the module half written and an error 500
 			$this->error['module'] = sprintf($this->language->get('error_writable'), $blocked);
 		}
 

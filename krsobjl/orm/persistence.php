@@ -162,7 +162,7 @@ class Persistence {
 	}
 	
 	private function checkStatement($statement) {
-		/*controllo case sensitive*/
+		/*case-sensitive check*/
 		$new_statement = array();
 		foreach ($statement as $key => $value) {
 			$new_statement[strtoupper($key)] = $value;
@@ -174,7 +174,7 @@ class Persistence {
 	private function constructStatement($statement) {
 		$statement = $this->checkStatement($statement);
 		
-		/*selezione del database*/
+		/*database selection*/
 		if (!$this->registry->has('database_' . $statement['MODULE'] . '_' . $statement['TABLE'])) {
 			$stmt_database = $this->db->prepare("
 				SELECT d.TYPE, d.NAME, d.IP, d.PORT, d.USERNAME, d.PASSWORD
@@ -192,11 +192,11 @@ class Persistence {
 				
 			$database = $stmt_database->fetch();
 				
-			/*carico la connessione*/
+			/*load the connection*/
 			$this->load->database($statement['MODULE'] . '_' . $statement['TABLE'], $database['TYPE'], $database['IP'], $database['PORT'], $database['USERNAME'], $database['PASSWORD'], $database['NAME']);
 		}
 		
-		/*costruisco lo statement*/
+		/*build the statement*/
 		$stmt = $this->{'database_' . $statement['MODULE'] . '_' . $statement['TABLE']}->prepare($statement['QUERY']);
 		
 		foreach ($statement['TABLES'] as $table) {

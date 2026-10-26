@@ -112,10 +112,10 @@ $registry->set('request', $request);
 $response = new Response();
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 
-// Header di sicurezza, inviati subito cosi' valgono anche per i redirect
-// (che escono prima di Response::output): niente MIME sniffing, pagine non
-// incorniciabili da altri siti (clickjacking) e Referer solo verso questo
-// sito, perche' gli URL dell'admin contengono il token di sessione.
+// Security headers, sent right away so they also apply to redirects
+// (which exit before Response::output): no MIME sniffing, pages can't be
+// framed by other sites (clickjacking) and the Referer only towards this
+// site, because the admin URLs contain the session token.
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: same-origin');
@@ -141,10 +141,10 @@ $registry->set('document', new Document());
 $user = new User($registry);
 $registry->set('user', $user);
 
-// Language: quella scelta dall'utente (krs_users.LANGUAGE), altrimenti
-// setting.language di config.ini. La lingua di config.ini fa anche da
-// riserva per i file e le frasi che la lingua dell'utente non ha (in questo
-// modulo o in un altro). Il browser non conta: la lingua e' dell'utente.
+// Language: the one chosen by the user (krs_users.LANGUAGE), otherwise
+// setting.language from config.ini. The config.ini language is also the
+// fallback for the files and phrases the user's language lacks (in this
+// module or in another one). The browser doesn't count: the language belongs to the user.
 $loader->model('common/language');
 
 $languages = $registry->get('model_common_language')->getLanguages();

@@ -33,8 +33,8 @@ class ModelAdminLocalisationLanguage extends Model {
 		return $stmt->fetch();
 	}
 
-	// FILENAME (nome del file principale di ogni modulo, es. admin/english.php)
-	// e' sempre uguale alla cartella: non serve chiederlo
+	// FILENAME (name of each module's main file, e.g. admin/english.php)
+	// always equals the folder: no need to ask for it
 	public function addLanguage($data) {
 		$db = UtilityDB::getDBfromTable('krs_languages');
 		$image = '';
@@ -54,8 +54,8 @@ class ModelAdminLocalisationLanguage extends Model {
 		return $db->lastInsertId();
 	}
 
-	// La cartella non cambia dopo la creazione (i file resterebbero nella
-	// vecchia); il codice si', e gli utenti che l'avevano scelto lo seguono.
+	// The folder doesn't change after creation (the files would stay in the
+	// old one); the code does, and the users who had chosen it follow it.
 	public function editLanguage($languageId, $data) {
 		$old = $this->getLanguage($languageId);
 
@@ -75,8 +75,8 @@ class ModelAdminLocalisationLanguage extends Model {
 		}
 	}
 
-	// I file su disco restano: si possono scaricare prima o rimuovere a mano.
-	// Gli utenti che l'avevano scelta tornano alla lingua di default.
+	// The files on disk stay: they can be downloaded first or removed by hand.
+	// The users who had chosen this language go back to the default one.
 	public function deleteLanguage($languageId) {
 		$language = $this->getLanguage($languageId);
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * Sessioni salvate su DB (tabella krs_session) invece che su file, per
- * poterle condividere tra pi web server. Implementa SessionHandlerInterface
- * (stile ad oggetti): la vecchia forma con array di callback e' deprecata
- * da PHP 8.
+ * Sessions stored in the DB (table krs_session) instead of files, so they
+ * can be shared between several web servers. Implements
+ * SessionHandlerInterface (object style): the old form with an array of
+ * callbacks is deprecated since PHP 8.
  */
 class SessionDB implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
@@ -45,8 +45,8 @@ class SessionDB implements SessionHandlerInterface, SessionUpdateTimestampHandle
 		}
 	}
 
-	// session_regenerate_id() chiude e riapre l'handler a meta' richiesta:
-	// dimenticare la connessione chiusa fa si' che open() ne apra una nuova.
+	// session_regenerate_id() closes and reopens the handler mid-request:
+	// forgetting the closed connection makes open() open a new one.
 	public function close(): bool {
 		try {
 			$closed = (bool) $this->_sess_db->disconnect();
@@ -102,9 +102,9 @@ class SessionDB implements SessionHandlerInterface, SessionUpdateTimestampHandle
 		}
 	}
 
-	// Con session.use_strict_mode PHP chiede all'handler se l'ID esiste: un ID
-	// mai emesso (es. imposto da un attaccante) viene scartato e ne nasce uno
-	// nuovo. Senza questo metodo lo strict mode non avrebbe effetto sul DB.
+	// With session.use_strict_mode PHP asks the handler whether the ID exists:
+	// an ID never issued (e.g. set by an attacker) is discarded and a new one
+	// is created. Without this method strict mode would have no effect on the DB.
 	public function validateId(string $id): bool {
 		try {
 			$stmt = $this->_sess_db->prepare('SELECT SESSION_ID FROM t:krs_session WHERE SESSION_ID = :id');

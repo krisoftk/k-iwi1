@@ -219,7 +219,7 @@ class ControllerAdminUserUser extends Controller {
 		$this->data['all_modules']    = $this->model_admin_extension_module->getModules();
 		$this->data['all_languages']  = $this->activeLanguages();
 
-		// la voce vuota significa "nessuna scelta": vale setting.language
+		// the empty entry means "no choice": setting.language applies
 		$defaultLanguage = Language::choose($this->data['all_languages'], array($this->config->get('setting.language')));
 		$this->data['text_language_default'] = sprintf($this->language->get('text_language_default'), $defaultLanguage['name']);
 
@@ -293,7 +293,7 @@ class ControllerAdminUserUser extends Controller {
 		if ($this->request->post['password'] || !$userId) {
 			$passwordLength = utf8_strlen($this->request->post['password']);
 
-			// 72 byte: oltre, bcrypt (password_hash) ignora il resto
+			// 72 bytes: beyond that, bcrypt (password_hash) ignores the rest
 			if ($passwordLength < 8 || strlen($this->request->post['password']) > 72) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
@@ -303,9 +303,9 @@ class ControllerAdminUserUser extends Controller {
 			}
 		}
 
-		// Solo gruppi esistenti: una riga vuota del form (usergroups[0]=) o un
-		// id inventato superavano il controllo empty(), l'utente veniva creato e
-		// l'associazione al gruppo falliva, lasciandolo senza gruppo.
+		// Existing groups only: an empty form row (usergroups[0]=) or a made-up
+		// id passed the empty() check, the user was created and the group
+		// association failed, leaving the user without a group.
 		$existing = array();
 
 		foreach ($this->model_admin_user_group->getUserGroups() as $group) {
@@ -321,7 +321,7 @@ class ControllerAdminUserUser extends Controller {
 			$this->request->post['usergroups'] = $groups;
 		}
 
-		// '' = nessuna scelta (vale setting.language), altrimenti una lingua attiva
+		// '' = no choice (setting.language applies), otherwise an active language
 		if (!isset($this->request->post['language']) || !is_string($this->request->post['language'])) {
 			$this->request->post['language'] = '';
 		}
@@ -335,7 +335,7 @@ class ControllerAdminUserUser extends Controller {
 		return empty($this->error);
 	}
 
-	// lingue che l'utente puo' scegliere: quelle attive di krs_languages
+	// languages the user can choose: the active ones of krs_languages
 	private function activeLanguages() {
 		$this->load->model('common/language');
 

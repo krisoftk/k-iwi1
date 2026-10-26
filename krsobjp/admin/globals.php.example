@@ -1,10 +1,10 @@
 <?php
-// Questo file viene scritto automaticamente dall'installer
-// (krsobjm/install/controller/step_1.php) con i valori reali della tua
-// installazione quando apri http://tuoserver/install/index.php.
-// Questo .example mostra solo il formato atteso: non serve copiarlo a
-// mano, ma puoi usarlo come riferimento se l'installer non può scrivere
-// questi file (permessi del webserver) e li devi creare tu.
+// This file is written automatically by the installer
+// (krsobjm/install/controller/step_1.php) with the real values of your
+// installation when you open http://yourserver/install/index.php.
+// This .example only shows the expected format: there's no need to copy it
+// by hand, but you can use it as a reference if the installer can't write
+// these files (web server permissions) and you have to create them yourself.
 
 // HTTP
 define('HTTP_SERVER', 'http://localhost/');

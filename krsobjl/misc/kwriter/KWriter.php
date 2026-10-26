@@ -1,10 +1,10 @@
 <?php
 class KWriter {
-	// costanti per specificare i tipi colonna nel xls
+	// constants for the column types in the xls
 	const COLUMN_STRING = 'String';
 	const COLUMN_NUMBER = 'Number';
 	
-	// costanti per indicare i tipi di writer
+	// constants for the writer types
 	/**
 	 * File CSV
 	 */
@@ -25,7 +25,7 @@ class KWriter {
 	 */
 	const XlsFooter = "</Workbook>";
 	
-	// variabili private
+	// private variables
 	private $filename = null;
 	private $handle = null;
 	private $type = null;
@@ -67,8 +67,8 @@ class KWriter {
 	
 	/* XLS get e set */
 	/**
-	 * Configure le proprietà del file XLS
-	 * 
+	 * Sets the properties of the XLS file
+	 *
 	 * @param string $prop
 	 * @param string $value
 	 */
@@ -158,7 +158,7 @@ class KWriter {
 	}
 	
 	private function createXlsHeader() {
-		// crea la testata
+		// create the header
 		$output = stripslashes(sprintf(self::XlsHeader, $this->encoding)) . "\n";
 		$output .= "<DocumentProperties xmlns=\"urn:schemas-microsoft-com:office:office\">\n";
 		$output .= "<Generator><![CDATA[KriFramework by Krisoft S.r.l - http://www.krisoft.it]]></Generator>\n";
@@ -170,7 +170,7 @@ class KWriter {
 		
 		$output .= "</DocumentProperties>\n";
 		
-		// crea il worksheet
+		// create the worksheet
 		if ($this->workbookDefault) {
 		    
 		    $this->workbookIsOpen = true;

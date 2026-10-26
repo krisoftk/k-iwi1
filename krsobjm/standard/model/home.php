@@ -1,9 +1,9 @@
 <?php
 class ModelStandardHome extends Model {
 
-	// Cambio password self-service per l'utente loggato. La verifica della
-	// password attuale e' fatta a monte nel controller (auth_check_user_login,
-	// stessa logica del login); qui si salva solo il nuovo hash (Auth::hash_password).
+	// Self-service password change for the logged-in user. The current
+	// password is verified upstream in the controller (auth_check_user_login,
+	// same logic as the login); here only the new hash is saved (Auth::hash_password).
 	public function changePassword($user_id, $password) {
 		$db = UtilityDB::getDBfromTable('krs_users');
 

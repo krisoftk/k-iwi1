@@ -1,8 +1,8 @@
 <?php
 /**
- * Contenitore chiave/valore condiviso: e' il punto in cui il bootstrap
- * pubblica i servizi applicativi (db, session, url, ...) e da cui Loader,
- * Controller e Model li recuperano tramite i loro __get/__set.
+ * Shared key/value container: it's where the bootstrap publishes the
+ * application services (db, session, url, ...) and where Loader,
+ * Controller and Model get them through their __get/__set.
  */
 final class Registry {
 	private $services = array();

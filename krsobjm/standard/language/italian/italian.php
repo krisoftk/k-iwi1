@@ -74,7 +74,7 @@ $_['button_add_image']        = 'Aggiungi Immagine';
 $_['warning']          	 	  = 'Attenzione!';
 $_['warning_timeout']         = 'Sessione scaduta.';
 
-// Home, menu, cambio password
+// Home, menu, change password
 $_['text_change_password'] = 'Cambia password';
 $_['text_logout'] = 'Esci';
 $_['text_toggle_navigation'] = 'Mostra/nascondi menu';
@@ -98,7 +98,7 @@ $_['error_communication'] = 'Errore di comunicazione, riprova.';
 $_['error_unauthorized'] = 'Autenticazione richiesta: API key non valida o assente.';
 $_['error_forbidden'] = 'Non hai i permessi per questo programma.';
 
-// Moduli generati
+// Generated modules
 $_['success_insert'] = 'Inserito con successo';
 $_['success_update'] = 'Aggiornato con successo';
 $_['success_delete'] = 'Cancellato con successo';

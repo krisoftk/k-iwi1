@@ -1,8 +1,8 @@
 <?php
 /**
- * Copia sanificata (htmlspecialchars ricorsivo) degli array superglobali di
- * input, cosi' il resto dell'applicazione puo' leggere $this->request->get
- * (ecc.) senza doversi preoccupare di escaping.
+ * Sanitized copy (recursive htmlspecialchars) of the input superglobal
+ * arrays, so the rest of the application can read $this->request->get
+ * (etc.) without worrying about escaping.
  */
 class Request {
 	public $get = array();

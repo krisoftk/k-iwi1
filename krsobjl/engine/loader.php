@@ -1,8 +1,9 @@
 <?php
 /**
- * Punto unico da cui un controller carica dipendenze aggiuntive: librerie
- * di krsobjl, model applicativi (risolti con lo stesso PathResolver usato
- * per i controller), file di configurazione, lingua ed estensioni.
+ * Single point from which a controller loads additional dependencies:
+ * krsobjl libraries, application models (resolved with the same
+ * PathResolver used for controllers), configuration files, language and
+ * extensions.
  */
 final class Loader {
 	private $registry;

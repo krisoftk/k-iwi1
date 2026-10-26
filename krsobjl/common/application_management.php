@@ -9,10 +9,10 @@ function makePath($path) {
 		$server = HTTP_THEMES;
 	}
 
-	// DIR_THEMES/HTTP(S)_THEMES puntano a una cartella diversa per l'area
-	// admin rispetto al sito standard (".../themes/admin/" vs ".../themes/"),
-	// ma il nome del tema in framework.theme e' sempre quello del sito
-	// standard: se in quella cartella non esiste, si usa framework.theme_admin.
+	// DIR_THEMES/HTTP(S)_THEMES point to a different folder for the admin area
+	// than for the standard site (".../themes/admin/" vs ".../themes/"), but
+	// the theme name in framework.theme is always the standard site's: if it
+	// doesn't exist in that folder, framework.theme_admin is used.
 	$theme = $config->get('framework.theme');
 
 	if (!is_dir(DIR_THEMES . $theme) && $config->has('framework.theme_admin')) {
@@ -21,9 +21,9 @@ function makePath($path) {
 
 	$url = $server . $theme . '/' . $path;
 
-	// cache-busting: aggiunge la data di modifica del file, cosi' il
-	// browser scarica la versione nuova di css/js quando cambiano senza
-	// bisogno di uno svuota-cache manuale.
+	// cache-busting: appends the file's modification time, so the browser
+	// downloads the new version of css/js when they change, without a
+	// manual cache flush.
 	$file = DIR_THEMES . $theme . '/' . $path;
 
 	if (is_file($file)) {

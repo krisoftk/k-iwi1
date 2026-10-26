@@ -1,8 +1,8 @@
 <?php
 /**
- * Wrapper esposto ai controller come $this->user: tiene i dati dell'utente
- * loggato in sessione e delega ad Auth le verifiche vere e proprie
- * (credenziali, permessi) senza duplicarne la logica.
+ * Wrapper exposed to controllers as $this->user: it keeps the data of the
+ * user logged in the session and delegates the actual checks to Auth
+ * (credentials, permissions) without duplicating its logic.
  */
 class User {
 	private $session;
@@ -20,8 +20,8 @@ class User {
 		}
 	}
 
-	// Con $module il login riesce solo se l'utente puo' usare quel modulo
-	// (es. 'admin'): chi non puo' non arriva nemmeno a toccare la sessione.
+	// With $module the login succeeds only if the user can use that module
+	// (e.g. 'admin'): whoever can't never even touches the session.
 	public function login($username, $password, $module = null) {
 		$user = $this->auth->auth_check_user_login($username, $password);
 
@@ -33,8 +33,8 @@ class User {
 			return false;
 		}
 
-		// nuovo ID di sessione a ogni login: un ID noto prima (fissato da
-		// altri o letto in chiaro) non diventa mai una sessione autenticata
+		// new session ID at every login: an ID known beforehand (set by
+		// someone else or read in clear) never becomes an authenticated session
 		session_regenerate_id(true);
 
 		$this->session->data['user_id'] = $user['ID'];
@@ -43,10 +43,10 @@ class User {
 		return true;
 	}
 
-	// Autentica la sola richiesta corrente tramite API key, senza scrivere
-	// nulla in sessione. Se la richiesta presenta una chiave, decide la
-	// chiave: una chiave non valida annulla anche un eventuale utente di
-	// sessione, cosi' chi la manda riceve sempre un esito coerente.
+	// Authenticates the current request only, through an API key, without
+	// writing anything to the session. If the request carries a key, the key
+	// decides: an invalid key also cancels any session user, so whoever sends
+	// it always gets a consistent result.
 	public function loginByApiKey($key) {
 		$this->apiKey = (string) $key;
 		$this->apiAuthenticated = false;
@@ -65,7 +65,7 @@ class User {
 		return true;
 	}
 
-	// login rifiutato per i troppi tentativi falliti (vedi Auth)
+	// login refused because of too many failed attempts (see Auth)
 	public function isLoginBlocked() {
 		return $this->auth->auth_login_blocked();
 	}
@@ -109,8 +109,8 @@ class User {
 		return $this->details['USERNAME'];
 	}
 
-	// codice della lingua scelta (krs_users.LANGUAGE), '' se non scelta:
-	// vale allora setting.language di config.ini
+	// code of the chosen language (krs_users.LANGUAGE), '' if none was chosen:
+	// setting.language from config.ini applies then
 	public function getLanguage() {
 		return isset($this->details['LANGUAGE']) ? (string) $this->details['LANGUAGE'] : '';
 	}

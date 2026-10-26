@@ -34,7 +34,7 @@ class ControllerCommonKReport extends Controller {
 		$this->deleteTokenExpire(date('Y-m-d H:i:s', $current_time));
 		
 		$expire = date('Y-m-d H:i:s', $current_time + $this->config->get('report.time_expire'));		
-		// casuale e imprevedibile: chi ha il token apre il report
+		// random and unpredictable: whoever has the token opens the report
 		$token = bin2hex(random_bytes(16));
 		$ip = $_SERVER['REMOTE_ADDR'];
 	

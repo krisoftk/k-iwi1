@@ -116,8 +116,8 @@ class ControllerAdminToolImportTables extends Controller {
 	}
 
 	private function validateFormTable() {
-		// il nome finisce senza virgolette nel DESCRIBE del generatore e nei
-		// nomi di classi e file generati: solo un identificatore SQL semplice
+		// the name goes unquoted into the generator's DESCRIBE and into the
+		// names of the generated classes and files: only a plain SQL identifier
 		if (!preg_match('/^[A-Za-z0-9_]{1,32}$/', $this->request->post['name'])) {
 			$this->error['name_table'] = $this->language->get('error_name');
 		}

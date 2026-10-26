@@ -1,18 +1,18 @@
 <?php
 /**
- * Gestione delle API key da riga di comando.
+ * API key management from the command line.
  *
- *   php tools/api_key.php create <username> [descrizione]
+ *   php tools/api_key.php create <username> [description]
  *   php tools/api_key.php list
  *   php tools/api_key.php revoke <id>
  *
- * La chiave viene mostrata una sola volta, alla creazione: nel database
- * resta solo il suo hash SHA-256 (piu' le prime 8 cifre, per riconoscerla
- * nell'elenco). Chi la usa agisce come l'utente a cui appartiene, con i
- * suoi stessi permessi.
+ * The key is shown only once, when it's created: the database keeps only
+ * its SHA-256 hash (plus the first 8 characters, to recognise it in the
+ * list). Whoever uses it acts as the user it belongs to, with the same
+ * permissions.
  *
- * Al primo avvio crea la tabella krs_api_keys se manca (installazioni
- * precedenti all'introduzione delle API key).
+ * On first run it creates the krs_api_keys table if it's missing
+ * (installations made before API keys were introduced).
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -30,7 +30,7 @@ $config->load('config');
 $db = new KPDO($config->get('database.driver'), $config->get('database.host'), $config->get('database.port'), $config->get('database.user'), $config->get('database.password'), $config->get('database.name'));
 
 function ensure_api_keys_table($db) {
-	// stessa definizione di krsobjm/install/controller/step_1.php
+	// same definition as krsobjm/install/controller/step_1.php
 	$created = UtilityDB::ensureTable($db, 'krs_api_keys', array(
 		array('ID',          KPDO::TYPE_INTEGER,  null,  KPDO::PRIMARY_KEY|KPDO::NOT_NULL|KPDO::AUTO_INCREMENT),
 		array('USER_ID',     KPDO::TYPE_INTEGER,  null,  KPDO::NOT_NULL),

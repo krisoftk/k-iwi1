@@ -10,7 +10,7 @@ if ($logged) {
 	echo $text_not_logged;
 }
 
-// i titoli passano dai menu.php dei moduli, come nel menu.tpl base
+// titles go through the modules' menu.php files, as in the base menu.tpl
 function create_menu($menu, $labels, $level = false) {
 	$html_menu = '';
 	

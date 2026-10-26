@@ -1,7 +1,7 @@
 <?php
-	// Installer del modulo, generato dal generatore di K-iwi. Le voci di menu
-	// di ogni tabella generata stanno in installation/menu_<tabella>.php:
-	// cosi' un modulo con piu' tabelle ha un solo installer.
+	// Module installer, made by the K-iwi generator. The menu items of each
+	// generated table are in installation/menu_<table>.php: this way a module
+	// with several tables has a single installer.
 	class {Module}Install extends Install {
 		
 		public function install() {

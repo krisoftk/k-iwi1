@@ -1,16 +1,16 @@
 <?php
-// Numero di caratteri di una stringa UTF-8: si contano i byte che non
-// sono di continuazione (10xxxxxx). Stesso risultato del vecchio
-// strlen(utf8_decode()), deprecato da PHP 8.2, senza richiedere mbstring.
+// Number of characters of a UTF-8 string: counts the bytes that aren't
+// continuation bytes (10xxxxxx). Same result as the old
+// strlen(utf8_decode()), deprecated since PHP 8.2, without needing mbstring.
 function utf8_strlen($string) {
 	$string = (string) $string;
 
 	return strlen($string) - preg_match_all('/[\x80-\xBF]/', $string);
 }
 
-// Converte in UTF-8 una stringa ISO-8859-1 (es. nomi di file creati su
-// Windows); se e' gia' UTF-8 valido la lascia com'e', invece di codificarla
-// due volte come faceva utf8_encode() (deprecato da PHP 8.2).
+// Converts an ISO-8859-1 string to UTF-8 (e.g. names of files created on
+// Windows); if it's already valid UTF-8 it leaves it as it is, instead of
+// encoding it twice like utf8_encode() did (deprecated since PHP 8.2).
 function utf8_from_latin1($string) {
 	$string = (string) $string;
 

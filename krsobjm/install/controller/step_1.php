@@ -56,7 +56,7 @@ class ControllerInstallStep1 extends Controller {
 			}
 		}
 		
-		//echo "Inizio dati tabella krs_databases<br>";
+		//echo "Start of krs_databases table data<br>";
 		$driver = $this->config->get('database.driver');
 		$host = $this->config->get('database.host');
 		$port = $this->config->get('database.port');
@@ -72,9 +72,9 @@ class ControllerInstallStep1 extends Controller {
 		$stmt = $this->db->prepare("INSERT INTO t:krs_databases (TYPE, NAME, IP, PORT, USERNAME, PASSWORD, MODULE_ID) VALUES ('" . $driver . "', '" . $database . "', '" . $host . "', '" . $port . "', '" . $username . "', '" . $password . "', '" . $modulo_id . "')");
 		$stmt->bindTable("krs_databases", "krs_databases");
 		$stmt->execute();
-		//echo "Fine dati tabella krs_databases<br>";
+		//echo "End of krs_databases table data<br>";
 		
-		//echo "Inizio dati tabella krs_tables<br>";
+		//echo "Start of krs_tables table data<br>";
 		$stmt = $this->db->prepare("INSERT INTO t:krs_tables (NAME, DATABASE_ID, MODULE_ID) VALUES
 			('krs_users_modules_map', 1, 1),
 			('krs_usergroups_modules_map', 1, 1),
@@ -99,9 +99,9 @@ class ControllerInstallStep1 extends Controller {
 		");
 		$stmt->bindTable("krs_tables", "krs_tables");
 		$stmt->execute();
-		//echo "Fine dati tabella krs_tables<br>";
+		//echo "End of krs_tables table data<br>";
 		
-		//echo "Inizio dati tabella krs_types<br>";
+		//echo "Start of krs_types table data<br>";
 		$stmt = $this->db->prepare("INSERT INTO t:krs_types (NAME, PARAM) VALUES
 			('" . KPDO::TYPE_INTEGER . "', null),
 			('" . KPDO::TYPE_VARCHAR . "', '255'),
@@ -112,9 +112,9 @@ class ControllerInstallStep1 extends Controller {
 		");
 		$stmt->bindTable("krs_types", "krs_types");
 		$stmt->execute();
-		//echo "Fine dati tabella krs_types<br>";
+		//echo "End of krs_types table data<br>";
 		
-		//echo "Inizio dati tabella krs_fields<br>";
+		//echo "Start of krs_fields table data<br>";
 		$stmt = $this->db->prepare("INSERT INTO t:krs_fields (NAME, ATTRIBUTE, TYPE_ID, TABLE_ID) VALUES
 			('MODULE_ID', '" . (KPDO::PRIMARY_KEY|KPDO::NOT_NULL) . "', 1, 1),
 			('USER_ID', '" . (KPDO::PRIMARY_KEY|KPDO::NOT_NULL) . "', 1, 1),
@@ -216,7 +216,7 @@ class ControllerInstallStep1 extends Controller {
 		");
 		$stmt->bindTable("krs_fields", "krs_fields");
 		$stmt->execute();
-		//echo "Fine dati tabella krs_fields<br>";
+		//echo "End of krs_fields table data<br>";
 		
 		$stmt_tables = $this->db->prepare('SELECT t.ID AS "TABLE_ID", t.NAME AS "TABLE", db.TYPE AS "DRIVER", db.NAME AS "DB", db.IP, db.PORT, db.USERNAME, db.PASSWORD FROM t:krs_tables as t, t:krs_databases as db WHERE t.DATABASE_ID = db.id');
 		$stmt_tables->bindTable("krs_tables", "krs_tables");
@@ -235,7 +235,7 @@ class ControllerInstallStep1 extends Controller {
 				$fields_of_table[] = array($field['FIELD'], array($field['TYPE'], $field['PARAM']), $field['ATTRIBUTE']);
 			}
 			$this->db->createTable($table['TABLE'], $fields_of_table);
-			//echo "Tabella " . $table['TABLE'] . " creata<br>";
+			//echo "Table " . $table['TABLE'] . " created<br>";
 		}
 		
 		// start create user admin
@@ -310,7 +310,7 @@ class ControllerInstallStep1 extends Controller {
 		$stmt->bindTable("krs_tables", "krs_tables");
 		$stmt->execute();
 		
-		/**** SCRITTURA DEI FILE DI CONFIGURAZIONE ****/
+		/**** WRITING OF THE CONFIGURATION FILES ****/
 		/* ADMIN */
 		$output  = '<?php' . "\n";
 		$output .= '// HTTP' . "\n";

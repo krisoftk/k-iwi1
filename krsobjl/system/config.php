@@ -1,8 +1,8 @@
 <?php
 /**
- * Contenitore per i parametri letti dai file .ini sotto DIR_CONFIG. Le
- * chiavi restano quelle "puntate" gia' usate nei file ini esistenti
- * (es. "database.host", "setting.language").
+ * Container for the parameters read from the .ini files under DIR_CONFIG.
+ * The keys stay the "dotted" ones already used in the existing ini files
+ * (e.g. "database.host", "setting.language").
  */
 class Config {
 	private $items = array();

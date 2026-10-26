@@ -79,11 +79,11 @@ class ModelStandardMenu extends Model {
 		}
 	}
 	
-	// Programma "diretto" (PATTERN vuoto o 'direct') a cui corrisponde una
-	// route richiesta con pattern=direct: si ricostruisce il percorso di ogni
-	// programma diretto esattamente come fa il menu e lo si confronta, su
-	// file reali, con quello richiesto. Serve a krsobjp/index.php per
-	// controllare il permesso sul programma prima di includerlo.
+	// "Direct" program (empty PATTERN or 'direct') matching a route requested
+	// with pattern=direct: the path of every direct program is rebuilt exactly
+	// as the menu does and compared, on real files, with the requested one.
+	// krsobjp/index.php uses it to check the permission on the program before
+	// including it.
 	public function find_direct_prog($route) {
 		$target = realpath(DIR_MODULE . $route);
 
@@ -106,13 +106,13 @@ class ModelStandardMenu extends Model {
 		return false;
 	}
 
-	// Programmi MVC registrati a cui corrisponde una route: confronta il
-	// controller e il metodo che la route risolve davvero con quelli dei
-	// programmi (percorso del modulo + PROG, come nel menu), cosi' varianti
-	// come "clienti//clienti" non sfuggono. Prima i programmi con lo stesso
-	// metodo (es. clienti/clienti/insert), altrimenti quello sull'index dello
-	// stesso controller (clienti/clienti copre update, delete, ...).
-	// Nessun risultato = route non registrata come programma.
+	// Registered MVC programs matching a route: compares the controller and
+	// method the route really resolves to with those of the programs (module
+	// path + PROG, as in the menu), so variants like "customers//customers"
+	// don't slip through. First the programs with the same method (e.g.
+	// customers/customers/insert), otherwise the one on the index of the same
+	// controller (customers/customers covers update, delete, ...).
+	// No result = route not registered as a program.
 	public function find_route_progs($route) {
 		if (!($db = UtilityDB::getDBfromTable("krs_progs"))) {
 			return array();
@@ -156,10 +156,10 @@ class ModelStandardMenu extends Model {
 		return $exact ? $exact : $controller;
 	}
 
-	// Un modulo con un installer (installation/install.php) e' raggiungibile
-	// solo se e' installato: disinstallarlo toglie programmi e permessi ma
-	// lascia i file, che altrimenti resterebbero aperti a ogni utente loggato.
-	// Le aree del framework (standard, common, error, ...) non hanno installer.
+	// A module with an installer (installation/install.php) is reachable only
+	// if it's installed: uninstalling it removes programs and permissions but
+	// leaves the files, which would otherwise stay open to every logged-in user.
+	// The framework areas (standard, common, error, ...) have no installer.
 	public function is_route_module_available($route) {
 		$segments = array_values(array_filter(explode('/', str_replace('..', '', (string) $route)), function ($segment) {
 			return $segment !== '' && $segment !== '.';

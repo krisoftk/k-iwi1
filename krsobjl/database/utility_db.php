@@ -95,10 +95,10 @@ class UtilityDB
 		}
 	}
 	
-	// Crea una tabella del framework se manca, registrandola in krs_tables e
-	// krs_fields come fa l'installer: serve alle installazioni fatte prima
-	// che la tabella esistesse. $fields: array(NOME, tipo KPDO, parametro del
-	// tipo o null, attributi KPDO). Restituisce true se l'ha creata.
+	// Creates a framework table if it's missing, registering it in krs_tables
+	// and krs_fields like the installer does: needed by installations made
+	// before the table existed. $fields: array(NAME, KPDO type, type parameter
+	// or null, KPDO attributes). Returns true if it created the table.
 	static function ensureTable($db, $name, $fields) {
 		$stmt = $db->prepare("SELECT ID FROM t:krs_tables WHERE NAME = :name");
 		$stmt->bindTable("krs_tables", "krs_tables");
@@ -123,7 +123,7 @@ class UtilityDB
 
 			$type = UtilityDB::findType($db, $type_name, $type_param);
 
-			// nessun attributo = 0 (i bind di KPDO non accettano null)
+			// no attributes = 0 (KPDO binds don't accept null)
 			$attribute = (int) $attribute;
 
 			$stmt = $db->prepare("INSERT INTO t:krs_fields (NAME, ATTRIBUTE, TYPE_ID, TABLE_ID) VALUES (:name, :attribute, :type_id, :table_id)");

@@ -61,9 +61,9 @@ class ModelAdminUserUser extends Model {
 			$stmt->bindParam('id', $userId, KPDO::TYPE_VARCHAR);
 			$stmt->execute();
 
-			// La password si aggiorna solo se il campo e' stato valorizzato nel
-			// form: altrimenti si lascerebbe SALT/PASSWORD con l'hash di una
-			// stringa vuota a ogni modifica utente.
+			// The password is updated only if the field was filled in the
+			// form: otherwise SALT/PASSWORD would be left with the hash of an
+			// empty string at every user change.
 			if (!empty($data['password'])) {
 				$hash = $this->hashPassword($data['password']);
 
@@ -124,9 +124,9 @@ class ModelAdminUserUser extends Model {
 	public function deleteUser($userId) {
 		$db = UtilityDB::getDBfromTable('krs_users');
 
-		// Ripulisce anche le mappature, altrimenti restano righe orfane che
-		// fanno risultare l'utente cancellato ancora "assegnato" a un gruppo
-		// (es. bloccano la cancellazione del gruppo in ModelAdminUserGroup::
+		// Also cleans up the mappings, otherwise orphan rows stay behind and make
+		// the deleted user still look "assigned" to a group (e.g. they block
+		// the deletion of the group in ModelAdminUserGroup::
 		// getTotalUsersByGroupId()).
 		$stmt = $db->prepare('DELETE FROM t:user_usergroup_map WHERE USER_ID = :user_id');
 		$stmt->bindTable('user_usergroup_map', 'krs_user_usergroup_map');
@@ -169,8 +169,8 @@ class ModelAdminUserUser extends Model {
 
 		$sql = 'SELECT * FROM t:users';
 
-		// testo cercato sempre come parametro: prima finiva nella query cosi'
-		// com'era (e senza virgolette, quindi la query non funzionava nemmeno)
+		// search text always as a parameter: it used to go into the query as it
+		// was (and without quotes, so the query didn't even work)
 		if (!empty($data['filter_autocomplete'])) {
 			$sql .= " WHERE (FIRSTNAME LIKE :needle OR LASTNAME LIKE :needle OR USERNAME LIKE :needle)";
 		}
@@ -229,8 +229,8 @@ class ModelAdminUserUser extends Model {
 		$stmt->bindParam('id', $userId, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
 
-		// Ogni utente ha al piu' un modulo associato (una sola riga viene
-		// scritta da saveUserModule), quindi una singola riga e' corretta qui.
+		// Each user has at most one associated module (saveUserModule writes a
+		// single row), so a single row is correct here.
 		return $stmt->fetch();
 	}
 }

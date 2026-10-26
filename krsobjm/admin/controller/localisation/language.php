@@ -16,7 +16,7 @@ class ControllerAdminLocalisationLanguage extends Controller {
 		if ($this->isPost() && $this->validateForm()) {
 			$languageId = $this->model_admin_localisation_language->addLanguage($this->formData());
 
-			// dopo la creazione si resta nel form, dove si caricano i testi
+			// after creating it we stay in the form, where the texts are uploaded
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$this->redirect($this->link('admin/localisation/language/update', '&language_id=' . (int) $languageId));
@@ -91,10 +91,10 @@ class ControllerAdminLocalisationLanguage extends Controller {
 		$this->redirect($back);
 	}
 
-	// true se il pacchetto e' stato caricato, altrimenti il messaggio d'errore
+	// true if the pack was uploaded, otherwise the error message
 	private function importPack($language) {
-		// Request passa anche $_FILES da htmlspecialchars: numeri come stringhe
-		// e percorso del file temporaneo da decodificare
+		// Request passes $_FILES through htmlspecialchars too: numbers as strings
+		// and a temporary file path to decode
 		$files = $this->request->files;
 
 		if (!$this->isPost() || !isset($files['pack']['error']) || (int) $files['pack']['error'] === UPLOAD_ERR_NO_FILE) {
@@ -161,7 +161,7 @@ class ControllerAdminLocalisationLanguage extends Controller {
 		return $this->model_admin_localisation_language->getLanguage($this->request->get['language_id']);
 	}
 
-	// la lingua di config.ini: non si disattiva e non si cancella
+	// the language of config.ini: it can't be disabled or deleted
 	private function defaultCode() {
 		$languages = array();
 
@@ -210,7 +210,7 @@ class ControllerAdminLocalisationLanguage extends Controller {
 		$defaultCode = $this->defaultCode();
 		$languages = $this->model_admin_localisation_language->getLanguages();
 
-		// completezza: file di testo presenti rispetto alla lingua di default
+		// completeness: text files present compared with the default language
 		$defaultFiles = 0;
 
 		foreach ($languages as $language) {
@@ -313,7 +313,7 @@ class ControllerAdminLocalisationLanguage extends Controller {
 			}
 		}
 
-		// la cartella resta quella della creazione, anche se il POST dice altro
+		// the folder stays the one set at creation, even if the POST says otherwise
 		if ($language) {
 			$this->data['directory'] = $language['DIRECTORY'];
 		}
@@ -362,7 +362,7 @@ class ControllerAdminLocalisationLanguage extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		// es. it_IT, en_GB, pt_BR, de: e' anche il valore di setting.language
+		// e.g. it_IT, en_GB, pt_BR, de: it's also the value of setting.language
 		if (!preg_match('/^[a-z]{2,3}(_[A-Z]{2})?$/', $data['code'])) {
 			$this->error['code'] = $this->language->get('error_code');
 		} else {
@@ -377,7 +377,7 @@ class ControllerAdminLocalisationLanguage extends Controller {
 			$this->error['locale'] = $this->language->get('error_locale');
 		}
 
-		// la cartella diventa un percorso su disco: solo minuscole, cifre e _
+		// the folder becomes a path on disk: only lowercase letters, digits and _
 		if (!$language) {
 			if (!preg_match('/^[a-z0-9_]{2,32}$/', $data['directory'])) {
 				$this->error['directory'] = $this->language->get('error_directory');
@@ -386,8 +386,8 @@ class ControllerAdminLocalisationLanguage extends Controller {
 			}
 		}
 
-		// la lingua di config.ini resta attiva e con lo stesso codice, altrimenti
-		// setting.language non la troverebbe piu' e il default cambierebbe da solo
+		// the language of config.ini stays enabled and with the same code, otherwise
+		// setting.language wouldn't find it anymore and the default would change by itself
 		if ($language && $language['CODE'] === $this->defaultCode()) {
 			if ($data['status'] !== '1') {
 				$this->error['status'] = $this->language->get('error_default_status');

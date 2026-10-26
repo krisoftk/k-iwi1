@@ -2,11 +2,10 @@
 class ControllerCommonScheduler extends Controller { 
 	private $error = array();
 	
-	// Chiamato dal cron con l'API key di un utente di sistema:
-	//   https://host/krsobjp/index.php?route=common/scheduler&api_key=<chiave>
-	// La stessa chiave viene passata ai job, che sono route normali e quindi
-	// passano dal controllo di login del bootstrap pubblico come qualunque
-	// altra richiesta.
+	// Called by cron with the API key of a system user:
+	//   https://host/krsobjp/index.php?route=common/scheduler&api_key=<key>
+	// The same key is passed to the jobs, which are normal routes and so go
+	// through the login check of the public bootstrap like any other request.
 	public function index() {		
 		if (!$this->user->isApiAuthenticated()) {
 			http_response_code(401);
@@ -18,14 +17,14 @@ class ControllerCommonScheduler extends Controller {
 		$this->check_scheduler();
 	}
 	
-	// Lancia la richiesta al job e non aspetta la risposta (fire-and-forget),
-	// cosi' lo scheduler passa subito al job successivo. Usa un socket PHP
-	// puro invece di un binario esterno (curl/wget) per funzionare in modo
-	// identico su Windows e Linux senza dipendenze di sistema.
-	// La chiave viaggia nell'header X-API-KEY, non nell'URL, per non finire
-	// nei log di accesso del web server; con setting.use_ssl attivo la
-	// chiamata e' in https e il certificato viene verificato, a meno di
-	// setting.scheduler_ssl_verify = "0" (certificati self-signed).
+	// Sends the request to the job and doesn't wait for the response
+	// (fire-and-forget), so the scheduler moves straight to the next job. It
+	// uses a plain PHP socket instead of an external binary (curl/wget) to
+	// work the same way on Windows and Linux without system dependencies.
+	// The key travels in the X-API-KEY header, not in the URL, so it doesn't
+	// end up in the web server's access logs; with setting.use_ssl on, the
+	// call is over https and the certificate is verified, unless
+	// setting.scheduler_ssl_verify = "0" (self-signed certificates).
 	private function execInBackground($route) {
 		$base = $this->config->get('setting.use_ssl') ? HTTPS_PUBLIC : HTTP_PUBLIC;
 		$parts = parse_url($base . 'index.php?route=' . $route);
@@ -42,8 +41,8 @@ class ControllerCommonScheduler extends Controller {
 		$verify = !$this->config->has('setting.scheduler_ssl_verify') || $this->config->get('setting.scheduler_ssl_verify') != '0';
 		$context = stream_context_create(array('ssl' => array('verify_peer' => $verify, 'verify_peer_name' => $verify, 'peer_name' => $parts['host'])));
 
-		// con ssl:// il motivo di un fallimento (es. certificato rifiutato)
-		// arriva come warning e non in $errstr: lo si cattura qui
+		// with ssl:// the reason of a failure (e.g. a rejected certificate)
+		// arrives as a warning and not in $errstr: it's caught here
 		$reason = '';
 
 		set_error_handler(function ($errno, $message) use (&$reason) {
@@ -64,11 +63,11 @@ class ControllerCommonScheduler extends Controller {
 
 		fwrite($socket, "GET {$path} HTTP/1.1\r\nHost: {$parts['host']}\r\nX-API-KEY: " . $this->user->getApiKey() . "\r\nConnection: Close\r\n\r\n");
 
-		// Prima di chiudere si aspetta il primo byte di risposta (al massimo
-		// un secondo): in TLS, chiudendo subito con dati del server non ancora
-		// letti, la connessione viene resettata e il web server scarta la
-		// richiesta prima di eseguirla. Un job che dura di piu' continua
-		// comunque dopo la chiusura.
+		// Before closing, wait for the first byte of the response (one second
+		// at most): with TLS, closing right away with server data not yet
+		// read resets the connection and the web server drops the request
+		// before running it. A job that takes longer carries on after the
+		// close anyway.
 		stream_set_timeout($socket, 1);
 		fread($socket, 1);
 		fclose($socket);
@@ -79,9 +78,9 @@ class ControllerCommonScheduler extends Controller {
 	private function check_scheduler() {
 		$jobs=$this->model_common_scheduler->get_jobs();
 		foreach ($jobs as $job) {		
-			// LAST_RUN solo se il job e' partito davvero: altrimenti un job
-			// non avviato (server irraggiungibile, certificato rifiutato)
-			// verrebbe segnato come eseguito e salterebbe l'intera giornata
+			// LAST_RUN only if the job really started: otherwise a job that
+			// didn't start (server unreachable, certificate rejected) would be
+			// marked as run and would skip the whole day
 			if ($this->model_common_scheduler->check_job($job) && $this->execInBackground($job["CONTROLLER"])) {
 				$this->model_common_scheduler->set_job_last_run_date($job["ID"]);
 			}

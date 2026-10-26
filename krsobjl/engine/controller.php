@@ -1,9 +1,9 @@
 <?php
 /**
- * Base per i controller: oltre a esporre i servizi del registry, fornisce
- * i tre strumenti che ogni controller usa per comporre una risposta:
- * forward() (route interna), redirect() (HTTP) e render() (assembla i
- * controller "figli" dichiarati in $children dentro il template).
+ * Base for controllers: besides exposing the registry's services, it
+ * provides the three tools every controller uses to build a response:
+ * forward() (internal route), redirect() (HTTP) and render() (puts the
+ * "child" controllers declared in $children into the template).
  */
 abstract class Controller {
 	protected $registry;

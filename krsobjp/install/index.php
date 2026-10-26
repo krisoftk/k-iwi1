@@ -11,10 +11,10 @@
  */
 
 
-// Gia' installato? L'installer parte con una semplice GET e non chiede
-// conferme: su un'installazione esistente inserirebbe di nuovo i dati base e
-// riscriverebbe i globals.php. Lo stesso criterio di krsobjp/index.php: e'
-// installato quando globals.php definisce DIR_PUBLIC.
+// Already installed? The installer starts with a simple GET and asks for no
+// confirmation: on an existing installation it would insert the base data
+// again and rewrite the globals.php files. Same criterion as
+// krsobjp/index.php: it's installed when globals.php defines DIR_PUBLIC.
 $installed_globals = dirname(__DIR__) . '/globals.php';
 
 if (is_file($installed_globals) && strpos(file_get_contents($installed_globals), "define('DIR_PUBLIC'") !== false) {
@@ -28,9 +28,9 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // HTTP
-// URL della cartella pubblica (krsobjp), che e' la DocumentRoot consigliata:
-// "/install/index.php" -> "/", ma funziona anche se l'installazione e'
-// raggiungibile come "/qualcosa/krsobjp/install/index.php".
+// URL of the public folder (krsobjp), which is the recommended DocumentRoot:
+// "/install/index.php" -> "/", but it also works if the installation is
+// reachable as "/something/krsobjp/install/index.php".
 define('PUBLIC_PATH', rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['PHP_SELF']))), '/') . '/');
 define('HTTP_SERVER', 'http://' . $_SERVER['HTTP_HOST'] . PUBLIC_PATH);
 define('HTTPS_SERVER', 'https://' . $_SERVER['HTTP_HOST'] . PUBLIC_PATH);

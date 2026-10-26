@@ -72,7 +72,7 @@ class ControllerAdminExtensionModule extends Controller {
 	private function runInstaller($action) {
 		$extension = isset($this->request->get['extension']) ? $this->request->get['extension'] : '';
 
-		// il nome finisce in un require: solo un nome di modulo, niente percorsi
+		// the name ends up in a require: only a module name, no paths
 		if (!preg_match('/^[A-Za-z0-9_]+$/', $extension) || !is_file(DIR_MODULE . $extension . '/installation/install.php')) {
 			$this->redirect($this->url->link('admin/extension/module', 'token=' . $this->session->data['token'], 'SSL'));
 		}

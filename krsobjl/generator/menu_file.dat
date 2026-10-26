@@ -1,6 +1,6 @@
 <?php
-// Voci di menu della tabella {table}, raccolte da installation/install.php.
-// Formato: titolo voce, titolo programma, programma, voce padre, pattern.
+// Menu items of the table {table}, collected by installation/install.php.
+// Format: item title, program title, program, parent item, pattern.
 return array(
 	array('{Table}', '{Table}', '{table}', '0', 'mvc'),{insert.item}
 );

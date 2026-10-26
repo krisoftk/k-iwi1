@@ -5,13 +5,13 @@ class KDownload implements iDownload {
 	const STREAM = 'application/octet-stream';
 	
 	public function download($file, $mime_type = null) {
-		// verifico che il file esista
+		// check that the file exists
 		if (!file_exists($file)) {
-			// se non esiste chiudo e stampo un errore
+			// if it doesn't exist, stop and print an error
 			die("Il file non esiste!");
 		} else {
-			// Se il file esiste...
-			// Imposto gli header della pagina per forzare il download del file
+			// If the file exists...
+			// Set the page headers to force the download of the file
 			header("Cache-Control: public");
 			header("Content-Description: File Transfer");
 			header("Content-Disposition: attachment; filename=" . $this->clean(basename($file)));
@@ -21,7 +21,7 @@ class KDownload implements iDownload {
 				header('Content-Type: ' . $mime_type);
 			}
 			
-			// Leggo il contenuto del file
+			// Read the content of the file
 			readfile($file);
 		}
 	}

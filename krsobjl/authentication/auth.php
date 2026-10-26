@@ -12,16 +12,16 @@ class Auth {
 		$this->config = $registry->get('config');
 	}
 	
-	// Hash delle password con password_hash() (oggi bcrypt, domani quello che
-	// PHP sceglie come default): lento da forzare e col sale dentro l'hash,
-	// quindi la colonna SALT resta vuota. Unico punto in cui si calcola.
+	// Password hashing with password_hash() (bcrypt today, whatever PHP picks
+	// as its default tomorrow): slow to brute-force and with the salt inside
+	// the hash, so the SALT column stays empty. The only place hashes are made.
 	public static function hash_password($password) {
 		return password_hash($password, PASSWORD_DEFAULT);
 	}
 
-	// Accetta sia gli hash password_hash() sia quelli delle installazioni
-	// precedenti, sha1(SALT . sha1(SALT . sha1(password))), che vengono
-	// convertiti al primo login riuscito (vedi auth_check_user_login).
+	// Accepts both password_hash() hashes and those of earlier installations,
+	// sha1(SALT . sha1(SALT . sha1(password))), which are converted at the
+	// first successful login (see auth_check_user_login).
 	private function verify_password($db_user, $password) {
 		if (password_get_info($db_user['PASSWORD'])['algo']) {
 			return password_verify($password, $db_user['PASSWORD']);
@@ -39,8 +39,8 @@ class Auth {
 
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 
-		// Troppi errori recenti per questo username da questo IP: la
-		// password non viene nemmeno controllata finche' la finestra non passa
+		// Too many recent failures for this username from this IP: the
+		// password isn't even checked until the window has passed
 		if ($this->count_failed_logins($username, $ip) >= $this->login_max_attempts()) {
 			$this->loginBlocked = true;
 
@@ -55,9 +55,9 @@ class Auth {
 		$db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC);
 
 		if (!$db_user) {
-			// Utente inesistente: si calcola comunque un hash, cosi' la
-			// risposta impiega lo stesso tempo e non rivela quali username
-			// esistono (bcrypt rende la differenza ben misurabile).
+			// Unknown user: a hash is computed anyway, so the response takes
+			// the same time and doesn't reveal which usernames exist (bcrypt
+			// makes the difference easy to measure).
 			password_verify($password, '$2y$12$' . str_repeat('a', 53));
 
 			$this->record_failed_login($username, $ip);
@@ -73,8 +73,8 @@ class Auth {
 
 		$this->clear_failed_logins($username, $ip);
 
-		// utente disabilitato da admin (ACTIVATION) -> credenziali
-		// corrette ma login comunque rifiutato
+		// user disabled by an admin (ACTIVATION) -> right credentials
+		// but the login is refused anyway
 		if (empty($db_user['ACTIVATION'])) {
 			return false;
 		}
@@ -94,18 +94,18 @@ class Auth {
 		return $this->auth_get_details($db_user['ID']);
 	}
 
-	// true se l'ultimo auth_check_user_login e' stato rifiutato per i troppi
-	// tentativi falliti (i controller mostrano un messaggio diverso)
+	// true if the last auth_check_user_login was refused because of too many
+	// failed attempts (the controllers show a different message)
 	public function auth_login_blocked() {
 		return $this->loginBlocked;
 	}
 
-	// Limite ai tentativi di login (brute force): dopo login_max_attempts
-	// errori in login_lockout_minutes per la stessa coppia username + IP, i
-	// login di quella coppia vengono rifiutati fino alla fine della finestra.
-	// La coppia, e non il solo IP, perche' dietro un proxy tutti gli utenti
-	// arrivano dallo stesso indirizzo; e non il solo username, perche'
-	// chiunque potrebbe bloccare l'account di un altro.
+	// Login attempt limit (brute force): after login_max_attempts failures
+	// within login_lockout_minutes for the same username + IP pair, logins of
+	// that pair are refused until the end of the window. The pair, and not the
+	// IP alone, because behind a proxy every user comes from the same address;
+	// and not the username alone, because anyone could lock someone else's
+	// account.
 	private function login_max_attempts() {
 		$value = $this->config ? (int) $this->config->get('setting.login_max_attempts') : 0;
 
@@ -118,8 +118,8 @@ class Auth {
 		return $value > 0 ? $value : 15;
 	}
 
-	// Tabella dei tentativi, creata al primo uso sulle installazioni fatte
-	// prima che esistesse (su quelle nuove la crea l'installer).
+	// Table of the attempts, created on first use on installations made before
+	// it existed (on new ones the installer creates it).
 	private function login_attempts_db() {
 		global $db;
 
@@ -158,7 +158,7 @@ class Auth {
 		$now = time();
 		$expired = $now - $this->login_lockout_minutes() * 60;
 
-		// pulizia: i tentativi fuori dalla finestra non servono piu'
+		// cleanup: attempts outside the window are no longer needed
 		$stmt = $db->prepare("DELETE FROM t:krs_login_attempts WHERE TIME <= :expired");
 		$stmt->bindTable("krs_login_attempts", "krs_login_attempts");
 		$stmt->bindParam(":expired", $expired, KPDO::TYPE_INTEGER);
@@ -196,8 +196,8 @@ class Auth {
 			if (($db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC))) {
 				$details = $this->auth_get_details($db_user['USER_ID']);
 
-				// stesso controllo di auth_check_user_login: un utente
-				// disabilitato non entra nemmeno da PIN
+				// same check as auth_check_user_login: a disabled user
+				// can't get in with a PIN either
 				if (empty($details['ACTIVATION'])) {
 					return false;
 				}
@@ -223,8 +223,8 @@ class Auth {
 			if (($db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC))) {
 				$details = $this->auth_get_details($db_user['USER_ID']);
 
-				// stesso controllo di auth_check_user_login: un utente
-				// disabilitato non entra nemmeno da RFID
+				// same check as auth_check_user_login: a disabled user
+				// can't get in with an RFID tag either
 				if (empty($details['ACTIVATION'])) {
 					return false;
 				}
@@ -236,10 +236,10 @@ class Auth {
 		}
 	}
 
-	// Chiamate machine-to-machine (API, cron dello scheduler): la chiave non
-	// e' salvata in chiaro ma come hash SHA-256 in krs_api_keys. La ricerca
-	// per hash di una chiave casuale a 256 bit non espone nulla sui tempi di
-	// risposta, quindi non serve un confronto a tempo costante.
+	// Machine-to-machine calls (APIs, the scheduler's cron): the key isn't
+	// stored in clear but as a SHA-256 hash in krs_api_keys. Looking up the
+	// hash of a random 256-bit key leaks nothing through response times, so
+	// no constant-time comparison is needed.
 	public function auth_check_api_key($key) {
 		if (!is_string($key) || strlen($key) < 32) {
 			return false;
@@ -257,8 +257,8 @@ class Auth {
 			if (($db_key = $stmt_key->fetch(KPDO::FETCH_ASSOC))) {
 				$details = $this->auth_get_details($db_key['USER_ID']);
 
-				// stesso controllo di auth_check_user_login: la chiave di un
-				// utente disabilitato non vale piu'
+				// same check as auth_check_user_login: the key of a disabled
+				// user is no longer valid
 				if (empty($details['ACTIVATION'])) {
 					return false;
 				}
@@ -338,10 +338,10 @@ class Auth {
 		}
 	}
 	
-	// Un utente puo' usare un modulo se almeno uno dei suoi gruppi appartiene
-	// a quel modulo (krs_usergroups_modules_map, campo "Modulo" del gruppo).
-	// E' cosi' che si distinguono gli amministratori: i gruppi del modulo
-	// "admin", come il gruppo Administrator creato dall'installer.
+	// A user can use a module if at least one of their groups belongs to that
+	// module (krs_usergroups_modules_map, the "Module" field of the group).
+	// This is how administrators are told apart: the groups of the "admin"
+	// module, like the Administrator group created by the installer.
 	public function auth_check_module_access($user, $module_name) {
 		if (empty($user['GROUPS'])) {
 			return false;

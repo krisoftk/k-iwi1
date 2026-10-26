@@ -78,17 +78,17 @@ class ModelAdminToolGenerator extends Model {
 		}
 	}
 	
-	// Un solo installation/install.php per modulo (quello che cerca la pagina
-	// Moduli dell'admin) e un installation/menu_<tabella>.php per ogni tabella
-	// generata, che install.php raccoglie: generare una seconda tabella nello
-	// stesso modulo aggiunge le sue voci invece di creare un altro installer.
+	// A single installation/install.php per module (the one the admin's Modules
+	// page looks for) and an installation/menu_<table>.php for each generated
+	// table, which install.php collects: generating a second table in the same
+	// module adds its items instead of creating another installer.
 	private function createInstall($module, $table, $data) {
 		$Table = str_replace('_', '', ucfirst(strtolower($table['NAME'])));
 
 		$insert_item = '';
 
 		if (!empty($data['insert_check'])) {
-			// titolo nella lingua predefinita: e' anche la chiave dei menu.php di createLanguage()
+			// title in the default language: it's also the key of createLanguage()'s menu.php files
 			$title = addcslashes($this->textAdd($this->defaultLanguage()) . ' ' . $Table, "\\'");
 
 			$insert_item = "\r\n\tarray('" . $title . "', '" . $title . "', '" . strtolower($table['NAME']) . "/insert', '0', 'mvc'),";
@@ -126,7 +126,7 @@ class ModelAdminToolGenerator extends Model {
 			foreach ($data['fields'] as $field) {
 				if (isset($field['field_search_check'])) {
 					
-					// filtro "inizia per" con parametro legato, non concatenato
+					// "starts with" filter with a bound parameter, not concatenated
 					$filters_query .= 'if (!empty($data[\'filter_' . $field['field'] . '\'])) {
 						$implode[] = "' . $field['field'] . ' LIKE :filter_' . $field['field'] . '";
 						$params[\'filter_' . $field['field'] . '\'] = $data[\'filter_' . $field['field'] . '\'] . \'%\';
@@ -661,8 +661,8 @@ class ModelAdminToolGenerator extends Model {
 		$pagination_controller = '';
 		$url_pagination_filters = '';
 		if (isset($data['pagination_check'])) {
-			// page arriva dall'URL e finisce nel LIMIT e nel JavaScript della
-			// paginazione: sempre un intero >= 1
+			// page comes from the URL and ends up in the LIMIT and in the
+			// pagination JavaScript: always an integer >= 1
 			$page_query = 'if (isset($this->request->get[\'page\'])) {
 				$page = max(1, (int) $this->request->get[\'page\']);
 			} else {
@@ -673,7 +673,7 @@ class ModelAdminToolGenerator extends Model {
 				$url .= \'&page=\' . max(1, (int) $this->request->get[\'page\']);
 			}';
 				
-			// scritto cosi' com'e' nel sorgente generato: solo un numero
+			// written as it is into the generated source: only a number
 			$limit = '$limit = ' . max(1, (int) $data['pagination_limit']) . ';';
 				
 			$filters_data_page = '\'start\' => ($page - 1) * $limit,
@@ -975,10 +975,10 @@ class ModelAdminToolGenerator extends Model {
 		fclose($controller);
 	}
 	
-	// Testi del modulo, un file per ogni lingua attiva: etichette (titolo,
-	// lista, campi: uguali in tutte le lingue finche' non si traducono da
-	// Admin > Lingue) e voci di menu. I messaggi comuni (inserito,
-	// aggiornato, cancellato) stanno nel file principale del lato pubblico.
+	// Texts of the module, one file per active language: labels (title,
+	// list, fields: the same in every language until they are translated
+	// from Admin > Languages) and menu items. The common messages (added,
+	// updated, deleted) are in the user side's main language file.
 	private function createLanguage($module, $table, $data) {
 		$name = strtolower($table['NAME']);
 		$Table = str_replace('_', '', ucfirst($name));
@@ -1007,9 +1007,9 @@ class ModelAdminToolGenerator extends Model {
 
 			$this->writeStrings($dir . $name . '.php', $strings);
 
-			// il menu traduce i titoli salvati nel DB (vedi createInstall),
-			// quindi la chiave e' il titolo nella lingua predefinita; il file
-			// e' unico per modulo e raccoglie le voci di tutte le tabelle
+			// the menu translates the titles stored in the DB (see createInstall),
+			// so the key is the title in the default language; there's one file
+			// per module, collecting the items of all its tables
 			$menu = $this->readStrings($dir . 'menu.php');
 			$menu[$Table] = $Table;
 
@@ -1045,8 +1045,8 @@ class ModelAdminToolGenerator extends Model {
 		return Language::choose($this->languages(), array($this->config->get('setting.language')));
 	}
 
-	// "Nuovo" nella lingua data (text_add del lato pubblico), per la voce di
-	// menu dell'inserimento; se la lingua non lo ha, quello della predefinita
+	// "New" in the given language (text_add of the user side), for the menu
+	// item of the insert form; if the language lacks it, the default's one
 	private function textAdd($language) {
 		foreach (array($language, $this->defaultLanguage()) as $candidate) {
 			$strings = $this->readStrings(DIR_MODULE . 'standard/language/' . $candidate['directory'] . '/' . $candidate['filename'] . '.php');
@@ -1071,8 +1071,8 @@ class ModelAdminToolGenerator extends Model {
 		return $_;
 	}
 
-	// var_export: nomi di campo e testi finiscono nel file come stringhe PHP
-	// correttamente escapate, qualunque carattere contengano
+	// var_export: field names and texts go into the file as correctly escaped
+	// PHP strings, whatever characters they contain
 	private function writeStrings($file, $strings) {
 		$php = "<?php\n";
 

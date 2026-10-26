@@ -1,11 +1,11 @@
 <?php
 /**
- * Carica le stringhe di lingua per un dato "filename" logico, prima nella
- * lingua di default (fallback) poi in quella richiesta, cosi' i file e le
- * chiavi che mancano nella traduzione corrente restano coperti dal default.
+ * Loads the language strings for a given logical "filename", first in the
+ * default language (fallback) and then in the requested one, so the files
+ * and keys missing from the current translation stay covered by the default.
  *
- * Le lingue sono le righe di krs_languages come le restituisce
- * ModelCommonLanguage::getLanguages() (chiavi code, directory, filename...).
+ * Languages are the rows of krs_languages as returned by
+ * ModelCommonLanguage::getLanguages() (keys code, directory, filename...).
  */
 class Language {
 	private $language;
@@ -17,11 +17,11 @@ class Language {
 		$this->default = $default ? $default : $language;
 	}
 
-	// Sceglie la lingua dell'interfaccia: la prima attiva tra i codici dati,
-	// in ordine (es. lingua dell'utente, poi setting.language). Se nessuno e'
-	// valido, ad esempio config.ini punta a una lingua cancellata o
-	// disattivata, ripiega sulla prima lingua attiva invece di rompere la
-	// pagina. Il browser (Accept-Language) non conta mai.
+	// Picks the interface language: the first active one among the given
+	// codes, in order (e.g. the user's language, then setting.language). If
+	// none is valid, for example config.ini points to a deleted or disabled
+	// language, it falls back to the first active language instead of
+	// breaking the page. The browser (Accept-Language) never counts.
 	public static function choose($languages, $codes) {
 		foreach ($codes as $code) {
 			if ($code && isset($languages[$code]) && $languages[$code]['status']) {
@@ -56,9 +56,9 @@ class Language {
 		return $this->strings;
 	}
 
-	// File principale di un modulo (formati di data e numeri, direzione del
-	// testo, testi comuni): si chiama come la lingua (es. admin/italian.php,
-	// standard/english.php), quindi il nome cambia tra default e lingua scelta.
+	// Main file of a module (date and number formats, text direction, common
+	// texts): it's named after the language (e.g. admin/italian.php,
+	// standard/english.php), so the name differs between default and chosen language.
 	public function loadMain($module) {
 		$this->loadFile($module . '/' . $this->default['filename'], $this->default['directory']);
 

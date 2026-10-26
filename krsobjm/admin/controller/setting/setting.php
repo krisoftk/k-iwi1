@@ -4,9 +4,9 @@ class ControllerAdminSettingSetting extends Controller {
 
 	private $error = array();
 
-	// Chiavi conosciute di config.ini: tipo di campo, facoltativa (se vuota la
-	// riga si toglie e vale il default del codice), limiti. Le chiavi del
-	// file che non sono qui compaiono come campi di testo.
+	// Known keys of config.ini: field type, optional (if empty the line is
+	// removed and the code's default applies), limits. The keys of the file
+	// that aren't here show up as text fields.
 	private $schema = array(
 		'database.driver'               => array('type' => 'select'),
 		'database.host'                 => array('type' => 'text', 'required' => true),
@@ -45,7 +45,7 @@ class ControllerAdminSettingSetting extends Controller {
 		$this->getForm();
 	}
 
-	// salvataggio dal form a campi
+	// save from the form with fields
 	public function save() {
 		$this->prepare();
 
@@ -67,7 +67,7 @@ class ControllerAdminSettingSetting extends Controller {
 		$this->getForm();
 	}
 
-	// salvataggio dall'editor di testo
+	// save from the text editor
 	public function editor() {
 		$this->prepare();
 
@@ -76,7 +76,7 @@ class ControllerAdminSettingSetting extends Controller {
 				? str_replace("\r\n", "\n", $this->decode($this->request->post['config_text']))
 				: '';
 
-			// stessi fine riga del file attuale (il browser manda sempre CRLF)
+			// same line endings as the current file (the browser always sends CRLF)
 			if (strpos($this->model_admin_setting_setting->read(), "\r\n") !== false) {
 				$text = str_replace("\n", "\r\n", $text);
 			}
@@ -112,7 +112,7 @@ class ControllerAdminSettingSetting extends Controller {
 		return $this->url->link($route, 'token=' . $this->session->data['token'] . $query, 'SSL');
 	}
 
-	// Request passa tutto da htmlspecialchars: nel file va il testo vero
+	// Request passes everything through htmlspecialchars: the file gets the real text
 	private function decode($value) {
 		return html_entity_decode((string) $value, ENT_QUOTES, 'UTF-8');
 	}
@@ -150,8 +150,8 @@ class ControllerAdminSettingSetting extends Controller {
 		return $themes;
 	}
 
-	// Valori da scrivere (chiave => testo, null = togli la riga), oppure false
-	// con gli errori in $this->error.
+	// Values to write (key => text, null = remove the line), or false with
+	// the errors in $this->error.
 	private function validateFields($text) {
 		$current = $this->model_admin_setting_setting->parse($text);
 		$posted = isset($this->request->post['config']) && is_array($this->request->post['config']) ? $this->request->post['config'] : array();
@@ -167,7 +167,7 @@ class ControllerAdminSettingSetting extends Controller {
 
 			$value = trim($this->decode($posted[$field]));
 
-			// la password non viene mai mostrata: vuota = resta quella attuale
+			// the password is never shown: empty = keep the current one
 			if ($spec['type'] === 'password' && $value === '') {
 				continue;
 			}
@@ -193,7 +193,7 @@ class ControllerAdminSettingSetting extends Controller {
 			return false;
 		}
 
-		// si scrivono solo le righe cambiate: il resto del file resta com'e'
+		// only the changed lines are written: the rest of the file stays as it is
 		foreach ($values as $key => $value) {
 			if ($value === null ? !isset($current[$key]) : (isset($current[$key]) && (string) $current[$key] === $value)) {
 				unset($values[$key]);
@@ -204,7 +204,7 @@ class ControllerAdminSettingSetting extends Controller {
 	}
 
 	private function validateValue($key, $spec, $value) {
-		// virgolette, a capo e ${...} cambierebbero il significato della riga ini
+		// quotes, line breaks and ${...} would change the meaning of the ini line
 		if (preg_match('/["\x00-\x1f\x7f]/', $value) || strpos($value, '${') !== false) {
 			return $this->language->get('error_chars');
 		}
@@ -244,9 +244,9 @@ class ControllerAdminSettingSetting extends Controller {
 		return '';
 	}
 
-	// Controlli comuni a form ed editor, poi il salvataggio. $values sono i
-	// valori voluti (solo dal form): riletti dal nuovo testo devono tornare
-	// identici, altrimenti la scrittura ini li ha alterati.
+	// Checks shared by form and editor, then the save. $values are the wanted
+	// values (from the form only): read back from the new text they must come
+	// out identical, otherwise writing the ini altered them.
 	private function checkAndSave($text, $values) {
 		$parseError = null;
 		$parsed = $this->model_admin_setting_setting->parse($text, $parseError);
@@ -279,8 +279,8 @@ class ControllerAdminSettingSetting extends Controller {
 			}
 		}
 
-		// con dati del database sbagliati il sito (admin compreso) non
-		// partirebbe piu': si prova la connessione prima di salvare
+		// with wrong database settings the site (admin included) wouldn't
+		// start anymore: the connection is tried before saving
 		$current = $this->model_admin_setting_setting->parse($this->model_admin_setting_setting->read());
 		$dbChanged = false;
 
@@ -312,7 +312,7 @@ class ControllerAdminSettingSetting extends Controller {
 		return true;
 	}
 
-	// le chiavi del form: quelle del file piu' le facoltative conosciute
+	// the form keys: those of the file plus the known optional ones
 	private function fieldKeys($text) {
 		$keys = array();
 
@@ -329,7 +329,7 @@ class ControllerAdminSettingSetting extends Controller {
 		return array_unique($keys);
 	}
 
-	// nei nomi dei campi HTML il punto diventerebbe "_" in $_POST
+	// in HTML field names the dot would become "_" in $_POST
 	private function fieldName($key) {
 		return str_replace('.', '__', $key);
 	}
@@ -368,7 +368,7 @@ class ControllerAdminSettingSetting extends Controller {
 		$this->data['action'] = $this->link('admin/setting/setting/save');
 		$this->data['action_editor'] = $this->link('admin/setting/setting/editor');
 
-		// sezioni del file, piu' quelle delle chiavi facoltative che mancano
+		// sections of the file, plus those of the missing optional keys
 		$sections = $model->sections($text);
 
 		foreach ($this->schema as $key => $spec) {
@@ -408,7 +408,7 @@ class ControllerAdminSettingSetting extends Controller {
 					$options[] = array('value' => htmlspecialchars($optionValue, ENT_QUOTES, 'UTF-8'), 'text' => htmlspecialchars($optionText, ENT_QUOTES, 'UTF-8'));
 				}
 
-				// un valore del file che non e' tra le scelte resta visibile e selezionato
+				// a value of the file that isn't among the choices stays visible and selected
 				if ($spec['type'] === 'select' && $value !== '' && !array_key_exists($value, $this->options($key))) {
 					$options[] = array('value' => htmlspecialchars($value, ENT_QUOTES, 'UTF-8'), 'text' => htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . ' (?)');
 				}
@@ -435,8 +435,8 @@ class ControllerAdminSettingSetting extends Controller {
 			);
 		}
 
-		// editor: il testo inviato se il salvataggio e' fallito, un backup
-		// scelto, oppure il file attuale
+		// editor: the submitted text if the save failed, a chosen backup,
+		// or the current file
 		$this->data['backup_loaded'] = '';
 
 		if (!isset($this->data['editor_text'])) {

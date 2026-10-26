@@ -113,10 +113,10 @@ $registry->set('request', $request);
 $response = new Response();
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 
-// Header di sicurezza, inviati subito cosi' valgono anche per i redirect
-// (che escono prima di Response::output): niente MIME sniffing, pagine non
-// incorniciabili da altri siti (clickjacking) e Referer solo verso questo
-// sito, perche' gli URL dell'admin contengono il token di sessione.
+// Security headers, sent right away so they also apply to redirects
+// (which exit before Response::output): no MIME sniffing, pages can't be
+// framed by other sites (clickjacking) and the Referer only towards this
+// site, because the admin URLs contain the session token.
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: same-origin');
@@ -142,8 +142,8 @@ $registry->set('document', new Document());
 $user = new User($registry);
 $registry->set('user', $user);
 
-// API key (chiamate machine-to-machine: API dei moduli, cron dello scheduler).
-// Autentica solo questa richiesta, senza toccare la sessione.
+// API key (machine-to-machine calls: module APIs, the scheduler's cron).
+// Authenticates this request only, without touching the session.
 if (isset($request->server['HTTP_X_API_KEY'])) {
 	$user->loginByApiKey($request->server['HTTP_X_API_KEY']);
 } elseif (isset($request->post['api_key'])) {
@@ -152,10 +152,10 @@ if (isset($request->server['HTTP_X_API_KEY'])) {
 	$user->loginByApiKey($request->get['api_key']);
 }
 
-// Language: quella scelta dall'utente (krs_users.LANGUAGE), altrimenti
-// setting.language di config.ini. La lingua di config.ini fa anche da
-// riserva per i file e le frasi che la lingua dell'utente non ha (in questo
-// modulo o in un altro). Il browser non conta: la lingua e' dell'utente.
+// Language: the one chosen by the user (krs_users.LANGUAGE), otherwise
+// setting.language from config.ini. The config.ini language is also the
+// fallback for the files and phrases the user's language lacks (in this
+// module or in another one). The browser doesn't count: the language belongs to the user.
 $loader->model('common/language');
 
 $languages = $registry->get('model_common_language')->getLanguages();
@@ -173,7 +173,7 @@ $registry->set('language', $language);
 // Front Controller
 $controller = new Front($registry);
 
-// Login obbligatorio su tutto tranne le pagine che portano al login
+// Login required everywhere except the pages leading to the login
 $controller->addPreAction(new Action('standard/home/login'));
 
 // Check session status
@@ -191,12 +191,12 @@ if (!$auth->auth_check_user_and_timeout()) {
 	// Router
 	if (isset($request->get['route'])) {
 		if (isset($request->get['pattern'])) {
-			// Programmi "diretti" del menu (krs_progs.PATTERN): file inclusi
-			// cosi' come sono. La route arriva dall'esterno, quindi si include
-			// solo un file dentro DIR_MODULE che corrisponda a un programma
-			// diretto registrato su cui l'utente ha permesso, come nel menu:
-			// senza questi controlli si potrebbe leggere qualunque file del
-			// server (es. ../config/config.ini) o eseguire programmi altrui.
+			// "Direct" programs of the menu (krs_progs.PATTERN): files included
+			// as they are. The route comes from outside, so only a file inside
+			// DIR_MODULE is included, matching a registered direct program the
+			// user has permission on, as in the menu: without these checks
+			// anyone could read any file of the server (e.g.
+			// ../config/config.ini) or run other people's programs.
 			$direct = realpath(DIR_MODULE . $request->get['route']);
 
 			if ($user->isLogged() && $direct && strpos($direct, realpath(DIR_MODULE) . DIRECTORY_SEPARATOR) === 0) {
@@ -210,8 +210,8 @@ if (!$auth->auth_check_user_and_timeout()) {
 				}
 			}
 
-			// altrimenti segue il percorso normale: il pre-action manda al
-			// login chi non e' autenticato, il resto finisce in not_found
+			// otherwise the normal path follows: the pre-action sends to the
+			// login whoever isn't authenticated, the rest ends in not_found
 			$action = new Action($request->get['route']);
 		} else {
 			// Action

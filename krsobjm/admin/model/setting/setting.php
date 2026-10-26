@@ -1,11 +1,11 @@
 <?php
 /**
- * Lettura e scrittura di config/config.ini per Admin > Impostazioni.
+ * Reads and writes config/config.ini for Admin > Settings.
  *
- * Il file si modifica riga per riga (commenti, ordine e sezioni restano
- * dove sono) e ogni salvataggio passa da tre controlli: il testo deve
- * essere un ini valido, i valori riletti devono essere quelli voluti, e
- * prima di sovrascrivere si tiene una copia in config/backup/.
+ * The file is edited line by line (comments, order and sections stay where
+ * they are) and every save goes through three checks: the text must be
+ * valid ini, the values read back must be the wanted ones, and a copy is
+ * kept in config/backup/ before overwriting.
  */
 class ModelAdminSettingSetting extends Model {
 	const MAX_BACKUPS = 10;
@@ -18,15 +18,15 @@ class ModelAdminSettingSetting extends Model {
 		return (string) file_get_contents($this->path());
 	}
 
-	// serve scrivere il file e la cartella dei backup (o crearla)
+	// needs to write the file and the backup folder (or create it)
 	public function isWritable() {
 		$backup = DIR_CONFIG . 'backup';
 
 		return is_writable($this->path()) && (is_dir($backup) ? is_writable($backup) : is_writable(DIR_CONFIG));
 	}
 
-	// Valori del testo ini come li legge Config (chiavi "sezione.nome"),
-	// oppure false con il motivo in $error.
+	// Values of the ini text as Config reads them ("section.name" keys),
+	// or false with the reason in $error.
 	public function parse($text, &$error = null) {
 		$error = null;
 
@@ -47,7 +47,7 @@ class ModelAdminSettingSetting extends Model {
 		return $values;
 	}
 
-	// sezioni e chiavi nell'ordine del file: array('database' => array('database.host', ...))
+	// sections and keys in file order: array('database' => array('database.host', ...))
 	public function sections($text) {
 		$sections = array();
 		$current = '';
@@ -64,9 +64,9 @@ class ModelAdminSettingSetting extends Model {
 		return $sections;
 	}
 
-	// Sostituisce i valori delle chiavi date lasciando intatto il resto del
-	// file. null toglie la riga (per le chiavi facoltative lasciate vuote);
-	// una chiave nuova va in fondo alla sua sezione ("setting.x" -> [setting]).
+	// Replaces the values of the given keys, leaving the rest of the file
+	// untouched. null removes the line (for optional keys left empty); a new
+	// key goes at the end of its section ("setting.x" -> [setting]).
 	public function applyValues($text, $values) {
 		$eol = (strpos($text, "\r\n") !== false) ? "\r\n" : "\n";
 		$lines = $this->lines($text);
@@ -137,9 +137,9 @@ class ModelAdminSettingSetting extends Model {
 		return rtrim(implode($eol, $out)) . $eol;
 	}
 
-	// Prova la connessione con i dati dati; '' se riesce, altrimenti il motivo.
-	// Gli avvisi di mysqli per una prova fallita non finiscono nel log: il
-	// motivo arriva comunque nel messaggio.
+	// Tries the connection with the given settings; '' if it works, otherwise
+	// the reason. The mysqli warnings of a failed attempt don't go to the
+	// log: the reason ends up in the message anyway.
 	public function testDatabase($driver, $host, $port, $user, $password, $name) {
 		set_error_handler(function () {
 			return true;
@@ -159,10 +159,10 @@ class ModelAdminSettingSetting extends Model {
 		return $error;
 	}
 
-	// Copia di sicurezza del file attuale, poi scrittura sul file stesso: un
-	// file temporaneo rinominato sarebbe atomico ma cambierebbe proprietario,
-	// permessi e ACL di config.ini (diventerebbe del web server). Senza la
-	// copia di sicurezza non si scrive.
+	// Safety copy of the current file, then a write on the file itself: a
+	// renamed temporary file would be atomic but would change the owner,
+	// permissions and ACL of config.ini (it would become the web server's).
+	// Without the safety copy nothing is written.
 	public function save($text) {
 		$dir = DIR_CONFIG . 'backup/';
 
@@ -183,7 +183,7 @@ class ModelAdminSettingSetting extends Model {
 		return file_put_contents($this->path(), $text, LOCK_EX) === strlen($text);
 	}
 
-	// dal piu' recente
+	// most recent first
 	public function backups() {
 		$backups = array();
 

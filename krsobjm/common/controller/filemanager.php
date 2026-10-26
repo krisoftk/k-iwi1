@@ -51,9 +51,9 @@ class ControllerCommonFileManager extends Controller {
 
 		$this->data['no_image'] = $this->model_common_image->resize('no_image.jpg', 100, 100);
 
-		// field e CKEditorFuncNum finiscono dentro il JavaScript della pagina:
-		// si accettano solo un id HTML e un numero, altrimenti un link
-		// preparato ad arte eseguirebbe codice con la sessione di chi lo apre
+		// field and CKEditorFuncNum end up inside the page's JavaScript:
+		// only an HTML id and a number are accepted, otherwise a crafted
+		// link would run code with the session of whoever opens it
 		if (isset($this->request->get['field']) && preg_match('/^[A-Za-z0-9_-]+$/', $this->request->get['field'])) {
 			$this->data['field'] = $this->request->get['field'];
 		} else {
@@ -332,8 +332,8 @@ class ControllerCommonFileManager extends Controller {
 			} elseif (!$name) {
 				$json['error'] = $this->language->get('error_filename');
 			} else {
-				// un file mantiene la sua estensione: il nome scelto non puo'
-				// trasformare un'immagine in qualcos'altro (es. .php)
+				// a file keeps its extension: the chosen name can't turn
+				// an image into something else (e.g. .php)
 				$ext = is_file($old_name) ? strrchr($old_name, '.') : '';
 
 				$new_name = dirname($old_name) . '/' . $name . $ext;
@@ -424,8 +424,8 @@ class ControllerCommonFileManager extends Controller {
 			} elseif (!$name) {
 				$json['error'] = $this->language->get('error_filename');
 			} else {
-				// un file mantiene la sua estensione: il nome scelto non puo'
-				// trasformare un'immagine in qualcos'altro (es. .php)
+				// a file keeps its extension: the chosen name can't turn
+				// an image into something else (e.g. .php)
 				$ext = is_file($old_name) ? strrchr($old_name, '.') : '';
 
 				$new_name = dirname($old_name) . '/' . $name . $ext;
@@ -473,9 +473,9 @@ class ControllerCommonFileManager extends Controller {
 					$json['error'] = $this->language->get('error_file_size');
 				}
 
-				// Il tipo dichiarato dal browser ($_FILES['type']) lo decide chi
-				// invia, quindi non conta: valgono l'estensione finale del nome
-				// e il contenuto vero del file, che deve essere un'immagine.
+				// The type declared by the browser ($_FILES['type']) is decided by
+				// the sender, so it doesn't count: what counts is the final
+				// extension of the name and the real content of the file, which must be an image.
 				$allowed = array(
 					'.jpg'  => IMAGETYPE_JPEG,
 					'.jpeg' => IMAGETYPE_JPEG,
@@ -521,11 +521,11 @@ class ControllerCommonFileManager extends Controller {
 		return realpath(DIR_IMAGE . 'data');
 	}
 
-	// Ogni percorso ricevuto dal client e' relativo a image/data/ e viene
-	// accettato solo se, risolto con realpath (quindi anche seguendo ".." e
-	// link simbolici), resta li' dentro. Il vecchio str_replace('../', '')
-	// si aggirava con "....//", che dopo la sostituzione torna "../".
-	// Restituisce il percorso assoluto, o false se non esiste o esce.
+	// Every path received from the client is relative to image/data/ and is
+	// accepted only if, resolved with realpath (so also following ".." and
+	// symbolic links), it stays inside it. The old str_replace('../', '')
+	// was bypassed with "....//", which becomes "../" after the replacement.
+	// Returns the absolute path, or false if it doesn't exist or gets out.
 	private function resolvePath($relative) {
 		$root = $this->rootPath();
 
@@ -535,7 +535,7 @@ class ControllerCommonFileManager extends Controller {
 
 		$relative = html_entity_decode($relative, ENT_QUOTES, 'UTF-8');
 
-		// realpath() con un byte nullo lancia un ValueError (errore 500)
+		// realpath() with a null byte throws a ValueError (error 500)
 		if (strpos($relative, "\0") !== false) {
 			return false;
 		}
@@ -553,8 +553,8 @@ class ControllerCommonFileManager extends Controller {
 		return ltrim(substr($path, strlen($this->rootPath())), '/');
 	}
 
-	// Nome di un file o cartella da creare: un solo elemento, senza
-	// separatori, senza ".." e senza file nascosti (es. .htaccess).
+	// Name of a file or folder to create: a single element, without
+	// separators, without ".." and without hidden files (e.g. .htaccess).
 	private function validName($name) {
 		$name = trim(html_entity_decode((string) $name, ENT_QUOTES, 'UTF-8'));
 
@@ -565,10 +565,10 @@ class ControllerCommonFileManager extends Controller {
 		return $name;
 	}
 
-	// Difesa in profondita': il pre-action di krsobjp/index.php blocca gia'
-	// gli anonimi, ma queste operazioni toccano il filesystem (upload,
-	// cancellazione, sovrascrittura) e non devono dipendere da un solo
-	// controllo. Risposta JSON come gli altri errori di questo file.
+	// Defence in depth: the pre-action of krsobjp/index.php already blocks
+	// anonymous users, but these operations touch the filesystem (upload,
+	// deletion, overwriting) and mustn't depend on a single check. JSON
+	// response like the other errors of this file.
 	private function denyAnonymous() {
 		if ($this->user->isLogged()) {
 			return false;

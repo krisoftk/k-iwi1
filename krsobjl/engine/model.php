@@ -1,8 +1,8 @@
 <?php
 /**
- * Base per i model: espone i servizi del registry come proprieta' magiche
- * (es. $this->db) cosi' i model non devono ricevere/passare ogni dipendenza
- * a mano.
+ * Base for models: exposes the registry's services as magic properties
+ * (e.g. $this->db), so models don't have to receive/pass every dependency
+ * by hand.
  */
 abstract class Model {
 	protected $registry;

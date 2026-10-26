@@ -3,106 +3,106 @@
 interface iDriverDB {
 	
 	/**
-	* Costruttore della classe per l'accesso al database
-	* 
+	* Constructor of the database access class
+	*
 	* @param string $server
 	* @param string $username
 	* @param string $password
-	* 
+	*
 	*/
 	public function __construct($driver, $host, $port, $username, $password, $database = NULL);
 	
 	/**
-	* Disconnette dal database rilasciando la connessione
-	* 
+	* Disconnects from the database, releasing the connection
+	*
 	* @return boolean
 	*/
 	public function disconnect();
 	
 	/**
- 	* Avvia una transazione
- 	* 
+ 	* Starts a transaction
+ 	*
  	* @return boolean
  	*
  	*/	
 	public function beginTransaction();
 	
 	/**
- 	* Esegue il commit
- 	* 
+ 	* Commits the transaction
+ 	*
  	* @return boolean
  	*
  	*/	
 	public function commit();
 	
 	/**
- 	* Restituisce il codice errore
- 	* 
+ 	* Returns the error code
+ 	*
  	* @return mixed
  	*
  	*/	
 	public function errorCode();
 	
 	/**
- 	* Restiusce un array contenente le informazioni sull'errore relativi 
- 	* all'ultima operazione effettuata sul database.
- 	* L'array contiene i seguenti valori:
+ 	* Returns an array with the information about the error of the last
+ 	* operation performed on the database.
+ 	* The array contains these values:
  	* 0 SQLSTATE error code.
  	* 1	Driver-specific error code.
  	* 2 Driver-specific error message.
- 	* 
+ 	*
  	* @return array
  	*
  	*/	
 	public function errorInfo();
 	
-	/** 
- 	* Esegue un SQL statement con una singola chiamata, ritornando il numero di righe coinvolte nell'operazione.
- 	* 
+	/**
+ 	* Executes an SQL statement in a single call, returning the number of rows affected by the operation.
+ 	*
  	* @return int
  	*
  	*/	
 	public function exec($statement);
 	
-	/**  
- 	* Controlla se si è all'interno di una transazione
- 	* 
+	/**
+ 	* Checks whether a transaction is in progress
+ 	*
  	* @param string statement
  	* @return boolean
  	*
  	*/	
 	public function inTransaction();
 	
-	/**   
- 	* Restituisce l'ID dell'ultima riga inserita
- 	* 
+	/**
+ 	* Returns the ID of the last inserted row
+ 	*
  	* @return String
  	*
  	*/	
 	public function lastInsertId($name = NULL);
 	
-	/**   
- 	* Restituisce lo statement con la query da prepare
- 	* 
+	/**
+ 	* Returns the statement with the query to prepare
+ 	*
  	* @return iStatement
  	*
  	*/
 	public function prepare($statement, $driver_options = array());
 	
-	/**    
- 	* Esegue un SQL statement in una singola operazione, ritornado il risultato (se c'è) attraverso un statement KStatement 
- 	* 
+	/**
+ 	* Executes an SQL statement in a single operation, returning the result (if any) through a KStatement statement
+ 	*
  	* @param string statement
  	* @param array driver_option [optional]
- 	* 
+ 	*
  	* @return iStatement
  	*
  	*/
 	public function query($statement);
 	
-	/**    
- 	* Effettua il rollback 
- 	* 
+	/**
+ 	* Rolls back the transaction
+ 	*
  	* @return boolean
  	*
  	*/

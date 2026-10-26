@@ -1,7 +1,7 @@
 <?php
 /**
- * Raccoglie i metadati e gli asset (css/js/link) che i controller "figli"
- * (header, ecc.) aggiungono via via, per poi renderizzarli nel layout.
+ * Collects the metadata and the assets (css/js/link) that the "child"
+ * controllers (header, etc.) add along the way, to render them in the layout.
  */
 class Document {
 	private $title;

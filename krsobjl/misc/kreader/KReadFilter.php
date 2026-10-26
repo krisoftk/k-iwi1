@@ -12,7 +12,7 @@ class KReadFilter implements PHPExcel_Reader_IReadFilter
 	}
 
 	public function readCell($column, $row, $worksheetName = '') {
-		//  Legge le righe nell'intervallo inizio e fine e non presenti nell'array delle righe da saltare
+		//  Reads the rows between start and end that aren't in the array of rows to skip
 		if ($row >= $this->_startRow && $row <= $this->_endRow) {
 			return true;
 		}

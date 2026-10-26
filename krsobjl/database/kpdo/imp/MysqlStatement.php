@@ -233,9 +233,9 @@ class MysqlStatement implements iStatement {
 	}
 	
 	function rowCount() {
-		// Per le query SELECT $this->result e' un mysqli_result (num_rows);
-		// per INSERT/UPDATE/DELETE mysqli::query() ritorna invece true, e il
-		// conteggio va preso dalla connessione (affected_rows).
+		// For SELECT queries $this->result is a mysqli_result (num_rows);
+		// for INSERT/UPDATE/DELETE mysqli::query() returns true instead, and the
+		// count has to come from the connection (affected_rows).
 		if ($this->result instanceof mysqli_result) {
 			return $this->result->num_rows;
 		}
@@ -243,18 +243,18 @@ class MysqlStatement implements iStatement {
 		return $this->link->affected_rows;
 	}
 	
-	// finiscono nel testo della query: sempre interi
+	// they end up in the query text: always integers
 	function limit($n, $m) {
 		$this->limit = true;
 		$this->n = max(0, (int) $n);
 		$this->m = max(0, (int) $m);
 	}
 
-	// Sostituisce tutti i parametri in un solo passaggio sulla query
-	// originale. Sostituendoli uno alla volta, un valore che conteneva il
-	// nome di un altro parametro (es. il testo ":id") veniva a sua volta
-	// sostituito, rompendo le virgolette. L'alternanza e' ordinata dal nome
-	// piu' lungo, cosi' ":id_user" non viene preso per ":id".
+	// Replaces all the parameters in a single pass over the original query.
+	// Replacing them one at a time, a value containing the name of another
+	// parameter (e.g. the text ":id") was replaced in turn, breaking the
+	// quotes. The alternation is sorted by the longest name, so ":id_user"
+	// isn't taken for ":id".
 	private function replaceParams($query, $values) {
 		if (!$values) {
 			return $query;
@@ -287,11 +287,10 @@ class MysqlStatement implements iStatement {
 		return $query;
 	}
 
-	// Valore per un parametro di tipo numerico (o comunque non testuale):
-	// finisce nella query senza virgolette, quindi deve essere davvero un
-	// numero. null o stringa vuota diventano NULL (prima producevano una
-	// query non valida); qualunque altra cosa e' rifiutata invece di essere
-	// inserita grezza nella query (SQL injection).
+	// Value for a numeric (or anyway non-text) parameter: it goes into the
+	// query without quotes, so it must really be a number. null or an empty
+	// string become NULL (they used to produce an invalid query); anything
+	// else is rejected instead of being put raw into the query (SQL injection).
 	private function numericLiteral($param, $value) {
 		if (is_bool($value)) {
 			return $value ? '1' : '0';

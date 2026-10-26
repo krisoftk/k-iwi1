@@ -27,7 +27,7 @@
 			<h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
 		</div>
 		<div class="panel-body">
-			<?php if (isset($button_filter)) { /* solo se il modulo e' stato generato con la ricerca */ ?>
+			<?php if (isset($button_filter)) { /* only if the module was generated with the search */ ?>
 			<div class="well" id="form-search">
 				{form_search}
 				<div class="row">

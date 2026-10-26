@@ -1,7 +1,7 @@
 <?php
 /**
- * Costruisce gli URL applicativi (INDEX + ?route=...&args) scegliendo la
- * base http o https a seconda del terzo parametro di link().
+ * Builds the application URLs (INDEX + ?route=...&args), choosing the http
+ * or https base depending on the third parameter of link().
  */
 class Url {
 	private $base;

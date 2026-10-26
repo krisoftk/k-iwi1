@@ -57,10 +57,10 @@ class ControllerAdminCommonHome extends Controller {
 			'admin/common/login',
 		);
 
-		// La sessione e' la stessa del lato pubblico: essere loggati non basta,
-		// l'utente deve appartenere a un gruppo del modulo admin. Il controllo
-		// vale a ogni richiesta, quindi chi viene tolto dal gruppo perde
-		// subito l'accesso; il token va via per non rimbalzare tra login e home.
+		// The session is the same as the public side's: being logged in isn't
+		// enough, the user must belong to a group of the admin module. The check
+		// runs on every request, so whoever is removed from the group loses access
+		// right away; the token goes away so it doesn't bounce between login and home.
 		if (!$this->user->canAccessModule('admin') && !in_array($route, $publicRoutes)) {
 			unset($this->session->data['token']);
 

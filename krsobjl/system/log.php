@@ -1,6 +1,6 @@
 <?php
 /**
- * Logger su file: ogni riga scritta viene prefissata con data e ora.
+ * File logger: every line written is prefixed with date and time.
  */
 class Log {
 	private $filename;

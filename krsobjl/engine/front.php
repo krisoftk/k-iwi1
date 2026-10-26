@@ -1,9 +1,9 @@
 <?php
 /**
- * Front controller: esegue prima le pre-action registrate (es. il guard di
- * login), e se nessuna di esse produce un'azione alternativa, esegue
- * l'azione richiesta incatenando eventuali forward() restituiti dai
- * controller, fino a un'azione finale di "not found" in caso di errore.
+ * Front controller: first runs the registered pre-actions (e.g. the login
+ * guard), and if none of them produces an alternative action, runs the
+ * requested action, following any forward() returned by the controllers,
+ * down to a final "not found" action in case of error.
  */
 final class Front {
 	private $registry;

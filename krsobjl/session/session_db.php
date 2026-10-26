@@ -80,26 +80,51 @@ class SessionDB implements SessionHandlerInterface, SessionUpdateTimestampHandle
 		}
 	}
 
+	// Update first, insert only for a new session. Requests of the same
+	// session can save at the same time (the AJAX calls of a page): with
+	// DELETE + INSERT the second INSERT hit the row the first one had just
+	// put back and the session data was lost. If another request inserts
+	// the row between our UPDATE and INSERT, our INSERT fails and the
+	// UPDATE is simply repeated.
 	public function write(string $id, string $data): bool {
 		try {
-			$time = time();
+			if ($this->updateSession($id, $data)) {
+				return true;
+			}
 
-			$stmt = $this->_sess_db->prepare('DELETE FROM t:krs_session WHERE SESSION_ID = :id');
-			$stmt->bindTable('krs_session', 'krs_session');
-			$stmt->bindParam('id', $id, KPDO::TYPE_VARCHAR);
-			$stmt->execute();
+			try {
+				$time = time();
 
-			$stmt = $this->_sess_db->prepare('INSERT INTO t:krs_session (SESSION_ID, TIME, DATA) VALUES (:id, :time, :data)');
-			$stmt->bindTable('krs_session', 'krs_session');
-			$stmt->bindParam('id', $id, KPDO::TYPE_VARCHAR);
-			$stmt->bindParam('time', $time, KPDO::TYPE_VARCHAR);
-			$stmt->bindParam('data', $data, KPDO::TYPE_VARCHAR);
-			$stmt->execute();
+				$stmt = $this->_sess_db->prepare('INSERT INTO t:krs_session (SESSION_ID, TIME, DATA) VALUES (:id, :time, :data)');
+				$stmt->bindTable('krs_session', 'krs_session');
+				$stmt->bindParam('id', $id, KPDO::TYPE_VARCHAR);
+				$stmt->bindParam('time', $time, KPDO::TYPE_VARCHAR);
+				$stmt->bindParam('data', $data, KPDO::TYPE_VARCHAR);
+				$stmt->execute();
+			} catch (KPDOException $e) {
+				$this->updateSession($id, $data);
+			}
 
 			return true;
 		} catch (KPDOException $e) {
 			return false;
 		}
+	}
+
+	// true if the row exists and was updated (MySQL counts only rows that
+	// actually change: same data in the same second gives 0, and the INSERT
+	// that follows then fails and falls back to this update again)
+	private function updateSession($id, $data) {
+		$time = time();
+
+		$stmt = $this->_sess_db->prepare('UPDATE t:krs_session SET TIME = :time, DATA = :data WHERE SESSION_ID = :id');
+		$stmt->bindTable('krs_session', 'krs_session');
+		$stmt->bindParam('id', $id, KPDO::TYPE_VARCHAR);
+		$stmt->bindParam('time', $time, KPDO::TYPE_VARCHAR);
+		$stmt->bindParam('data', $data, KPDO::TYPE_VARCHAR);
+		$stmt->execute();
+
+		return $stmt->rowCount() > 0;
 	}
 
 	// With session.use_strict_mode PHP asks the handler whether the ID exists:

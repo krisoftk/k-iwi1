@@ -15,20 +15,12 @@
 		<a href="<?php action('mail')?>"><img src="<?php echo makePath('img/mail.png')?>" width="20" height="20" alt="<?php echo $text_mail_alt; ?>" title="<?php echo $text_mail; ?>" /></a>
 	</div>
 	
-	<div class="info" id="information">		
+	<div class="info" id="info">		
 	</div>
 	
-	<div class="menu" id="menudinamico">
-		<script type="text/javascript">
-			actionKAJAX("<?php echo $menu; ?>", "menu=standard", "menudinamico");
-		</script>
-	</div>
+	<div class="menu" id="menudinamico"></div>
 	
-	<div class="corpo" id="corposito">
-		<script type="text/javascript">
-			actionKAJAX("<?php echo $login; ?>");
-		</script>
-	</div>
+	<div class="corpo" id="content"></div>
 	
 	<div class="foot" id="sitefoot">
 		<?php echo $footer; ?>

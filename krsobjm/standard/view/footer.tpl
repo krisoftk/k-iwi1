@@ -1,5 +1,14 @@
-<?php echo $copyright; ?> 
-<a
-	href="http://validator.w3.org/check?uri=referer">
-	<img src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Strict" height="31" width="88">
-</a>
+<?php echo $copyright; ?>
+
+<?php echo $kajax; ?>
+
+<script type="text/javascript"><!--
+	$(document).ready(function() {
+		actionKAJAX("<?php echo $menu; ?>", "menu=standard", "#menudinamico", 'post', {'block':false});
+
+		actionKAJAX("<?php echo $login; ?>", "", null, null, {'block':false});
+	});
+--></script>
+
+<!-- GUI CONTROL -->
+<script type="text/javascript" src="js/gui/gui_control.js"></script>

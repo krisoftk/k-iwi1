@@ -10,7 +10,7 @@
 	   			<td><?php echo $entry_password; ?></td><td><input type="password" name="password" value="<?php echo $password ?>"></td>
 			</tr>
 		</table>
-		<input id="login" type="button" value="<?php echo $button_login; ?>" onClick="javascript:actionKAJAX(flogin.action, flogin, null, flogin.method)">
+		<input id="login" type="button" value="<?php echo $button_login; ?>" onClick="javascript:actionKAJAX(flogin.action, $(flogin).serialize(), null, flogin.method)">
 	</form>
 	<?php 
 		if(isset($error)) {
@@ -20,6 +20,6 @@
 <?php } else { ?>
 	<?php echo $user['FIRSTNAME'] . ' ' . $user['LASTNAME']; ?>
 	<form name="flogin" method="post" action="<?php echo $logout ?>">
-		<input id="login" type="BUTTON" value="<?php echo $button_logout; ?>" onClick="javascript:actionKAJAX(flogin.action, flogin, null, flogin.method)">
+		<input id="login" type="BUTTON" value="<?php echo $button_logout; ?>" onClick="javascript:actionKAJAX(flogin.action, $(flogin).serialize(), null, flogin.method)">
 	</form>
 <?php } ?>

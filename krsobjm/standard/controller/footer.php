@@ -11,6 +11,7 @@ class ControllerStandardFooter extends Controller {
 		$this->data['kajax'] = initializeKAJAX($id_body, $id_info, $loader);
 		$this->data['menu'] = $this->url->link('standard/menu', '', 'SSL');
 		$this->data['login'] = $this->url->link('standard/login', '', 'SSL');
+		$this->data['copyright'] = $this->config->get('framework.copyright');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('framework.theme') . '/footer.tpl')) {
 			$this->template = 'standard/view/themes/' . $this->config->get('framework.theme') . '/footer.tpl';

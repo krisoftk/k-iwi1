@@ -46,10 +46,6 @@
 <!-- JS DEPRECATED -->
 <script type="text/javascript" src="js/deprecated/function.js"></script>
 
-<?php if ($kajax) {
-	echo $kajax;
-} ?>
-
 <?php if ($extras) {
 	echo $extras;
 } ?>

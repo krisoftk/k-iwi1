@@ -21,7 +21,7 @@
 						
 						<?php foreach ($pages as $page) { ?>
 							<?php if ($page['current']) { ?>
-								<li class="paginate_button active" tabindex="0"><span><?php echo $page['number']; ?><span class="sr-only">(current)</span></span></a></li>
+								<li class="paginate_button active" tabindex="0"><span><?php echo $page['number']; ?><span class="sr-only">(current)</span></span></li>
 							<?php } else { ?>
 								<li class="paginate_button" tabindex="0"><a href="<?php echo $page['url']; ?>"><?php echo $page['number']; ?></a></li>
 							<?php } ?>	

@@ -30,7 +30,7 @@
 <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
 <!-- SB Admin CSS - Include with every page -->
-<link href="themes/dashboard/css/sb-admin.css" rel="stylesheet">
+<link href="<?php echo makePath('css/sb-admin.css'); ?>" rel="stylesheet">
 
 <?php if ($extras) {
 	echo $extras;

@@ -6,7 +6,9 @@ class ControllerAdminCommonHome extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
-		$this->data['error_install'] = is_dir(DIR_PUBLIC . 'install') ? $this->language->get('error_install') : '';
+		// the installer locks itself once K-iwi is installed (see krsobjp/install/index.php):
+		// leaving it is a note for production servers, not an error
+		$this->data['text_install'] = is_dir(DIR_PUBLIC . 'install') ? $this->language->get('text_install') : '';
 		$this->data['error_logs']    = $this->checkLogsWritable() ? '' : sprintf($this->language->get('error_logs'), DIR_LOGS);
 
 		$this->data['breadcrumbs'] = array(

@@ -5,11 +5,12 @@
 		<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php endforeach; ?>
 	</div>
-	<?php foreach (array($error_install, $error_logs) as $warning): ?>
-	<?php if ($warning): ?>
-	<div class="warning"><?php echo $warning; ?></div>
+	<?php if ($error_logs): ?>
+	<div class="warning"><?php echo $error_logs; ?></div>
 	<?php endif; ?>
-	<?php endforeach; ?>
+	<?php if ($text_install): ?>
+	<div class="attention"><?php echo $text_install; ?></div>
+	<?php endif; ?>
 	<div class="box">
 		<div class="heading">
 			<h1><?php echo $heading_title; ?></h1>

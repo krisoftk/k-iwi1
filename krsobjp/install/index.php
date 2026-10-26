@@ -20,7 +20,7 @@ $installed_globals = dirname(__DIR__) . '/globals.php';
 if (is_file($installed_globals) && strpos(file_get_contents($installed_globals), "define('DIR_PUBLIC'") !== false) {
 	http_response_code(403);
 	header('Content-Type: text/plain; charset=utf-8');
-	echo "K-iwi risulta gia' installato.\n\nPer reinstallare da zero cancella krsobjp/globals.php e krsobjp/admin/globals.php e svuota il database.";
+	echo "K-iwi is already installed.\n\nTo reinstall from scratch, delete krsobjp/globals.php and krsobjp/admin/globals.php and empty the database.";
 	exit;
 }
 

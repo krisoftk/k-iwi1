@@ -326,7 +326,7 @@ input, select, textarea, button { font-family: var(--font-body); font-size: 13.5
 
 /* ---------- Alerts ---------- */
 
-.warning, .success, .error-box {
+.warning, .success, .attention, .error-box {
 	padding: 11px 16px;
 	border-radius: var(--radius-input);
 	font-size: 13px;
@@ -335,6 +335,7 @@ input, select, textarea, button { font-family: var(--font-body); font-size: 13.5
 
 .warning { background: var(--danger-bg); color: var(--danger-ink); }
 .success { background: var(--success-bg); color: var(--success-ink); }
+.attention { background: var(--warning-bg); color: var(--warning-ink); }
 
 /* ---------- Card ---------- */
 

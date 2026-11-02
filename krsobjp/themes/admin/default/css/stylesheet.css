@@ -691,6 +691,27 @@ h2.theme-area small { font-family: var(--font-mono); font-size: 11px; font-weigh
 
 .theme-body form { margin-top: auto; padding-top: 6px; }
 
+/* ---------- Backup / Restore ---------- */
+
+h2.backup-section {
+	font-family: var(--font-display);
+	font-size: 16px;
+	margin: 24px 0 10px;
+}
+
+.backup-actions form { display: inline; }
+
+.link-button {
+	background: none;
+	border: 0;
+	padding: 0;
+	font: inherit;
+	color: var(--accent);
+	cursor: pointer;
+}
+
+.link-button:hover { text-decoration: underline; }
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 860px) {

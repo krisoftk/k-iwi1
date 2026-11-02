@@ -3,7 +3,7 @@
 $_['heading_title']                    = 'Amministrazione';
 
 // Text
-$_['text_backup']                      = 'Backup / Ripristina';
+$_['text_backup']                      = 'Backup / Ripristino';
 $_['text_confirm']			           = 'Questa operazione non può essere annullata. Confermi?';
 $_['text_dashboard']                   = 'Pannello strumenti';
 $_['text_design']                      = 'Design';

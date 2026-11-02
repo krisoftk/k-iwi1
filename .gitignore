@@ -6,6 +6,12 @@ sessions/*
 !sessions/.gitkeep
 !sessions/.htaccess
 
+# Database backups made by Admin > Tools > Backup / Restore (they contain the
+# whole database: users, password hashes and any personal data)
+backup/*
+!backup/.gitkeep
+!backup/.htaccess
+
 # Written by the installer (krsobjm/install/controller/step_1.php) with the
 # real path of each installation: they mustn't be versioned with a fixed
 # value. See the matching *.example files for the format.

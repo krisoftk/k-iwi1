@@ -229,6 +229,28 @@ write access to those folders. As with the generator, on a production server
 you can keep them read-only and deploy the language files with the rest of
 the code.
 
+## Backup / Restore
+
+**Admin > Tools > Backup / Restore** saves the tables of the framework
+database (the `[database]` section of `config/config.ini`, MySQL/MariaDB only)
+to a `.sql` file written in PHP, so it works on hosting that can't run
+`mysqldump`. Every statement is on its own line and the last line holds the
+SHA-256 of the whole file. Sessions (`krs_session`) are left out unless you
+tick them.
+
+A backup made here, or uploaded after being downloaded, can be restored from
+a confirmation page that lists the tables it replaces and those it leaves
+alone. The file must pass the SHA-256 check and contain only the statements
+this page writes, for the tables named in its header; each line runs as a
+single statement. Before restoring, a full backup of the current database is
+made automatically, because MySQL can't roll back `DROP`/`CREATE TABLE`: if
+the restore stops halfway, that backup brings the database back.
+
+Backups are kept in `backup/` in the project root (outside the public folder,
+ignored by git), which the web server needs to write. They contain the whole
+database, users and password hashes included: download the ones you need and
+delete the others.
+
 ## Security
 
 Before exposing an installation to any network you don't fully control (and

@@ -182,7 +182,7 @@
 				<a href="<?php echo $error_log; ?>" class="nav-item" data-route="admin/tool/error_log"><?php echo $text_error_log; ?></a>
 				<a href="<?php echo $import_tables; ?>" class="nav-item" data-route="admin/tool/import_tables"><?php echo $text_import_tables; ?></a>
 				<a href="<?php echo $generator; ?>" class="nav-item" data-route="admin/tool/generator"><?php echo $text_generator; ?></a>
-				<a href="<?php echo $backup; ?>" class="nav-item"><?php echo $text_backup; ?></a>
+				<a href="<?php echo $backup; ?>" class="nav-item" data-route="admin/tool/backup"><?php echo $text_backup; ?></a>
 			</div></div>
 		</div>
 		<div class="nav-group" data-group="help">

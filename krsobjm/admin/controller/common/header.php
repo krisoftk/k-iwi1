@@ -18,7 +18,7 @@ class ControllerAdminCommonHeader extends Controller {
 		foreach (array(
 			'heading_title', 'text_backup', 'text_confirm', 'text_dashboard', 'text_design',
 			'text_documentation', 'text_error_log', 'text_extension', 'text_help', 'text_language',
-			'text_layout', 'text_localisation', 'text_logout', 'text_module', 'text_report',
+			'text_theme', 'text_localisation', 'text_logout', 'text_module', 'text_report',
 			'text_setting', 'text_system', 'text_support', 'text_user', 'text_user_group',
 			'text_users', 'text_framework', 'text_tools', 'text_generator', 'text_import_tables',
 			'text_front_end',
@@ -39,7 +39,7 @@ class ControllerAdminCommonHeader extends Controller {
 			$this->data['backup']        = $this->url->link('admin/tool/backup', $token, 'SSL');
 			$this->data['error_log']     = $this->url->link('admin/tool/error_log', $token, 'SSL');
 			$this->data['language']      = $this->url->link('admin/localisation/language', $token, 'SSL');
-			$this->data['layout']        = $this->url->link('admin/design/layout', $token, 'SSL');
+			$this->data['theme']         = $this->url->link('admin/design/theme', $token, 'SSL');
 			$this->data['logout']        = $this->url->link('admin/common/logout', $token, 'SSL');
 			$this->data['module']        = $this->url->link('admin/extension/module', $token, 'SSL');
 			$this->data['report']        = $this->url->link('admin/extension/report', $token, 'SSL');

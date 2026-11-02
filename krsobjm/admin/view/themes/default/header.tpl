@@ -172,7 +172,7 @@
 			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-system"><span><?php echo $text_system; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 			<div class="nav-group-items" id="nav-system"><div class="nav-group-inner">
 				<a href="<?php echo $setting; ?>" class="nav-item" data-route="admin/setting/setting"><?php echo $text_setting; ?></a>
-				<a href="<?php echo $layout; ?>" class="nav-item"><?php echo $text_layout; ?></a>
+				<a href="<?php echo $theme; ?>" class="nav-item" data-route="admin/design/theme"><?php echo $text_theme; ?></a>
 				<a href="<?php echo $language; ?>" class="nav-item" data-route="admin/localisation/language"><?php echo $text_language; ?></a>
 			</div></div>
 		</div>

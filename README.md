@@ -197,6 +197,18 @@ The page needs write access to `config/config.ini` and to `config/` (for the
 backups); without it the page is read-only. On a production server you can
 keep `config/` read-only and change the file by hand.
 
+## Themes
+
+**Admin > System > Themes** lists the themes of the site
+(`krsobjm/standard/view/themes/<name>/`) and of the admin
+(`krsobjm/admin/view/themes/<name>/`) and activates one, writing
+`framework.theme` or `framework.theme_admin` with the same save as Settings
+(backup copy included). Each theme is checked for its public folder
+(`krsobjp/themes/<name>/`, or `krsobjp/themes/admin/<name>/` for the admin) and
+for the files its templates point to through `makePath()` or a
+`themes/<name>/...` link, so a half-installed theme shows what's missing. A
+`preview.jpg` (or `.png`) in the public folder is shown as its preview.
+
 ## Languages
 
 Each user picks their own language (**Admin > Users**, "Language"). Users who

@@ -35,7 +35,21 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
 
 ## Release log
 
-- **1.0** — first public release.
+- **1.0.0** (2026-11-09) — first public release.
+  - MVC framework for business software: a user side (site) and an admin,
+    MySQL/MariaDB or ODBC databases through KPDO (bound parameters, utf8mb4),
+    sessions in the database or in files, API keys and a scheduler.
+  - Admin: users and user groups with Read / Write / Delete levels per
+    program, modules, reports, languages with downloadable/uploadable
+    language packs, Settings (config.ini through forms or a text editor,
+    with backups), site and admin themes, database Backup / Restore, error
+    log, audit trail, and a code generator for CRUD modules.
+  - Site themes: kiwi (the look of the admin, light and dark), dashboard,
+    dashboard_2.0 and default. Languages: English, Italian, Bulgarian.
+  - Security: see [Security](#security) — CSRF protection, output escaping,
+    login limits, a forced change of the default password, admin on its own
+    host, trusted reverse proxies, security headers, updated JavaScript
+    libraries.
 
 ## How to install
 

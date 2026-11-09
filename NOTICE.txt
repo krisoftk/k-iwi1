@@ -12,11 +12,12 @@ compatible with the GPLv3 distribution of K-iwi as a whole.
 Frameworks / core libraries
 ----------------------------
 
-jQuery (js/jquery-1.11.1.min.js)
-    MIT License. Copyright jQuery Foundation and other contributors.
+jQuery 3.7.1 (js/jquery-3.7.1.min.js) and jQuery Migrate 3.5.2
+(js/jquery-migrate-3.5.2.min.js)
+    MIT License. Copyright OpenJS Foundation and other contributors.
 
-jQuery UI (js/plugins/ui/*)
-    MIT License. Copyright jQuery Foundation and other contributors.
+jQuery UI 1.14.2 (js/plugins/ui/*)
+    MIT License. Copyright OpenJS Foundation and other contributors.
 
 Bootstrap (js/bootstrap.min.js, css/bootstrap*.css)
     MIT License. Copyright Twitter, Inc.
@@ -28,7 +29,7 @@ Font Awesome 4.0.3 (krsobjp/font-awesome/*)
 Glyphicons Halflings (krsobjp/fonts/glyphicons-halflings-*)
     MIT License (bundled with Bootstrap).
 
-moment.js (js/moment-with-locales.min.js)
+moment.js 2.30.1 (js/moment-with-locales.min.js)
     MIT License. Copyright JS Foundation and other contributors.
 
 createjs / SoundJS (js/createjs/*)
@@ -37,7 +38,8 @@ createjs / SoundJS (js/createjs/*)
 jQuery plugins (all under js/plugins/ and js/jqplot/ unless noted otherwise)
 -----------------------------------------------------------------------------
 
-dataTables (plugins/dataTables)
+DataTables 1.13.11 with the Bootstrap 3 integration (plugins/dataTables,
+css/plugins/dataTables)
     MIT License. Copyright SpryMedia Ltd.
 
 jqPlot (js/jqplot/*)
@@ -51,7 +53,8 @@ jQuery UI Timepicker Addon (plugins/timepicker)
     Dual-licensed MIT / GPL. Copyright Trent Richardson.
 
 Bootstrap Datetimepicker (plugins/datetimepicker)
-    MIT License. Copyright Jonathan Peterson.
+    MIT License. Copyright Jonathan Peterson. Patched: .size() replaced by
+    .length (removed in jQuery 3).
 
 fileTree (plugins/filetree)
     Dual-licensed MIT / GPL. Copyright 2008 A Beautiful Site, LLC.
@@ -63,7 +66,8 @@ jQuery File Download (plugins/filedownload)
     MIT License. Copyright John Culviner.
 
 fixedheadertable (plugins/fixedheadertable)
-    MIT License. Copyright Mark Malek.
+    MIT License. Copyright Mark Malek. Patched: the $.browser check
+    (removed in jQuery 1.9) no longer breaks the plugin.
 
 printElement (plugins/printElement)
     Dual-licensed MIT / GPL. Copyright Erik Zaadi.

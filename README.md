@@ -179,6 +179,17 @@ needs write access there while you use it. It's a development tool: on a
 production server keep `krsobjm/` read-only and copy the generated module in
 with the rest of the code.
 
+## JavaScript libraries
+
+The pages load jQuery 3.7.1 together with jQuery Migrate 3.5.2, which brings
+back the APIs removed in jQuery 3 (e.g. `.size()`, `.andSelf()`) for older
+plugins and modules. It doesn't print anything: to see which deprecated APIs
+a page uses, type `jQuery.migrateWarnings` in the browser console. jQuery UI
+1.14.2, DataTables 1.13.11 (Bootstrap 3 styling), moment 2.30.1 and the
+plugins listed in `NOTICE.txt` are available to every module of the site.
+There's no rich-text editor: a module that needs one should bring a
+maintained editor (CKEditor 5, TinyMCE, ...).
+
 ## Settings
 
 **Admin > System > Settings** edits `config/config.ini`: a form with one tab

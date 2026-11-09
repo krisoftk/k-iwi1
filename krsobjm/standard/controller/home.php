@@ -97,7 +97,7 @@ class ControllerStandardHome extends Controller {
 		if (file_exists($dataTables)) {
 			$this->document->addStyle(makePath('/css/dataTables/dataTables.bootstrap.css'));
 		} else {
-			$this->document->addStyle('css/plugins/dataTables/dataTables.bootstrap.css');
+			$this->document->addStyle('css/plugins/dataTables/dataTables.bootstrap.min.css');
 		}
 		
 		//Date Time Picker

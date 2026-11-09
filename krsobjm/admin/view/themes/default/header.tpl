@@ -21,8 +21,9 @@
 	<link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
 	<?php endforeach; ?>
 	<?php foreach (array(
-		'js/jquery-1.11.1.min.js',
-		'js/plugins/ui/jquery-ui-1.10.4.custom.min.js',
+		'js/jquery-3.7.1.min.js',
+		'js/jquery-migrate-3.5.2.min.js',
+		'js/plugins/ui/jquery-ui-1.14.2.min.js',
 		'js/plugins/tabs/jquery.tabs.js',
 	) as $baseScript): ?>
 	<script type="text/javascript" src="<?php echo $baseScript; ?>"></script>

@@ -24,7 +24,7 @@
 				<table class="list">
 					<thead>
 						<tr>
-							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
 							<td class="left"><a href="<?php echo $sort_prog_id; ?>" class="<?php echo ($sort === 'PROG_ID') ? strtolower($order) : ''; ?>"><?php echo $column_prog; ?></a></td>
 							<td class="left"><a href="<?php echo $sort_name; ?>" class="<?php echo ($sort === 'NAME') ? strtolower($order) : ''; ?>"><?php echo $column_name; ?></a></td>
 							<td class="left"><?php echo $column_description; ?></td>

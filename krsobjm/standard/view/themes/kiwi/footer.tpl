@@ -8,8 +8,10 @@
 <script type="text/javascript" src="js/createjs/soundjs/HTMLAudioPlugin.js"></script>
 
 <!-- JQUERY + PLUGINS -->
-<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery-ui-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
+<!-- old plugins and modules still use APIs removed in jQuery 3 -->
+<script type="text/javascript" src="js/jquery-migrate-3.5.2.min.js"></script>
+<script type="text/javascript" src="js/plugins/ui/jquery-ui-1.14.2.min.js"></script>
 <script type="text/javascript" src="js/plugins/timepicker/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="js/plugins/fixedheadertable/jquery.fixedheadertable.js"></script>
 <script type="text/javascript" src="js/plugins/bgiframe/jquery.bgiframe.js"></script>
@@ -32,8 +34,8 @@
 <script type="text/javascript" src="js/plugins/datetimepicker/bootstrap-datetimepicker.js"></script>
 
 <!-- Data tables -->
-<script type="text/javascript" src="js/plugins/dataTables/jquery.dataTables.js"></script>
-<script type="text/javascript" src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables/dataTables.bootstrap.min.js"></script>
 
 <!-- FILE UPLOAD -->
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload.js"></script>

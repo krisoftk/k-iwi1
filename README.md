@@ -271,7 +271,9 @@ Before exposing an installation to any network you don't fully control (and
 before deploying to production in general):
 
 - **Change the default `admin`/`admin` login** immediately after your first
-  install (Admin > Users).
+  install: whoever logs in to the admin with the password `admin` is taken to
+  their own user form, and every other page stays closed until a new password
+  is saved. Changing the username too (Admin > Users) is a good idea.
 - **Change the example database credentials** shipped in `config/config.ini`
   (`database.user` / `database.password`): they are placeholders, not meant
   to be used as-is.

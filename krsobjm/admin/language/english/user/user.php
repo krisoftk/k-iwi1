@@ -26,6 +26,7 @@ $_['error_account'] = 'Warning: You cannot delete your own account!';
 $_['error_exists'] = 'Warning: Username is already in use!';
 $_['error_username'] = 'The username must be between 3 and 20 characters!';
 $_['error_password'] = 'The password must be between 8 and 72 characters!';
+$_['error_default_password'] = 'You logged in with the installation\'s default password: choose a new one (at least 8 characters) and save to go on.';
 $_['error_confirm'] = 'The passwords do not match!';
 $_['error_language'] = 'The selected language does not exist or is not enabled!';
 $_['error_firstname'] = 'The first name must be between 1 and 32 characters!';

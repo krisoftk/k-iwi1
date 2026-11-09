@@ -91,6 +91,27 @@ class ControllerAdminCommonHome extends Controller {
 		if (!$this->hasValidToken()) {
 			return $this->forward('admin/common/login');
 		}
+
+		// Logged in with the installer's default password (see
+		// ControllerAdminCommonLogin::attemptLogin): only the user's own form
+		// (and the logout) until a new password is saved there.
+		if (!empty($this->session->data['must_change_password']) && !$this->isOwnPasswordForm($route)) {
+			$this->redirect($this->url->link('admin/user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->user->getId(), 'SSL'));
+		}
+	}
+
+	private function isOwnPasswordForm($route) {
+		if ($route === 'admin/common/logout') {
+			return true;
+		}
+
+		$requested = new Action(isset($this->request->get['route']) ? $this->request->get['route'] : '');
+		$form = new Action('admin/user/user/update');
+
+		return $requested->getFile() === $form->getFile()
+			&& strtolower($requested->getMethod()) === 'update'
+			&& isset($this->request->get['user_id'])
+			&& (string) $this->request->get['user_id'] === (string) $this->user->getId();
 	}
 
 	private function currentRouteArea() {

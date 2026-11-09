@@ -119,6 +119,12 @@ class ControllerAdminCommonLogin extends Controller {
 			return false;
 		}
 
+		// Still the installer's password ("admin"): until it's changed every
+		// page leads to the user's own form (ControllerAdminCommonHome::login)
+		if ($this->request->post['password'] === 'admin') {
+			$this->session->data['must_change_password'] = true;
+		}
+
 		return true;
 	}
 }

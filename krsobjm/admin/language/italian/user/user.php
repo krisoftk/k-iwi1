@@ -38,6 +38,7 @@ $_['error_account']    	= 'Attenzione: Non puoi cancellare il tuo account!';
 $_['error_exists']     	= 'Attenzione: Username già in uso!';
 $_['error_username']   	= 'Lo username deve essere compreso tra 3 e 20 caratteri!';
 $_['error_password']   	= 'La password deve essere compresa tra 8 e 72 caratteri!';
+$_['error_default_password'] = 'Sei entrato con la password predefinita dell\'installazione: scegline una nuova (almeno 8 caratteri) e salva per continuare.';
 $_['error_confirm']    	= 'Le password non coincidono!';
 $_['error_language']   	= 'La lingua scelta non esiste o non è attiva!';
 $_['error_firstname']  	= 'Il nome deve essere compreso tra 1 e 32 caratteri!';

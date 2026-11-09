@@ -30,6 +30,12 @@ class ControllerAdminUserUser extends Controller {
 		if ($this->isPost() && $this->validateForm()) {
 			$this->model_admin_user_user->editUser($this->request->get['user_id'], $this->request->post);
 
+			// the default password has been replaced (validateForm requires
+			// at least 8 characters, so it can't be "admin" again)
+			if ((string) $this->request->get['user_id'] === (string) $this->user->getId() && $this->request->post['password'] !== '') {
+				unset($this->session->data['must_change_password']);
+			}
+
 			$this->finishAndRedirect();
 		}
 
@@ -191,6 +197,11 @@ class ControllerAdminUserUser extends Controller {
 
 		foreach (array('warning', 'username', 'password', 'confirm', 'firstname', 'lastname', 'usergroups', 'language') as $field) {
 			$this->data['error_' . $field] = isset($this->error[$field]) ? $this->error[$field] : '';
+		}
+
+		// sent here by the admin's pre-action: say why
+		if (!empty($this->session->data['must_change_password']) && $this->data['error_warning'] === '') {
+			$this->data['error_warning'] = $this->language->get('error_default_password');
 		}
 
 		$query = $this->listQueryString();

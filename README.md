@@ -288,5 +288,11 @@ before deploying to production in general):
 - **Keep `setting.error_display = "0"`** (the default) in `config/config.ini`:
   PHP errors go to `logs/error.txt` instead of being printed to visitors, with
   the server's paths. Turn it on only on a development machine.
+- **Site POST requests carry a CSRF token**: every POST made with the session
+  cookie must send back the session's token, or it's refused ("The page has
+  expired"). KAJAX and jQuery's `$.ajax` add it on their own (`X-CSRF-Token`
+  header); a module that posts a plain HTML form, or uploads through an
+  iframe, has to add a `csrf_token` field with the value of
+  `csrf_token($this->session)`. Calls made with an API key don't need it.
 
 Enjoy!

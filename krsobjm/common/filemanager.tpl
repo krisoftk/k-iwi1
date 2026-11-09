@@ -9,6 +9,10 @@
 <script type="text/javascript" src="js/plugins/bgiframe/jquery.bgiframe.js"></script>
 <script type="text/javascript" src="js/plugins/jstree/jquery.tree.min.js"></script>
 <script type="text/javascript" src="js/ajaxupload.js"></script>
+<script type="text/javascript">
+// CSRF token of the session on every request of this page (see csrf_token())
+$.ajaxSetup({headers: {'X-CSRF-Token': '<?php echo $csrf_token; ?>'}});
+</script>
 <link rel="stylesheet" type="text/css" href="css/plugins/ui/south-street/jquery-ui-1.10.4.custom.min.css" />
 <style type="text/css">
 body {
@@ -615,10 +619,11 @@ $(document).ready(function() {
 		onChange: function(file, extension) {
 			var tree = $.tree.focused();
 			
+			// the upload goes through a hidden form: the token as a field
 			if (tree.selected) {
-				this.setData({'directory': $(tree.selected).attr('directory')});
+				this.setData({'directory': $(tree.selected).attr('directory'), 'csrf_token': '<?php echo $csrf_token; ?>'});
 			} else {
-				this.setData({'directory': ''});
+				this.setData({'directory': '', 'csrf_token': '<?php echo $csrf_token; ?>'});
 			}
 			
 			this.submit();

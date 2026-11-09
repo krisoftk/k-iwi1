@@ -11,6 +11,17 @@ var global_prog, global_param, global_out, global_method;
 //for stop double click
 var is_action = false;
 
+// CSRF token of the session (window.KAJAX_CSRF, written by initializeKAJAX
+// in application_management.php): added to every jQuery request towards
+// this site, KAJAX and plain $.ajax alike, never to other sites.
+if (window.jQuery) {
+	jQuery.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+		if (window.KAJAX_CSRF && !options.crossDomain) {
+			jqXHR.setRequestHeader('X-CSRF-Token', window.KAJAX_CSRF);
+		}
+	});
+}
+
 function initializeKAJAX(body, info, loader) {
 	div_body = body;
 	div_information = info;

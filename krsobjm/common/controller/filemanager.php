@@ -34,6 +34,9 @@ class ControllerCommonFileManager extends Controller {
 		$this->data['error_select'] = $this->language->get('error_select');
 		$this->data['error_directory'] = $this->language->get('error_directory');
 		
+		// sent back by the page's requests (see csrf_token())
+		$this->data['csrf_token'] = csrf_token($this->session);
+
 		$this->data['action_files'] = $this->url->link('common/filemanager/files', '', 'SSL');
 		$this->data['action_directory'] = $this->url->link('common/filemanager/directory', '', 'SSL');
 		$this->data['action_folders'] = $this->url->link('common/filemanager/folders', '', 'SSL');

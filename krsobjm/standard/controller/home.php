@@ -148,6 +148,13 @@ class ControllerStandardHome extends Controller {
 			return $this->forward('standard/home/unauthorized');
 		}
 
+		// CSRF (see csrf_token() in application_management.php): a POST made
+		// with the session cookie must carry the session's token. Calls with
+		// a valid API key don't use the cookie.
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && !$this->user->isApiAuthenticated() && !csrf_valid($this->session, $this->request)) {
+			return $this->forward('standard/home/expired');
+		}
+
 		if ($this->isPublicRoute()) {
 			return;
 		}
@@ -176,6 +183,28 @@ class ControllerStandardHome extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode(array('result' => false, 'stato' => 'auth', 'id' => 0, 'msg' => $this->language->get('error_unauthorized'))));
+	}
+
+	// POST without the session's CSRF token: the page was opened before the
+	// session changed (logout, expiry) or the request comes from another site
+	public function expired() {
+		$message = $this->language->get('error_csrf');
+
+		if ($this->wantsJson()) {
+			http_response_code(403);
+
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode(array('result' => false, 'stato' => 'auth', 'id' => 0, 'msg' => $message)));
+
+			return;
+		}
+
+		// as in forbidden(): KAJAX shows the message only with a 200
+		if (empty($this->request->server['HTTP_X_REQUESTED_WITH'])) {
+			http_response_code(403);
+		}
+
+		$this->response->setOutput('<div class="alert alert-danger">' . $message . '</div>');
 	}
 
 	public function forbidden() {

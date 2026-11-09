@@ -206,7 +206,11 @@ if (!$auth->auth_check_user_and_timeout()) {
 
 				$prog = $registry->get('model_standard_menu')->find_direct_prog($request->get['route']);
 
-				if ($prog && $user->hasPermission($prog['ID'])) {
+				// a POST also needs the CSRF token, as in the pre-action
+				// (otherwise it goes on below and the pre-action refuses it)
+				$csrf_ok = $request->server['REQUEST_METHOD'] !== 'POST' || $user->isApiAuthenticated() || csrf_valid($session, $request);
+
+				if ($prog && $user->hasPermission($prog['ID']) && $csrf_ok) {
 					include $direct;
 					exit;
 				}

@@ -33,6 +33,7 @@ $_['text_confirm_delete'] = 'Deleting cannot be undone. Are you sure you want to
 $_['text_enabled'] = 'Enabled';
 $_['text_disabled'] = 'Disabled';
 $_['text_loading'] = 'Loading';
+$_['error_csrf'] = 'The page has expired: reload it and try again.';
 $_['button_insert'] = 'Insert';
 $_['button_update'] = 'Update';
 $_['button_delete'] = 'Delete';

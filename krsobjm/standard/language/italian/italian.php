@@ -35,6 +35,7 @@ $_['text_confirm_delete']   = 'La cancellazione non può essere annullata. Sicur
 $_['text_enabled']			= 'Abilitato';
 $_['text_disabled']   		= 'Disabilitato';
 $_['text_loading']   		= 'Caricamento';
+$_['error_csrf']     		= 'La pagina è scaduta: ricaricala e riprova.';
 
 // Button
 $_['button_insert']           = 'Inserisci';

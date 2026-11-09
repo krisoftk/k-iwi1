@@ -53,7 +53,9 @@ function action($action) {
 	};
 }
 
-function initializeKAJAX($body, $info, $loader) {
+// $csrf: the session's token (csrf_token()), which kajax.js adds to every
+// request towards this site
+function initializeKAJAX($body, $info, $loader, $csrf = null) {
 	$body 	= ($body == null)? 'null' : '\'' . $body . '\''; 
 	$info 	= ($info == null)? 'null' : '\'' . $info . '\'';
 	$loader = ($loader == null)? 'null' : '\'' . $loader . '\'';
@@ -61,9 +63,40 @@ function initializeKAJAX($body, $info, $loader) {
 	return '
 	<script type="text/javascript" src="js/ajax/kajax.js"></script>
 	<script type="text/javascript">
+		window.KAJAX_CSRF = ' . json_encode($csrf) . ';
 		initializeKAJAX(' . $body . ', ' . $info . ', ' . $loader . ');
 	</script>
 	'; 
+}
+
+// CSRF protection of the site: a random token per session, which every
+// POST made with the session cookie must send back, in the X-CSRF-Token
+// header (KAJAX and jQuery do it on their own, see kajax.js) or in a
+// csrf_token field (plain forms, iframe uploads). Another site can make the
+// browser send the cookie, but it can't read the token. The admin has its
+// own token in the URL; API calls authenticate with their key instead.
+function csrf_token($session) {
+	if (empty($session->data['csrf_token'])) {
+		$session->data['csrf_token'] = bin2hex(random_bytes(32));
+	}
+
+	return $session->data['csrf_token'];
+}
+
+function csrf_valid($session, $request) {
+	if (empty($session->data['csrf_token'])) {
+		return false;
+	}
+
+	if (isset($request->server['HTTP_X_CSRF_TOKEN'])) {
+		$sent = $request->server['HTTP_X_CSRF_TOKEN'];
+	} elseif (isset($request->post['csrf_token'])) {
+		$sent = $request->post['csrf_token'];
+	} else {
+		return false;
+	}
+
+	return is_string($sent) && hash_equals($session->data['csrf_token'], $sent);
 }
 
 function save_history($page) {

@@ -8,7 +8,7 @@ class ControllerStandardFooter extends Controller {
 		$id_info = "#info";
 		$loader = '<div class="navbar-brand" id="loading">&nbsp;</div>';
 		 
-		$this->data['kajax'] = initializeKAJAX($id_body, $id_info, $loader);
+		$this->data['kajax'] = initializeKAJAX($id_body, $id_info, $loader, csrf_token($this->session));
 		$this->data['menu'] = $this->url->link('standard/menu', '', 'SSL');
 		$this->data['login'] = $this->url->link('standard/login', '', 'SSL');
 		$this->data['copyright'] = $this->config->get('framework.copyright');

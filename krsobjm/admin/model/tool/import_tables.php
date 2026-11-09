@@ -21,9 +21,15 @@ class ModelAdminToolImportTables extends Model {
 
 		$stmt = $db->prepare('INSERT INTO t:table (NAME, DATABASE_ID, MODULE_ID) VALUES (:name, :database_id, :module_id)');
 		$stmt->bindTable('table', 'krs_tables');
+		// The table form has no module: 0 (no module), as for the framework's
+		// own tables. An empty string in these integer columns is refused by
+		// MySQL/MariaDB in strict mode (their default), so the import failed.
+		$databaseId = (int) $data['database_id'];
+		$moduleId = (isset($data['module_id']) && $data['module_id'] !== '') ? (int) $data['module_id'] : 0;
+
 		$stmt->bindParam('name', $data['name'], KPDO::TYPE_VARCHAR);
-		$stmt->bindParam('database_id', $data['database_id'], KPDO::TYPE_VARCHAR);
-		$stmt->bindParam('module_id', $data['module_id'], KPDO::TYPE_VARCHAR);
+		$stmt->bindParam('database_id', $databaseId, KPDO::TYPE_INTEGER);
+		$stmt->bindParam('module_id', $moduleId, KPDO::TYPE_INTEGER);
 		$stmt->execute();
 	}
 }

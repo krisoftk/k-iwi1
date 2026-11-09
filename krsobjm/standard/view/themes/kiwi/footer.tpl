@@ -31,6 +31,8 @@
 
 <!-- Bootstrap  + plugins-->
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- fixes for the known XSS issues of Bootstrap 3.4.1 -->
+<script type="text/javascript" src="js/bootstrap-security.js"></script>
 <script type="text/javascript" src="js/plugins/datetimepicker/bootstrap-datetimepicker.js"></script>
 
 <!-- Data tables -->

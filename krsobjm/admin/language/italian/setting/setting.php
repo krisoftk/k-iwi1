@@ -54,6 +54,8 @@ $_['entry_setting_dec_point']             = 'Separatore decimale';
 $_['entry_setting_thousands_sep']         = 'Separatore delle migliaia';
 $_['entry_setting_login_max_attempts']    = 'Tentativi di login';
 $_['entry_setting_login_lockout_minutes'] = 'Blocco dopo i tentativi';
+$_['entry_setting_login_max_attempts_ip']   = 'Tentativi per IP';
+$_['entry_setting_login_max_attempts_user'] = 'Tentativi per utente';
 $_['entry_setting_scheduler_ssl_verify']  = 'Scheduler: verifica il certificato';
 $_['entry_report_time_expire']            = 'Validità dei link ai report';
 $_['entry_report_base_url']               = 'Indirizzo di BIRT';
@@ -73,6 +75,8 @@ $_['help_setting_language']               = 'Per chi non è loggato o non ha sce
 $_['help_setting_timeout']                = 'Secondi di inattività prima del logout.';
 $_['help_setting_login_max_attempts']     = 'Password sbagliate (stesso utente e IP) prima del blocco. Predefinito: 5.';
 $_['help_setting_login_lockout_minutes']  = 'Minuti di blocco. Predefinito: 15.';
+$_['help_setting_login_max_attempts_ip']  = 'Password sbagliate dallo stesso IP, su qualunque utente, prima di bloccare quell\'IP. Predefinito: 50.';
+$_['help_setting_login_max_attempts_user'] = 'Password sbagliate per lo stesso utente, da qualunque IP, prima di bloccarlo. Predefinito: 100.';
 $_['help_setting_scheduler_ssl_verify']   = 'No solo con un certificato autofirmato. Predefinito: Sì.';
 $_['help_report_time_expire']             = 'Secondi.';
 $_['help_help_framework']                 = 'Voci del menu Aiuto dell\'admin. Vuoto = voce nascosta.';

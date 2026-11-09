@@ -34,6 +34,8 @@ class ControllerAdminSettingSetting extends Controller {
 		'setting.thousands_sep'         => array('type' => 'text'),
 		'setting.login_max_attempts'    => array('type' => 'int', 'optional' => true, 'min' => 1, 'max' => 1000),
 		'setting.login_lockout_minutes' => array('type' => 'int', 'optional' => true, 'min' => 1, 'max' => 10080),
+		'setting.login_max_attempts_ip'   => array('type' => 'int', 'optional' => true, 'min' => 1, 'max' => 100000),
+		'setting.login_max_attempts_user' => array('type' => 'int', 'optional' => true, 'min' => 1, 'max' => 100000),
 		'setting.scheduler_ssl_verify'  => array('type' => 'bool', 'optional' => true),
 		'report.time_expire'            => array('type' => 'int', 'min' => 1, 'max' => 86400),
 		'report.base_url'               => array('type' => 'url'),

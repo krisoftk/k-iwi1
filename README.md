@@ -285,6 +285,11 @@ before deploying to production in general):
   setting.login_lockout_minutes = 15
   ```
 
+  Two wider limits, in the same window, stop attacks that change username or
+  IP: 50 failures from one IP on any usernames lock that IP out, 100 failures
+  for one username from any IP lock that username out
+  (`setting.login_max_attempts_ip`, `setting.login_max_attempts_user`).
+
 - **Keep `setting.error_display = "0"`** (the default) in `config/config.ini`:
   PHP errors go to `logs/error.txt` instead of being printed to visitors, with
   the server's paths. Turn it on only on a development machine.

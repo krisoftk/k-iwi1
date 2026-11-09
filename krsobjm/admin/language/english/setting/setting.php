@@ -46,6 +46,8 @@ $_['entry_setting_dec_point'] = 'Decimal separator';
 $_['entry_setting_thousands_sep'] = 'Thousands separator';
 $_['entry_setting_login_max_attempts'] = 'Login attempts';
 $_['entry_setting_login_lockout_minutes'] = 'Lockout after the attempts';
+$_['entry_setting_login_max_attempts_ip'] = 'Attempts per IP';
+$_['entry_setting_login_max_attempts_user'] = 'Attempts per user';
 $_['entry_setting_scheduler_ssl_verify'] = 'Scheduler: verify the certificate';
 $_['entry_report_time_expire'] = 'Report link validity';
 $_['entry_report_base_url'] = 'BIRT address';
@@ -63,6 +65,8 @@ $_['help_setting_language'] = 'For users who are not logged in or haven\'t chose
 $_['help_setting_timeout'] = 'Seconds of inactivity before logout.';
 $_['help_setting_login_max_attempts'] = 'Wrong passwords (same user and IP) before the lockout. Default: 5.';
 $_['help_setting_login_lockout_minutes'] = 'Lockout minutes. Default: 15.';
+$_['help_setting_login_max_attempts_ip'] = 'Wrong passwords from the same IP, for any user, before that IP is locked out. Default: 50.';
+$_['help_setting_login_max_attempts_user'] = 'Wrong passwords for the same user, from any IP, before it is locked out. Default: 100.';
 $_['help_setting_scheduler_ssl_verify'] = 'No only with a self-signed certificate. Default: Yes.';
 $_['help_report_time_expire'] = 'Seconds.';
 $_['help_help_framework'] = 'Entries of the admin\'s Help menu. Empty = entry hidden.';

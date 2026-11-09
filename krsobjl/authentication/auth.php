@@ -39,9 +39,9 @@ class Auth {
 
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 
-		// Too many recent failures for this username from this IP: the
-		// password isn't even checked until the window has passed
-		if ($this->count_failed_logins($username, $ip) >= $this->login_max_attempts()) {
+		// Too many recent failures (see too_many_failures): the password
+		// isn't even checked until the window has passed
+		if ($this->too_many_failures($username, $ip)) {
 			$this->loginBlocked = true;
 
 			return false;
@@ -128,6 +128,23 @@ class Auth {
 	// IP alone, because behind a proxy every user comes from the same address;
 	// and not the username alone, because anyone could lock someone else's
 	// account.
+	// Two wider limits, much higher, catch what the pair misses: one IP
+	// trying many usernames (password spraying) and one username tried from
+	// many IPs (distributed attack). The second can lock the account for
+	// the window: it takes login_max_attempts_user failures, far more than
+	// anyone types by mistake.
+	private function too_many_failures($username, $ip) {
+		return $this->count_failed_logins($username, $ip) >= $this->login_max_attempts()
+			|| ($ip !== '' && $this->count_failed_logins(null, $ip) >= $this->login_limit('setting.login_max_attempts_ip', 50))
+			|| $this->count_failed_logins($username, null) >= $this->login_limit('setting.login_max_attempts_user', 100);
+	}
+
+	private function login_limit($key, $default) {
+		$value = $this->config ? (int) $this->config->get($key) : 0;
+
+		return $value > 0 ? $value : $default;
+	}
+
 	private function login_max_attempts() {
 		$value = $this->config ? (int) $this->config->get('setting.login_max_attempts') : 0;
 
@@ -159,15 +176,25 @@ class Auth {
 		return $this->attemptsDb;
 	}
 
+	// failures within the window; null = any username / any IP
 	private function count_failed_logins($username, $ip) {
 		$db = $this->login_attempts_db();
 		$since = time() - $this->login_lockout_minutes() * 60;
 
-		$stmt = $db->prepare("SELECT COUNT(*) AS TOTAL FROM t:krs_login_attempts WHERE USERNAME = :username AND IP = :ip AND TIME > :since");
+		$stmt = $db->prepare("SELECT COUNT(*) AS TOTAL FROM t:krs_login_attempts WHERE TIME > :since"
+			. ($username !== null ? " AND USERNAME = :username" : "")
+			. ($ip !== null ? " AND IP = :ip" : ""));
 		$stmt->bindTable("krs_login_attempts", "krs_login_attempts");
-		$stmt->bindParam(":username", $username, KPDO::TYPE_VARCHAR);
-		$stmt->bindParam(":ip", $ip, KPDO::TYPE_VARCHAR);
 		$stmt->bindParam(":since", $since, KPDO::TYPE_INTEGER);
+
+		if ($username !== null) {
+			$stmt->bindParam(":username", $username, KPDO::TYPE_VARCHAR);
+		}
+
+		if ($ip !== null) {
+			$stmt->bindParam(":ip", $ip, KPDO::TYPE_VARCHAR);
+		}
+
 		$stmt->execute();
 
 		$row = $stmt->fetch(KPDO::FETCH_ASSOC);

@@ -46,12 +46,15 @@ class ModelStandardMenu extends Model {
 	
 								$prog = $stmt_prog->fetch(KPDO::FETCH_ASSOC);
 								
-								if (!$user->hasPermission($prog['ID'])) { continue; }
-								
 								$args = '';
 								if($prog['PATTERN'] == '' || $prog['PATTERN'] == 'direct') {
 									$args = 'pattern=direct';
 								}
+
+								// the item shows up only if the user can run what it opens,
+								// with the access level that route needs (e.g. "New" =
+								// write), the same check as krsobjp/index.php
+								if ($args ? !$user->hasPermission($prog['ID']) : !$this->can_run($user, $this->generete_path_prog($prog, $db))) { continue; }
 								$link = 'javascript:actionKAJAX(\'' . $this->url->link($this->generete_path_prog($prog, $db), $args, 'SSL') . '\', null, \'\', \'get\')';
 								$title = $menuitem['TITLE'];
 									
@@ -106,28 +109,98 @@ class ModelStandardMenu extends Model {
 		return false;
 	}
 
-	// Registered MVC programs matching a route: compares the controller and
-	// method the route really resolves to with those of the programs (module
-	// path + PROG, as in the menu), so variants like "customers//customers"
-	// don't slip through. First the programs with the same method (e.g.
-	// customers/customers/insert), otherwise the one on the index of the same
-	// controller (customers/customers covers update, delete, ...).
-	// No result = route not registered as a program.
-	public function find_route_progs($route) {
+	// Access check of a route for a user, used by the pre-action of
+	// krsobjp/index.php and by the menu.
+	//
+	// Permissions belong to the controller: every program registered on the
+	// same controller (its list, its "New" item...) counts, and the method
+	// decides the level it needs (required_mode). A route of a module that
+	// matches no program is refused, unless its controller declares the
+	// method open to any logged-in user (ACCESS = 'login'). The framework's
+	// own areas, which do their own checks, only need the login.
+	public function can_run($user, $route) {
+		if (!$this->is_route_module_available($route)) {
+			return false;
+		}
+
+		$action = new Action($route);
+
+		// a missing controller: the dispatcher answers "not found"
+		if (!is_file($action->getFile())) {
+			return true;
+		}
+
+		$mode = $this->required_mode($action);
+		$progs = $this->controller_progs($action);
+
+		if (!$progs) {
+			return $mode === null || in_array(PathResolver::area($route), array('standard', 'common', 'error'), true);
+		}
+
+		if ($mode === null) {
+			return true;
+		}
+
+		foreach ($progs as $prog) {
+			if ($user->hasPermission($prog['ID'], $mode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// Route a program opens (module path + PROG), as the menu builds it; ''
+	// if it can't be built. Used by Admin > User Groups too.
+	public function prog_route($prog) {
+		$db = UtilityDB::getDBfromTable("krs_progs");
+
+		return $db ? (string) $this->generete_path_prog($prog, $db) : '';
+	}
+
+	// Level a method needs (Auth::PERM_*), or null if any logged-in user can
+	// run it. The controller can declare it:
+	//   const ACCESS = array('index' => 'read', 'export' => 'read', 'ping' => 'login');
+	// otherwise index and the methods starting with autocomplete, get,
+	// search, list or view need read, those starting with delete need
+	// delete, every other one write (the safer guess).
+	public function required_mode($action) {
+		$levels = array('read' => Auth::PERM_READ, 'write' => Auth::PERM_WRITE, 'delete' => Auth::PERM_DELETE, 'login' => null);
+		$method = strtolower($action->getMethod());
+
+		require_once($action->getFile());
+
+		$class = $action->getClass();
+
+		if (class_exists($class, false) && defined($class . '::ACCESS')) {
+			$access = array_change_key_case((array) constant($class . '::ACCESS'), CASE_LOWER);
+
+			if (isset($access[$method]) && array_key_exists($access[$method], $levels)) {
+				return $levels[$access[$method]];
+			}
+		}
+
+		if ($method === 'index' || preg_match('/^(autocomplete|get|search|list|view)/', $method)) {
+			return Auth::PERM_READ;
+		}
+
+		if (strpos($method, 'delete') === 0) {
+			return Auth::PERM_DELETE;
+		}
+
+		return Auth::PERM_WRITE;
+	}
+
+	// The programs registered on the controller a route resolves to (any of
+	// its methods), comparing real files, so variants like
+	// "customers//customers" don't slip through.
+	private function controller_progs($action) {
 		if (!($db = UtilityDB::getDBfromTable("krs_progs"))) {
 			return array();
 		}
 
-		$requested = new Action($route);
-		$requestedFile = realpath($requested->getFile());
-		$method = strtolower($requested->getMethod());
-
-		if (!$requestedFile) {
-			return array();
-		}
-
-		$exact = array();
-		$controller = array();
+		$requestedFile = realpath($action->getFile());
+		$progs = array();
 
 		$stmt_progs = $db->prepare("SELECT * FROM t:krs_progs WHERE PATTERN <> '' AND PATTERN <> 'direct'");
 		$stmt_progs->bindTable("krs_progs", "krs_progs");
@@ -136,24 +209,12 @@ class ModelStandardMenu extends Model {
 		while (($prog = $stmt_progs->fetch(KPDO::FETCH_ASSOC))) {
 			$path = $this->generete_path_prog($prog, $db);
 
-			if (!$path) {
-				continue;
-			}
-
-			$action = new Action($path);
-
-			if (realpath($action->getFile()) !== $requestedFile) {
-				continue;
-			}
-
-			if (strtolower($action->getMethod()) === $method) {
-				$exact[] = $prog;
-			} elseif (strtolower($action->getMethod()) === 'index') {
-				$controller[] = $prog;
+			if ($path && realpath((new Action($path))->getFile()) === $requestedFile) {
+				$progs[] = $prog;
 			}
 		}
 
-		return $exact ? $exact : $controller;
+		return $progs;
 	}
 
 	// A module with an installer (installation/install.php) is reachable only

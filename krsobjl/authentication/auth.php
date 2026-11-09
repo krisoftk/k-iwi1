@@ -358,40 +358,55 @@ class Auth {
 		}
 	}
 	
+	// Access levels of a program for a group (krs_progs_usergroups_map):
+	// READ_ENABLED, WRITE_ENABLED and EXECUTION_ENABLED, the last one used as
+	// "delete". $mode is a combination of these bits; 0 = any access.
+	const PERM_READ = 4;
+	const PERM_WRITE = 2;
+	const PERM_DELETE = 1;
+
+	// true if one of the user's groups has the program with at least the
+	// levels in $mode. It used to require the flags to be exactly those of
+	// $mode, so a group with every level failed a "read" check.
 	public function auth_check_permission($user, $prog_id, $mode) {
+		if (empty($user['GROUPS'])) {
+			return false;
+		}
+
 		try {
 			$db = UtilityDB::getDBfromTable("krs_progs_usergroups_map");
-			
+
 			$query = "SELECT * FROM t:krs_progs_usergroups_map WHERE PROG_ID = :prog_id AND GROUP_ID = :group_id";
-				
-			if ($mode) {
-				$binary_mode = str_pad(decbin($mode), 3, 0, STR_PAD_LEFT);
-				$read = $binary_mode[0];
-				$write = $binary_mode[1];
-				$execution = $binary_mode[2];
-				
-				$query .= " AND READ_ENABLED = :read AND WRITE_ENABLED = :write AND EXECUTION_ENABLED = :execution";
+
+			if ($mode & self::PERM_READ) {
+				$query .= " AND READ_ENABLED = 1";
 			}
-				
+
+			if ($mode & self::PERM_WRITE) {
+				$query .= " AND WRITE_ENABLED = 1";
+			}
+
+			if ($mode & self::PERM_DELETE) {
+				$query .= " AND EXECUTION_ENABLED = 1";
+			}
+
+			if (!$mode) {
+				$query .= " AND (READ_ENABLED = 1 OR WRITE_ENABLED = 1 OR EXECUTION_ENABLED = 1)";
+			}
+
 			$stmt_permission = $db->prepare($query);
 			$stmt_permission->bindTable("krs_progs_usergroups_map", "krs_progs_usergroups_map");
 			$stmt_permission->bindParam(":prog_id", $prog_id, KPDO::TYPE_INTEGER);
-			
-			if ($mode) {
-				$stmt_permission->bindParam(":read", $read, KPDO::TYPE_INTEGER);
-				$stmt_permission->bindParam(":write", $write, KPDO::TYPE_INTEGER);
-				$stmt_permission->bindParam(":execution", $execution, KPDO::TYPE_INTEGER);
-			}
-			
+
 			foreach ($user['GROUPS'] as $group) {
 				$stmt_permission->bindParam("group_id", $group['ID'], KPDO::TYPE_INTEGER);
 				$stmt_permission->execute();
-				
-				if($stmt_permission->rowCount()) {
+
+				if ($stmt_permission->rowCount()) {
 					return true;
 				}
 			}
-				
+
 			return false;
 		} catch (KPDOException $e) {
 			trigger_error($e);

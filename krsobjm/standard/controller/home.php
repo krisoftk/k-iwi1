@@ -229,10 +229,10 @@ class ControllerStandardHome extends Controller {
 		$this->response->setOutput('<div class="alert alert-danger">' . $message . '</div>');
 	}
 
-	// The menu shows each user only the programs they have permission on; here
-	// the same permission applies also to whoever opens the route by hand.
-	// Routes that don't match any registered program (APIs, scheduler jobs,
-	// ...) only require the login, as long as their module is installed.
+	// The menu shows each user only what they have permission on; here the
+	// same check (ModelStandardMenu::can_run) applies to whoever opens the
+	// route by hand: the program of the controller, with the access level
+	// (read / write / delete) the method needs.
 	private function canRunRoute() {
 		if (!isset($this->request->get['route'])) {
 			return true;
@@ -240,23 +240,7 @@ class ControllerStandardHome extends Controller {
 
 		$this->load->model('standard/menu');
 
-		if (!$this->model_standard_menu->is_route_module_available($this->request->get['route'])) {
-			return false;
-		}
-
-		$progs = $this->model_standard_menu->find_route_progs($this->request->get['route']);
-
-		if (!$progs) {
-			return true;
-		}
-
-		foreach ($progs as $prog) {
-			if ($this->user->hasPermission($prog['ID'])) {
-				return true;
-			}
-		}
-
-		return false;
+		return $this->model_standard_menu->can_run($this->user, $this->request->get['route']);
 	}
 
 	// Compares the controller and method the route really resolves to, not

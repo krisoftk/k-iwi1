@@ -178,7 +178,8 @@ class ControllerAdminUserGroup extends Controller {
 	protected function getForm() {
 		foreach (array(
 			'heading_title', 'text_select_all', 'text_unselect_all', 'tab_group', 'tab_prog',
-			'column_prog_name', 'column_prog_menu', 'entry_name', 'entry_modules',
+			'column_prog_name', 'column_prog_menu', 'column_read', 'column_write', 'column_delete',
+			'text_levels_help', 'text_also_opens', 'entry_name', 'entry_modules',
 			'button_save', 'button_cancel',
 		) as $key) {
 			$this->data[$key] = $this->language->get($key);
@@ -212,7 +213,7 @@ class ControllerAdminUserGroup extends Controller {
 		$this->data['cancel'] = $this->url->link('admin/user/group', 'token=' . $this->session->data['token'] . $query, 'SSL');
 
 		$groupInfo = null;
-		$groupProgIds = array();
+		$groupLevels = array();
 		$groupModule = null;
 
 		if ($groupId && !$this->isPost()) {
@@ -220,14 +221,16 @@ class ControllerAdminUserGroup extends Controller {
 			$groupModule = $this->model_admin_user_group->getModuleByGroupId($groupId);
 
 			foreach ($this->model_admin_user_group->getProgByGroupId($groupId) as $prog) {
-				$groupProgIds[] = $prog['ID'];
+				$groupLevels[$prog['ID']] = array('read' => $prog['READ_ENABLED'], 'write' => $prog['WRITE_ENABLED'], 'delete' => $prog['EXECUTION_ENABLED']);
 			}
 		}
 
-		$this->data['progs']   = $this->model_admin_extension_prog->getProgs();
-		$this->data['modules'] = $this->model_admin_extension_module->getModules();
+		if (isset($this->request->post['progs']) && is_array($this->request->post['progs'])) {
+			$groupLevels = $this->request->post['progs'];
+		}
 
-		$this->data['group_progs'] = isset($this->request->post['progs']) ? $this->request->post['progs'] : $groupProgIds;
+		$this->data['progs']   = $this->progRows($groupLevels);
+		$this->data['modules'] = $this->model_admin_extension_module->getModules();
 
 		$this->data['name'] = isset($this->request->post['name'])
 			? $this->request->post['name']
@@ -250,11 +253,85 @@ class ControllerAdminUserGroup extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if (empty($this->request->post['progs'])) {
+		$anyLevel = false;
+
+		foreach (isset($this->request->post['progs']) && is_array($this->request->post['progs']) ? $this->request->post['progs'] : array() as $levels) {
+			if (is_array($levels) && (!empty($levels['read']) || !empty($levels['write']) || !empty($levels['delete']))) {
+				$anyLevel = true;
+			}
+		}
+
+		if (!$anyLevel) {
 			$this->error['progs'] = $this->language->get('error_progs');
 		}
 
 		return empty($this->error);
+	}
+
+	// One row per controller: the access levels belong to the controller
+	// (see ModelStandardMenu::can_run), so the programs opening another
+	// method of a controller that has its own list (e.g. "New ...") are shown
+	// under it instead of as rows of their own.
+	private function progRows($levels) {
+		$this->load->model('standard/menu');
+
+		$rows = array();
+		$byFile = array();
+		$extras = array();
+
+		foreach ($this->model_admin_extension_prog->getProgs() as $prog) {
+			$route = ($prog['PATTERN'] !== '' && $prog['PATTERN'] !== 'direct') ? $this->model_standard_menu->prog_route($prog) : '';
+			$file = '';
+			$method = '';
+
+			if ($route !== '') {
+				$action = new Action($route);
+				$file = (string) realpath($action->getFile());
+				$method = strtolower($action->getMethod());
+			}
+
+			if ($file !== '' && $method !== 'index') {
+				$extras[] = array('file' => $file, 'prog' => $prog);
+
+				continue;
+			}
+
+			$id = $prog['ID'];
+
+			$rows[$id] = array(
+				'id'     => $id,
+				'title'  => $prog['TITLE'],
+				'prog'   => $prog['PROG'],
+				'menu'   => $prog['MENU_TITLE'],
+				'read'   => !empty($levels[$id]['read']),
+				'write'  => !empty($levels[$id]['write']),
+				'delete' => !empty($levels[$id]['delete']),
+				'also'   => array(),
+			);
+
+			if ($file !== '') {
+				$byFile[$file] = $id;
+			}
+		}
+
+		// a method program without the list of its controller stays a row
+		foreach ($extras as $extra) {
+			$prog = $extra['prog'];
+
+			if (isset($byFile[$extra['file']])) {
+				$rows[$byFile[$extra['file']]]['also'][] = $prog['MENU_TITLE'] ? $prog['MENU_TITLE'] : $prog['TITLE'];
+			} else {
+				$id = $prog['ID'];
+				$rows[$id] = array(
+					'id' => $id, 'title' => $prog['TITLE'], 'prog' => $prog['PROG'], 'menu' => $prog['MENU_TITLE'],
+					'read' => !empty($levels[$id]['read']), 'write' => !empty($levels[$id]['write']), 'delete' => !empty($levels[$id]['delete']),
+					'also' => array(),
+				);
+				$byFile[$extra['file']] = $id;
+			}
+		}
+
+		return array_values($rows);
 	}
 
 	protected function validateDelete() {

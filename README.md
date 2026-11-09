@@ -164,9 +164,11 @@ and pagination, insert/update form, delete) for a database table:
    tables can be generated into the same module.
 3. Install it from **Admin > Extensions > Modules**: this creates the menu
    items and the programs (list, and "New ..." for the insert form).
-4. Give permissions on the new programs to the user groups
-   (**Admin > Users > User Groups**). Each user sees and can open only the
-   programs of their groups, also when typing the address by hand.
+4. Give the user groups access to the new program
+   (**Admin > Users > User Groups**), with one or more levels: **Read**
+   (list, search), **Write** (new records and changes, the "New ..." menu
+   item included) and **Delete**. Each user sees and can open only what their
+   groups allow, also when typing the address by hand.
 
 The module gets a language file for every active language (labels of the
 page, the list and the fields, plus `menu.php` for the menu items): they start
@@ -178,6 +180,25 @@ The generator writes PHP files into `krsobjm/<module>/`, so the web server
 needs write access there while you use it. It's a development tool: on a
 production server keep `krsobjm/` read-only and copy the generated module in
 with the rest of the code.
+
+### Permissions in your own modules
+
+Access belongs to the controller: any program registered on it counts, and
+the method decides the level it needs. By default `index` and the methods
+starting with `autocomplete`, `get`, `search`, `list` or `view` need Read,
+those starting with `delete` need Delete, and every other method needs Write.
+A controller can state it explicitly:
+
+```php
+class ControllerMymoduleOrders extends Controller {
+	const ACCESS = array('export' => 'read', 'ping' => 'login');
+	...
+}
+```
+
+`'login'` opens a method to any logged-in user. A route of a module whose
+controller has no program registered at all is refused, unless the method is
+declared `'login'`: register the programs in the module's installer.
 
 ### Printing data
 

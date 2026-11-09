@@ -9,10 +9,15 @@ $_['column_module_name'] = 'Module Name';
 $_['column_action'] = 'Action';
 $_['column_prog_name'] = 'Function';
 $_['column_prog_menu'] = 'Menu Item';
+$_['column_read'] = 'Read';
+$_['column_write'] = 'Write';
+$_['column_delete'] = 'Delete';
+$_['text_levels_help'] = 'Read: lists, details and searches. Write: new records and changes. Delete: deleting records. The levels apply to the whole program, the extra menu items included (e.g. "New ...", which needs Write).';
+$_['text_also_opens'] = 'Also:';
 $_['entry_name'] = 'Group Name:';
 $_['entry_modules'] = 'Module';
 $_['error_permission'] = 'Warning: You do not have permission to modify the group!';
 $_['error_user'] = 'Warning: This group cannot be deleted because it is currently assigned to %s users!';
 $_['error_name'] = 'The group name must be between 3 and 64 characters!';
-$_['error_progs'] = 'At least one program must be selected!';
+$_['error_progs'] = 'Give the group at least one level on one program!';
 ?>

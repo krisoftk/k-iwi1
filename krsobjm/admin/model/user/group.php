@@ -29,22 +29,35 @@ class ModelAdminUserGroup extends Model {
 		$this->saveModule($db, $groupId, $data['module']);
 	}
 
+	// $progs: program id => array('read' => 1, 'write' => 1, 'delete' => 1),
+	// the levels ticked in the form (EXECUTION_ENABLED is "delete"). A
+	// program with no level ticked isn't saved.
 	private function saveProgs($db, $groupId, $progs) {
 		$stmt = $db->prepare('DELETE FROM t:progs_usergroups_map WHERE GROUP_ID = :group_id');
 		$stmt->bindTable('progs_usergroups_map', 'krs_progs_usergroups_map');
 		$stmt->bindParam('group_id', $groupId, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
 
-		$progId = '';
+		$progId = $read = $write = $delete = 0;
 		$stmt = $db->prepare('INSERT INTO t:progs_usergroups_map
 			(PROG_ID, GROUP_ID, READ_ENABLED, WRITE_ENABLED, EXECUTION_ENABLED)
-			VALUES (:prog_id, :group_id, 1, 1, 1)');
+			VALUES (:prog_id, :group_id, :read, :write, :delete)');
 		$stmt->bindTable('progs_usergroups_map', 'krs_progs_usergroups_map');
 		$stmt->bindParam('group_id', $groupId, KPDO::TYPE_INTEGER);
 		$stmt->bindParam('prog_id', $progId, KPDO::TYPE_INTEGER);
+		$stmt->bindParam('read', $read, KPDO::TYPE_INTEGER);
+		$stmt->bindParam('write', $write, KPDO::TYPE_INTEGER);
+		$stmt->bindParam('delete', $delete, KPDO::TYPE_INTEGER);
 
-		foreach ($progs as $progId) {
-			$stmt->execute();
+		foreach ((array) $progs as $id => $levels) {
+			$progId = (int) $id;
+			$read = empty($levels['read']) ? 0 : 1;
+			$write = empty($levels['write']) ? 0 : 1;
+			$delete = empty($levels['delete']) ? 0 : 1;
+
+			if ($progId > 0 && ($read || $write || $delete)) {
+				$stmt->execute();
+			}
 		}
 	}
 
@@ -130,7 +143,7 @@ class ModelAdminUserGroup extends Model {
 
 	public function getProgByGroupId($id) {
 		$db = UtilityDB::getDBfromTable('krs_progs');
-		$stmt = $db->prepare('SELECT p.* FROM t:progs, t:progs_usergroups_map WHERE p.ID = pg.PROG_ID AND pg.GROUP_ID = :group_id');
+		$stmt = $db->prepare('SELECT p.*, pg.READ_ENABLED, pg.WRITE_ENABLED, pg.EXECUTION_ENABLED FROM t:progs, t:progs_usergroups_map WHERE p.ID = pg.PROG_ID AND pg.GROUP_ID = :group_id');
 		$stmt->bindTable('progs', 'krs_progs', 'p');
 		$stmt->bindTable('progs_usergroups_map', 'krs_progs_usergroups_map', 'pg');
 		$stmt->bindParam('group_id', $id, KPDO::TYPE_INTEGER);

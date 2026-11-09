@@ -8,7 +8,7 @@ class ControllerCommonKReport extends Controller {
 		$prog_id = isset($this->request->get['prog']) ? $this->request->get['prog'] : '';
 		$name = isset($this->request->get['report']) ? $this->request->get['report'] : '';
 
-		if ($this->user->isLogged() && ctype_digit((string) $prog_id) && $this->user->hasPermission($prog_id)) {
+		if ($this->user->isLogged() && ctype_digit((string) $prog_id) && $this->user->hasPermission($prog_id, Auth::PERM_READ)) {
 			$stmt = $this->db->prepare("SELECT * FROM t:reports WHERE PROG_ID = :prog_id AND NAME = :name");
 			$stmt->bindTable("reports", "krs_rpt_report");
 			$stmt->bindParam("prog_id", $prog_id, KPDO::TYPE_INTEGER);

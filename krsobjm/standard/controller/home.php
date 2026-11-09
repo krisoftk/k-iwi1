@@ -11,6 +11,16 @@ class ControllerStandardHome extends Controller {
 		$this->data['action_change_password'] = $this->url->link('standard/home/changePassword', '', 'SSL');
 		$this->data['copyright'] = $this->config->get('framework.copyright');
 
+		// for the themes that show the shell differently to guests (kiwi)
+		$this->data['logged'] = (bool) $this->user->isLogged();
+		$this->data['user_name'] = '';
+
+		if ($this->data['logged']) {
+			$details = $this->user->getDetails();
+			$name = trim((isset($details['FIRSTNAME']) ? $details['FIRSTNAME'] : '') . ' ' . (isset($details['LASTNAME']) ? $details['LASTNAME'] : ''));
+			$this->data['user_name'] = ($name !== '') ? $name : $this->user->getUsername();
+		}
+
 		foreach (array(
 			'text_change_password', 'text_logout', 'text_toggle_navigation', 'text_print', 'text_print_alt',
 			'text_pdf', 'text_pdf_alt', 'text_mail', 'text_mail_alt', 'entry_current_password',

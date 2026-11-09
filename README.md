@@ -209,6 +209,11 @@ for the files its templates point to through `makePath()` or a
 `themes/<name>/...` link, so a half-installed theme shows what's missing. A
 `preview.jpg` (or `.png`) in the public folder is shown as its preview.
 
+The site ships four themes: `kiwi` (the look of the admin — same palette,
+fonts and collapsible sidebar, light and dark — on top of Bootstrap 3, so the
+pages made by the generator need no changes), `dashboard`, `dashboard_2.0`
+and `default`.
+
 ## Languages
 
 Each user picks their own language (**Admin > Users**, "Language"). Users who

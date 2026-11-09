@@ -83,4 +83,57 @@ function load_library($libraries = NULL) {
 		}
 	}
 }
+
+// Uncaught exceptions and fatal errors don't go through error_handler
+// (krsobjp/index.php): PHP 8 turns most fatal errors (undefined function,
+// TypeError, ArgumentCountError...) into exceptions, and without these
+// handlers they would only reach the web server's log, which often can't be
+// read (shared hosting). Registered by both index.php right after this file,
+// so they also cover the startup (e.g. the database connection).
+function exception_handler($exception) {
+	report_fatal_error('Uncaught ' . get_class($exception) . ': ' . $exception->getMessage(), $exception->getFile(), $exception->getLine());
+}
+
+function shutdown_handler() {
+	$error = error_get_last();
+
+	if ($error && in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR))) {
+		report_fatal_error($error['message'], $error['file'], $error['line']);
+	}
+}
+
+// Same settings as error_handler: setting.error_log writes to the
+// framework's log, setting.error_display shows the error in the page. Before
+// the configuration is loaded only PHP's own log is left.
+function report_fatal_error($message, $file, $line) {
+	global $config, $log;
+
+	$text = 'PHP Fatal Error:  ' . $message . ' in ' . $file . ' on line ' . $line;
+
+	if (!headers_sent()) {
+		http_response_code(500);
+	}
+
+	if (!($config instanceof Config)) {
+		error_log($text);
+
+		return;
+	}
+
+	if ($config->get('setting.error_log')) {
+		if (!($log instanceof Log) && $config->get('setting.file_log')) {
+			$log = new Log($config->get('setting.file_log'));
+		}
+
+		if ($log instanceof Log) {
+			$log->write($text);
+		} else {
+			error_log($text);
+		}
+	}
+
+	if ($config->get('setting.error_display')) {
+		echo '<b>Fatal Error</b>: ' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . ' in <b>' . htmlspecialchars($file, ENT_QUOTES, 'UTF-8') . '</b> on line <b>' . (int) $line . '</b>';
+	}
+}
 ?>

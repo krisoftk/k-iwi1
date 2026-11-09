@@ -25,6 +25,8 @@ if (!defined('DIR_PUBLIC')) {
 
 // Application Management
 require_once(DIR_LIBRARY . 'common/application_management.php');
+set_exception_handler('exception_handler');
+register_shutdown_function('shutdown_handler');
 
 // Startup
 require_once(DIR_LIBRARY . 'common/bootstrap.php');

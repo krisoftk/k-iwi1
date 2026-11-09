@@ -117,6 +117,8 @@ class ControllerAdminCommonLogin extends Controller {
 		if (!$this->user->login($this->request->post['username'], $this->request->post['password'], 'admin')) {
 			$this->warning = $this->user->isLoginBlocked() ? sprintf($this->language->get('error_attempts'), $this->user->getLoginLockoutMinutes()) : $this->language->get('error_login');
 
+			audit_log(null, 'login failed', 'username=' . substr((string) $this->request->post['username'], 0, 64) . ($this->user->isLoginBlocked() ? ' (locked out)' : ''));
+
 			return false;
 		}
 
@@ -125,6 +127,8 @@ class ControllerAdminCommonLogin extends Controller {
 		if ($this->request->post['password'] === 'admin') {
 			$this->session->data['must_change_password'] = true;
 		}
+
+		audit_log($this->user, 'login');
 
 		return true;
 	}

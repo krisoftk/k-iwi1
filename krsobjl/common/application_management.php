@@ -117,6 +117,18 @@ function apply_trusted_proxies($list) {
 	}
 }
 
+// Audit trail of the admin (logs/audit.txt): who did what, when and from
+// where. One line per action; $details must not hold passwords or personal
+// data (the admin's pre-action passes field names and ids only). Line
+// breaks are removed so a value can't forge another line.
+function audit_log($user, $action, $details = '') {
+	$who = ($user && $user->isLogged()) ? $user->getUsername() . ' (#' . $user->getId() . ')' : '-';
+	$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+
+	$log = new Log('audit.txt');
+	$log->write(str_replace(array("\r", "\n"), ' ', 'user=' . $who . ' ip=' . $ip . ' ' . $action . ($details !== '' ? ' ' . $details : '')));
+}
+
 // Admin on a host of its own (setting.admin_host, e.g. admin.example.com).
 // Site and admin on the same host share the browser's same-origin rules: a
 // script injected in a page of the site could open the admin's pages with

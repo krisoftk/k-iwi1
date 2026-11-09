@@ -332,6 +332,13 @@ before deploying to production in general):
   for one username from any IP lock that username out
   (`setting.login_max_attempts_ip`, `setting.login_max_attempts_user`).
 
+- **Audit trail of the admin**: `logs/audit.txt` gets a line for every
+  change made in the admin (every POST), for the installs, uninstalls,
+  deletions and downloads, and for logins (also failed) and logouts: who,
+  from which address, which route. It holds the names of the posted fields
+  and the values of identifiers only (selected rows, `*_id`, the module or
+  file), never passwords or personal data. Keep `logs/` readable only by
+  the web server and the administrators.
 - **Keep `setting.error_display = "0"`** (the default) in `config/config.ini`:
   PHP errors go to `logs/error.txt` instead of being printed to visitors, with
   the server's paths. Turn it on only on a development machine.

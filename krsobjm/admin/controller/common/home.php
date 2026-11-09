@@ -98,6 +98,44 @@ class ControllerAdminCommonHome extends Controller {
 		if (!empty($this->session->data['must_change_password']) && !$this->isOwnPasswordForm($route)) {
 			$this->redirect($this->url->link('admin/user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->user->getId(), 'SSL'));
 		}
+
+		// Audit trail (logs/audit.txt): every change (POST) and the GETs that
+		// install, uninstall, delete or download something
+		$method = isset($this->request->get['route']) ? strtolower((new Action($this->request->get['route']))->getMethod()) : 'index';
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' || in_array($method, array('install', 'uninstall', 'delete', 'download'), true)) {
+			audit_log($this->user, $this->request->server['REQUEST_METHOD'] . ' ' . (isset($this->request->get['route']) ? $this->request->get['route'] : ''), $this->auditDetails());
+		}
+	}
+
+	// What the request worked on, without values that could be passwords or
+	// personal data: the query parameters, the names of the posted fields and
+	// the values of the identifiers only (selected rows, *_id, extension...).
+	private function auditDetails() {
+		$details = array();
+		$clip = function ($value) {
+			$value = is_array($value) ? implode(',', array_map('strval', array_filter($value, 'is_scalar'))) : (string) $value;
+
+			return (strlen($value) > 80) ? substr($value, 0, 80) . '...' : $value;
+		};
+
+		foreach ($this->request->get as $key => $value) {
+			if ($key !== 'route' && $key !== 'token') {
+				$details[] = $key . '=' . $clip($value);
+			}
+		}
+
+		if ($this->request->post) {
+			$fields = array();
+
+			foreach ($this->request->post as $key => $value) {
+				$fields[] = preg_match('/^(selected|id|.+_id|extension|file|area|theme)$/i', $key) ? $key . '=' . $clip($value) : $key;
+			}
+
+			$details[] = 'fields=[' . implode(' ', $fields) . ']';
+		}
+
+		return implode(' ', $details);
 	}
 
 	private function isOwnPasswordForm($route) {

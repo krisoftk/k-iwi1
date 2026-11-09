@@ -90,9 +90,14 @@ class Pagination {
 			'{pages}'
 		);
 		
+		// rows shown on this page; a page past the last one (e.g. after a
+		// deletion) shows nothing: "0 to 0", not "26 to 25"
+		$first_row = (($page - 1) * $limit) + 1;
+		$shown = ($total > 0 && $first_row <= $total);
+
 		$replace = array(
-			($total) ? (($page - 1) * $limit) + 1 : 0,
-			((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit),
+			$shown ? $first_row : 0,
+			$shown ? min($page * $limit, $total) : 0,
 			$total, 
 			$num_pages
 		);

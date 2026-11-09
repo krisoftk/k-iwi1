@@ -121,6 +121,20 @@ $response->addHeader('Content-Type: text/html; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: same-origin');
+
+// A Content-Security-Policy limited to what doesn't need the inline
+// scripts and onclick attributes to go (the pages and the generated modules
+// use them everywhere): no <base> pointing elsewhere, no plugins, forms only
+// towards this site, framing only by this site.
+header("Content-Security-Policy: base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'");
+
+// HSTS: once the browser has seen it over https, it never uses plain http
+// for this site again (no downgrade on a hostile network). Only with
+// setting.use_ssl on and on an https request, so a site without a
+// certificate isn't locked out.
+if ($config->get('setting.use_ssl') && isset($_SERVER['HTTPS']) && in_array(strtolower($_SERVER['HTTPS']), array('on', '1'))) {
+	header('Strict-Transport-Security: max-age=31536000');
+}
 $response->setCompression($config->get(('setting.compression')));
 $registry->set('response', $response);
 

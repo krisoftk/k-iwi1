@@ -51,6 +51,8 @@ class ControllerAdminCommonHeader extends Controller {
 			$this->data['front_end']     = HTTP_PUBLIC;
 		}
 
+		$this->data['help_links'] = $this->helpLinks();
+
 		$this->template = $this->themeFile('header.tpl');
 
 		$this->render();
@@ -61,6 +63,29 @@ class ControllerAdminCommonHeader extends Controller {
 			&& isset($this->request->get['token'])
 			&& isset($this->session->data['token'])
 			&& ($this->request->get['token'] === $this->session->data['token']);
+	}
+
+	// The Help entries come from the [help] section of config.ini: an empty
+	// or missing value hides the entry. Only http(s) addresses, so a value
+	// like "javascript:..." can't end up in the menu.
+	private function helpLinks() {
+		$links = array();
+
+		foreach (array(
+			'framework'     => $this->language->get('text_framework'),
+			'documentation' => $this->language->get('text_documentation'),
+			'support'       => $this->language->get('text_support'),
+			// named after the author of the installation (framework.author)
+			'vendor'        => $this->config->get('framework.author') ? htmlspecialchars($this->config->get('framework.author'), ENT_QUOTES, 'UTF-8') : $this->language->get('text_vendor'),
+		) as $key => $text) {
+			$href = trim((string) $this->config->get('help.' . $key));
+
+			if (preg_match('#^https?://[^\s"<>]+$#i', $href)) {
+				$links[] = array('text' => $text, 'href' => htmlspecialchars($href, ENT_QUOTES, 'UTF-8'));
+			}
+		}
+
+		return $links;
 	}
 
 	private function themeFile($name) {

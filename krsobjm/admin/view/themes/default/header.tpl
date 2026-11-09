@@ -185,14 +185,16 @@
 				<a href="<?php echo $backup; ?>" class="nav-item" data-route="admin/tool/backup"><?php echo $text_backup; ?></a>
 			</div></div>
 		</div>
+		<?php if ($help_links): ?>
 		<div class="nav-group" data-group="help">
 			<button type="button" class="nav-group-toggle" aria-expanded="true" aria-controls="nav-help"><span><?php echo $text_help; ?></span><svg class="nav-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 			<div class="nav-group-items" id="nav-help"><div class="nav-group-inner">
-				<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_framework; ?></a>
-				<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_documentation; ?></a>
-				<a onclick="window.open('http://www.krisoft.it');" class="nav-item"><?php echo $text_support; ?></a>
+				<?php foreach ($help_links as $help_link): ?>
+				<a href="<?php echo $help_link['href']; ?>" class="nav-item nav-external" target="_blank" rel="noopener noreferrer"><?php echo $help_link['text']; ?><svg class="nav-external-icon" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><path d="M6 3.5h6.5V10M12.5 3.5 4 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+				<?php endforeach; ?>
 			</div></div>
 		</div>
+		<?php endif; ?>
 	</nav>
 	<script type="text/javascript">
 	// Runs right after the sidebar markup, before the page is painted, so the

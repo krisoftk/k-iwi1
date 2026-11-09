@@ -37,6 +37,11 @@ class ControllerAdminSettingSetting extends Controller {
 		'setting.scheduler_ssl_verify'  => array('type' => 'bool', 'optional' => true),
 		'report.time_expire'            => array('type' => 'int', 'min' => 1, 'max' => 86400),
 		'report.base_url'               => array('type' => 'url'),
+		// empty = entry hidden from the Help menu
+		'help.framework'                => array('type' => 'url'),
+		'help.documentation'            => array('type' => 'url'),
+		'help.support'                  => array('type' => 'url'),
+		'help.vendor'                   => array('type' => 'url'),
 	);
 
 	public function index() {

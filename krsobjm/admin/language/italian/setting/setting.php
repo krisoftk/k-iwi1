@@ -18,6 +18,7 @@ $_['tab_database']          = 'Database';
 $_['tab_framework']         = 'Aspetto';
 $_['tab_setting']           = 'Sistema';
 $_['tab_report']            = 'Report';
+$_['tab_help']              = 'Aiuto';
 $_['tab_editor']            = 'Editor config.ini';
 $_['tab_backup']            = 'Backup';
 
@@ -56,6 +57,10 @@ $_['entry_setting_login_lockout_minutes'] = 'Blocco dopo i tentativi';
 $_['entry_setting_scheduler_ssl_verify']  = 'Scheduler: verifica il certificato';
 $_['entry_report_time_expire']            = 'Validità dei link ai report';
 $_['entry_report_base_url']               = 'Indirizzo di BIRT';
+$_['entry_help_framework']                = 'Link "Framework"';
+$_['entry_help_documentation']            = 'Link "Documentazione"';
+$_['entry_help_support']                  = 'Link "Forum di supporto"';
+$_['entry_help_vendor']                   = 'Link al sito dell\'autore';
 
 // Help
 $_['help_database_port']                  = 'Vuota per la porta standard.';
@@ -70,6 +75,8 @@ $_['help_setting_login_max_attempts']     = 'Password sbagliate (stesso utente e
 $_['help_setting_login_lockout_minutes']  = 'Minuti di blocco. Predefinito: 15.';
 $_['help_setting_scheduler_ssl_verify']   = 'No solo con un certificato autofirmato. Predefinito: Sì.';
 $_['help_report_time_expire']             = 'Secondi.';
+$_['help_help_framework']                 = 'Voci del menu Aiuto dell\'admin. Vuoto = voce nascosta.';
+$_['help_help_vendor']                    = 'Nel menu ha il nome di framework.author.';
 
 // Button
 $_['button_save_editor']    = 'Salva config.ini';

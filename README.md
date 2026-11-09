@@ -193,6 +193,12 @@ of the previous file goes to `config/backup/` (the last 10, ignored by git
 because they contain the database password) and can be reopened in the
 editor.
 
+The links of the admin's **Help** menu come from the `[help]` section of
+`config/config.ini` (`help.framework`, `help.documentation`, `help.support`,
+`help.vendor`, the last one shown with the name in `framework.author`): point
+them to your own documentation or helpdesk, or leave a value empty to hide
+that entry. Only `http://` and `https://` addresses are used.
+
 The page needs write access to `config/config.ini` and to `config/` (for the
 backups); without it the page is read-only. On a production server you can
 keep `config/` read-only and change the file by hand.

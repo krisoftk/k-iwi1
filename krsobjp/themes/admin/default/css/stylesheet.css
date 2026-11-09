@@ -165,6 +165,11 @@ input, select, textarea, button { font-family: var(--font-body); font-size: 13.5
 
 .nav-item:hover { background: rgba(255, 255, 255, 0.06); color: var(--sidebar-ink); }
 
+/* links that leave the admin (Help): a small arrow after the text */
+.nav-external { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.nav-external-icon { flex: none; opacity: 0.6; }
+.nav-external:hover .nav-external-icon { opacity: 1; }
+
 .nav-item.active {
 	background: var(--sidebar-active);
 	color: #fff;

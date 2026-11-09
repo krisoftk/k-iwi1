@@ -20,6 +20,7 @@ $_['text_report']                      = 'Report';
 $_['text_home']                        = 'Home';
 $_['text_setting']                     = 'Impostazioni';
 $_['text_support']                     = 'Forum di supporto';
+$_['text_vendor']                      = 'Sito dell\'autore';
 $_['text_system']                      = 'Sistema';
 $_['text_user']                        = 'Utente';
 $_['text_documentation']               = 'Documentazione';

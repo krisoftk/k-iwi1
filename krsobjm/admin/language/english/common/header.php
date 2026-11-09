@@ -18,6 +18,7 @@ $_['text_report'] = 'Reports';
 $_['text_home'] = 'Home';
 $_['text_setting'] = 'Settings';
 $_['text_support'] = 'Support Forum';
+$_['text_vendor'] = 'Author\'s website';
 $_['text_system'] = 'System';
 $_['text_user'] = 'User';
 $_['text_documentation'] = 'Documentation';

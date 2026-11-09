@@ -136,6 +136,14 @@ class ControllerStandardHome extends Controller {
 	// (ControllerAdminCommonHome::login), so new modules, or those made by the
 	// generator, are protected from the start without doing anything.
 	public function login() {
+		// The admin and the installer have their own entry points with their
+		// own checks (admin group and token, "already installed"): through
+		// this one their controllers would run with just a site login, or an
+		// API key, so their routes don't exist here.
+		if (isset($this->request->get['route']) && in_array(PathResolver::area($this->request->get['route']), array('admin', 'install'), true)) {
+			return $this->forward('error/not_found');
+		}
+
 		if ($this->user->hasApiKey() && !$this->user->isApiAuthenticated()) {
 			return $this->forward('standard/home/unauthorized');
 		}

@@ -9,6 +9,20 @@
  * starting subfolder ('controller' or 'model').
  */
 final class PathResolver {
+	// The area of a route (its first folder under krsobjm: admin, standard,
+	// install, a module...), normalised as resolve() does and in lower case
+	// (on case-insensitive filesystems "Admin" opens the admin folder too).
+	// The entry points use it to decide which areas they may run.
+	public static function area($route) {
+		foreach (explode('/', str_replace('..', '', (string) $route)) as $segment) {
+			if ($segment !== '' && $segment !== '.') {
+				return strtolower($segment);
+			}
+		}
+
+		return '';
+	}
+
 	public static function resolve($route, $kind) {
 		// Empty or "." segments ("customers//customers", "customers/./customers")
 		// would be taken for subfolders and give a different path for the

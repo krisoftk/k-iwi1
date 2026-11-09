@@ -53,6 +53,13 @@ class ControllerAdminCommonHome extends Controller {
 	}
 
 	public function login() {
+		// Only the admin's own routes (and the error pages) run from this
+		// entry point: the site's controllers and the installer expect the
+		// site's checks, not these.
+		if (isset($this->request->get['route']) && !in_array(PathResolver::area($this->request->get['route']), array('admin', 'error'), true)) {
+			return $this->forward('error/not_found');
+		}
+
 		$route = $this->currentRouteArea();
 
 		$publicRoutes = array(

@@ -35,7 +35,6 @@
 <script src="js/plugins/fileupload/js/jquery.fileupload.js"></script>
 <script src="js/plugins/fileupload/js/jquery.fileupload-process.js"></script>
 <script src="js/plugins/fileupload/js/jquery.fileupload-ui.js"></script>
-<script src="js/plugins/fileupload/js/jquery.fileupload-jquery-ui.js"></script>
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 <script src="js/plugins/fileupload/js/jquery.iframe-transport.js"></script>
 

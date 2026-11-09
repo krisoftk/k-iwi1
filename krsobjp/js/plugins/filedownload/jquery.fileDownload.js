@@ -1,5 +1,5 @@
 /*
-* jQuery File Download Plugin v1.4.2 
+* jQuery File Download Plugin v1.4.5
 *
 * http://www.johnculviner.com
 *
@@ -24,7 +24,7 @@
 				'\r': "#13;",
 				'\n': "#10;",
 				'"': 'quot;',
-				"'": 'apos;' /*single quotes just to be safe*/
+				"'": '#39;' /*single quotes just to be safe, IE8 doesn't support &apos;, so use &#39; instead */
 	};
 
 $.extend({
@@ -50,6 +50,7 @@ $.extend({
             //the stock android browser straight up doesn't support file downloads initiated by a non GET: http://code.google.com/p/android/issues/detail?id=1780
             //specify a message here to display if a user tries with an android browser
             //if jQuery UI is installed this will be a dialog, otherwise it will be an alert
+            //Set to null to disable the message and attempt to download anyway
             //
             androidPostUnsupportedMessageHtml: "Unfortunately your Android browser doesn't support this type of file download. Please try again with a different browser.",
 
@@ -66,21 +67,29 @@ $.extend({
             prepareCallback: function (url) { },
 
             //
-            //a function to call after a file download dialog/ribbon has appeared
+            //a function to call after a file download successfully completed
             //Args:
             //  url - the original url attempted
             //
             successCallback: function (url) { },
 
             //
-            //a function to call after a file download dialog/ribbon has appeared
+            //a function to call after a file download request was canceled
+            //Args:
+            //  url - the original url attempted
+            //
+            abortCallback: function (url) { },
+
+            //
+            //a function to call after a file download failed
             //Args:
             //  responseHtml    - the html that came back in response to the file download. this won't necessarily come back depending on the browser.
             //                      in less than IE9 a cross domain error occurs because 500+ errors cause a cross domain issue due to IE subbing out the
             //                      server's error message with a "helpful" IE built in message
             //  url             - the original url attempted
+            //  error           - original error cautch from exception
             //
-            failCallback: function (responseHtml, url) { },
+            failCallback: function (responseHtml, url, error) { },
 
             //
             // the HTTP method to use. Defaults to "GET".
@@ -114,6 +123,12 @@ $.extend({
             cookiePath: "/",
 
             //
+            //if specified it will be used when attempting to clear the above name value pair
+            //useful for when downloads are being served on a subdomain (e.g. downloads.example.com)
+            //
+            cookieDomain: null,
+
+            //
             //the title for the popup second window as a download is processing in the case of a mobile browser
             //
             popupWindowTitle: "Initiating file download...",
@@ -125,7 +140,7 @@ $.extend({
             //It is recommended that on the server, htmlentity decoding is done irrespective.
             //
             encodeHTMLEntities: true
-            
+
         }, options);
 
         var deferred = new $.Deferred();
@@ -153,7 +168,7 @@ $.extend({
 
         var httpMethodUpper = settings.httpMethod.toUpperCase();
 
-        if (isAndroid && httpMethodUpper !== "GET") {
+        if (isAndroid && httpMethodUpper !== "GET" && settings.androidPostUnsupportedMessageHtml) {
             //the stock android browser straight up doesn't support file downloads initiated by non GET requests: http://code.google.com/p/android/issues/detail?id=1780
 
             if ($().dialog) {
@@ -189,27 +204,39 @@ $.extend({
                 //remove the perparing message if it was specified
                 if ($preparingDialog) {
                     $preparingDialog.dialog('close');
-                };
+                }
 
                 settings.successCallback(url);
 
                 deferred.resolve(url);
             },
 
-            onFail: function (responseHtml, url) {
+            onAbort: function (url) {
 
                 //remove the perparing message if it was specified
                 if ($preparingDialog) {
                     $preparingDialog.dialog('close');
                 };
 
+                settings.abortCallback(url);
+
+                deferred.reject(url);
+            },
+
+            onFail: function (responseHtml, url, error) {
+
+                //remove the perparing message if it was specified
+                if ($preparingDialog) {
+                    $preparingDialog.dialog('close');
+                }
+
                 //wire up a jquery dialog to display the fail message if specified
                 if (settings.failMessageHtml) {
                     $("<div>").html(settings.failMessageHtml).dialog(settings.dialogOptions);
                 }
 
-                settings.failCallback(responseHtml, url);
-                
+                settings.failCallback(responseHtml, url, error);
+
                 deferred.reject(responseHtml, url);
             }
         };
@@ -277,6 +304,12 @@ $.extend({
 
                     var kvp = this.split("=");
 
+                    //Issue: When value contains sign '=' then the kvp array does have more than 2 items. We have to join value back
+                    var k = kvp[0];
+                    kvp.shift();
+                    var v = kvp.join("=");
+                    kvp = [k, v];
+
                     var key = settings.encodeHTMLEntities ? htmlSpecialCharsEntityEncode(decodeURIComponent(kvp[0])) : decodeURIComponent(kvp[0]);
                     if (key) {
                         var value = settings.encodeHTMLEntities ? htmlSpecialCharsEntityEncode(decodeURIComponent(kvp[1])) : decodeURIComponent(kvp[1]);
@@ -321,16 +354,26 @@ $.extend({
 
 
         function checkFileDownloadComplete() {
-
             //has the cookie been written due to a file download occuring?
-            if (document.cookie.indexOf(settings.cookieName + "=" + settings.cookieValue) != -1) {
+
+            var cookieValue = settings.cookieValue;
+            if(typeof cookieValue == 'string') {
+                cookieValue = cookieValue.toLowerCase();
+            }
+
+            var lowerCaseCookie = settings.cookieName.toLowerCase() + "=" + cookieValue;
+
+            if (document.cookie.toLowerCase().indexOf(lowerCaseCookie) > -1) {
 
                 //execute specified callback
                 internalCallbacks.onSuccess(fileUrl);
 
-                //remove the cookie and iframe
-                document.cookie = settings.cookieName + "=; expires=" + new Date(1000).toUTCString() + "; path=" + settings.cookiePath;
+                //remove cookie
+                var cookieData = settings.cookieName + "=; path=" + settings.cookiePath + "; expires=" + new Date(0).toUTCString() + ";";
+                if (settings.cookieDomain) cookieData += " domain=" + settings.cookieDomain + ";";
+                document.cookie = cookieData;
 
+                //remove iframe
                 cleanUp(false);
 
                 return;
@@ -345,22 +388,33 @@ $.extend({
 
                     var formDoc = downloadWindow ? downloadWindow.document : getiframeDocument($iframe);
 
-                    if (formDoc && formDoc.body != null && formDoc.body.innerHTML.length) {
+                    if (formDoc && formDoc.body !== null && formDoc.body.innerHTML.length) {
 
                         var isFailure = true;
 
                         if ($form && $form.length) {
                             var $contents = $(formDoc.body).contents().first();
 
-                            if ($contents.length && $contents[0] === $form[0]) {
-                                isFailure = false;
+                            try {
+                                if ($contents.length && $contents[0] === $form[0]) {
+                                    isFailure = false;
+                                }
+                            } catch (e) {
+                                if (e && e.number == -2146828218) {
+                                    // IE 8-10 throw a permission denied after the form reloads on the "$contents[0] === $form[0]" comparison
+                                    isFailure = true;
+                                } else {
+                                    throw e;
+                                }
                             }
                         }
 
                         if (isFailure) {
-                            internalCallbacks.onFail(formDoc.body.innerHTML, fileUrl);
-
-                            cleanUp(true);
+                            // IE 8-10 don't always have the full content available right away, they need a litle bit to finish
+                            setTimeout(function () {
+                                internalCallbacks.onFail(formDoc.body.innerHTML, fileUrl);
+                                cleanUp(true);
+                            }, 100);
 
                             return;
                         }
@@ -369,7 +423,7 @@ $.extend({
                 catch (err) {
 
                     //500 error less than IE9
-                    internalCallbacks.onFail('', fileUrl);
+                    internalCallbacks.onFail('', fileUrl, err);
 
                     cleanUp(true);
 
@@ -402,13 +456,15 @@ $.extend({
                     }
 
                     if (isIos) {
-                        downloadWindow.focus(); //ios safari bug doesn't allow a window to be closed unless it is focused
-                        if (isFailure) {
-                            downloadWindow.close();
+                        if (downloadWindow.focus) {
+                            downloadWindow.focus(); //ios safari bug doesn't allow a window to be closed unless it is focused
+                            if (isFailure) {
+                                downloadWindow.close();
+                            }
                         }
                     }
                 }
-                
+
                 //iframe cleanup appears to randomly cause the download to fail
                 //not doing it seems better than failure...
                 //if ($iframe) {
@@ -424,9 +480,14 @@ $.extend({
                 return '&' + htmlSpecialCharsPlaceHolders[match];
         	});
         }
-
-        return deferred.promise();
+        var promise = deferred.promise();
+        promise.abort = function() {
+            cleanUp();
+            $iframe.attr('src', '').html('');
+            internalCallbacks.onAbort(fileUrl);
+        };
+        return promise;
     }
 });
 
-})(jQuery, this);
+})(jQuery, this || window);

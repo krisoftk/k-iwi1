@@ -221,6 +221,13 @@ plugins listed in `NOTICE.txt` are available to every module of the site.
 There's no rich-text editor: a module that needs one should bring a
 maintained editor (CKEditor 5, TinyMCE, ...).
 
+Bootstrap is 3.4.1, out of support: `js/bootstrap-security.js` fixes its two
+known XSS issues (CVE-2024-6484, CVE-2024-6485). jqPlot, fixedheadertable,
+printElement, the colorpicker and SoundJS are no longer maintained but have
+no known vulnerabilities; replace them when a module needs more. bgiframe,
+jQuery File Tree and the jQuery UI Timepicker Addon are no longer included:
+a module that uses them has to bring them.
+
 ## Settings
 
 **Admin > System > Settings** edits `config/config.ini`: a form with one tab

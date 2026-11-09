@@ -19,8 +19,9 @@ jQuery 3.7.1 (js/jquery-3.7.1.min.js) and jQuery Migrate 3.5.2
 jQuery UI 1.14.2 (js/plugins/ui/*)
     MIT License. Copyright OpenJS Foundation and other contributors.
 
-Bootstrap (js/bootstrap.min.js, css/bootstrap*.css)
-    MIT License. Copyright Twitter, Inc.
+Bootstrap 3.4.1 (js/bootstrap.min.js, css/bootstrap*.css)
+    MIT License. Copyright Twitter, Inc. js/bootstrap-security.js (K-iwi's
+    own) fixes CVE-2024-6484 and CVE-2024-6485, which no 3.x release fixes.
 
 Font Awesome 4.0.3 (krsobjp/font-awesome/*)
     Font: SIL Open Font License 1.1. Code (CSS): MIT License.
@@ -49,14 +50,13 @@ jqPlot (js/jqplot/*)
 ColorPicker / jqcolorpicker (plugins/colorpicker)
     MIT License. Copyright Martijn W. van der Lee.
 
-Bootstrap Datetimepicker (plugins/datetimepicker)
-    MIT License. Copyright Jonathan Peterson. Patched: .size() replaced by
-    .length (removed in jQuery 3).
+Bootstrap Datetimepicker 4.17.49 (plugins/datetimepicker)
+    MIT License. Copyright Jonathan Peterson.
 
-jQuery File Upload (plugins/fileupload)
+jQuery File Upload 10.32.0 (plugins/fileupload)
     MIT License. Copyright Sebastian Tschan (blueimp).
 
-jQuery File Download (plugins/filedownload)
+jQuery File Download 1.4.6 (plugins/filedownload)
     MIT License. Copyright John Culviner.
 
 fixedheadertable (plugins/fixedheadertable)
@@ -66,9 +66,8 @@ fixedheadertable (plugins/fixedheadertable)
 printElement (plugins/printElement)
     Dual-licensed MIT / GPL. Copyright Erik Zaadi.
 
-metisMenu (plugins/metisMenu)
-    MIT License (metisMenu by Jonathan Pearson; the bundled copy has no
-    header, license confirmed from the upstream project).
+metisMenu 2.7.9 (plugins/metisMenu)
+    MIT License. Copyright Osman Nuri Okumus.
 
 PHP libraries
 -------------

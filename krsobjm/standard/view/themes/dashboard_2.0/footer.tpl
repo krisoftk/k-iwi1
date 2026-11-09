@@ -19,7 +19,7 @@
 <script type="text/javascript" src="js/plugins/tabs/jquery.tabs.js"></script>
 <script type="text/javascript" src="js/plugins/filedownload/jquery.fileDownload.js"></script>
 <script type="text/javascript" src="js/plugins/colorpicker/jquery.colorpicker.js"></script>
-<script type="text/javascript" src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script type="text/javascript" src="js/plugins/metisMenu/metisMenu.min.js"></script>
 
 <!-- JqPlot -->
 <script type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
@@ -33,7 +33,7 @@
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <!-- fixes for the known XSS issues of Bootstrap 3.4.1 -->
 <script type="text/javascript" src="js/bootstrap-security.js"></script>
-<script type="text/javascript" src="js/plugins/datetimepicker/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="js/plugins/datetimepicker/bootstrap-datetimepicker.min.js"></script>
 
 <!-- Data tables -->
 <script type="text/javascript" src="js/plugins/dataTables/jquery.dataTables.min.js"></script>
@@ -43,7 +43,6 @@
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload-process.js"></script>
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload-ui.js"></script>
-<script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload-jquery-ui.js"></script>
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.iframe-transport.js"></script>
 

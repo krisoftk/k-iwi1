@@ -18,20 +18,32 @@ class Mail {
 	public $verp = false;
 	public $parameter = '';
 
+	// These values end up in the headers (and in the SMTP commands): a line
+	// break in them would add headers or recipients of the sender's choice
+	// (header injection), so CR, LF and NUL are removed, and from the
+	// addresses also the angle brackets that close <...> in SMTP.
 	public function setTo($to) {
-		$this->to = $to;
+		$this->to = is_array($to) ? array_map(array($this, 'cleanAddress'), $to) : $this->cleanAddress($to);
 	}
 
 	public function setFrom($from) {
-		$this->from = $from;
+		$this->from = $this->cleanAddress($from);
 	}
 
 	public function setSender($sender) {
-		$this->sender = $sender;
+		$this->sender = $this->cleanHeader($sender);
 	}
 
 	public function setSubject($subject) {
-		$this->subject = $subject;
+		$this->subject = $this->cleanHeader($subject);
+	}
+
+	private function cleanHeader($value) {
+		return str_replace(array("\r", "\n", "\0"), '', (string) $value);
+	}
+
+	private function cleanAddress($value) {
+		return trim(str_replace(array("\r", "\n", "\0", '<', '>'), '', (string) $value));
 	}
 
 	public function setText($text) {

@@ -231,49 +231,55 @@ class Auth {
 		$stmt->execute();
 	}
 
+	// PIN and RFID tag: looked up by their hash, as there's no username to
+	// pair them with. A short PIN has so few combinations that no hash
+	// would resist offline: the protection is the limit on wrong attempts
+	// from the same IP, as for passwords (code_login_blocked). Terminals
+	// are often shared, so it's the per-IP limit, not the pair one.
 	public function auth_check_user_pin($pin) {
-		$pin = sha1($pin);
-	
-		if (($db = UtilityDB::getDBfromTable("krs_users_auth"))) {
-				
-			$stmt_user = $db->prepare("SELECT * FROM t:krs_users_auth WHERE PIN = :pin");
-			$stmt_user->bindTable("krs_users_auth", "krs_users_auth");
-			$stmt_user->bindParam(":pin", $pin, KPDO::TYPE_VARCHAR);
-				
-			$stmt_user->execute();
-				
-			if (($db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC))) {
-				$details = $this->auth_get_details($db_user['USER_ID']);
-
-				// same check as auth_check_user_login: a disabled user
-				// can't get in with a PIN either
-				if (empty($details['ACTIVATION'])) {
-					return false;
-				}
-
-				return $details;
-			} else {
-				return false;
-			}
-		}
+		return $this->code_login($pin, 'PIN', '[pin]');
 	}
 
 	public function auth_check_user_rfid($tag) {
-		$tag = sha1($tag);
-		
+		return $this->code_login($tag, 'TAG', '[rfid]');
+	}
+
+	private function code_login($code, $column, $kind) {
+		$this->loginBlocked = false;
+
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+
+		if ($this->count_failed_logins($kind, $ip) >= $this->login_limit('setting.login_max_attempts_ip', 50)) {
+			$this->loginBlocked = true;
+
+			return false;
+		}
+
+		$details = $this->find_user_by_code($code, $column);
+
+		if (!$details) {
+			$this->record_failed_login($kind, $ip);
+		}
+
+		return $details;
+	}
+
+	private function find_user_by_code($code, $column) {
+		$hash = sha1($code);
+	
 		if (($db = UtilityDB::getDBfromTable("krs_users_auth"))) {
-	
-			$stmt_user = $db->prepare("SELECT * FROM t:krs_users_auth WHERE TAG = :tag");
+				
+			$stmt_user = $db->prepare("SELECT * FROM t:krs_users_auth WHERE " . ($column === 'TAG' ? 'TAG' : 'PIN') . " = :hash");
 			$stmt_user->bindTable("krs_users_auth", "krs_users_auth");
-			$stmt_user->bindParam(":tag", $tag, KPDO::TYPE_VARCHAR);
-	
+			$stmt_user->bindParam(":hash", $hash, KPDO::TYPE_VARCHAR);
+				
 			$stmt_user->execute();
-	
+				
 			if (($db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC))) {
 				$details = $this->auth_get_details($db_user['USER_ID']);
 
 				// same check as auth_check_user_login: a disabled user
-				// can't get in with an RFID tag either
+				// can't get in with a PIN or a tag either
 				if (empty($details['ACTIVATION'])) {
 					return false;
 				}

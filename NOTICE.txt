@@ -31,16 +31,8 @@ Glyphicons Halflings (krsobjp/fonts/glyphicons-halflings-*)
 moment.js (js/moment-with-locales.min.js)
     MIT License. Copyright JS Foundation and other contributors.
 
-CKEditor 4.4.2 (js/ckeditor/*)
-    Triple-licensed GPL / LGPL / MPL. Copyright CKSource - Frederico
-    Knabben. This distribution uses it under the GPL, consistent with
-    K-iwi's own license.
-
 createjs / SoundJS (js/createjs/*)
     MIT License. Copyright 2012 gskinner.com, inc.
-
-swfobject.js (js/createjs/swfobject.js)
-    MIT License.
 
 jQuery plugins (all under js/plugins/ and js/jqplot/ unless noted otherwise)
 -----------------------------------------------------------------------------
@@ -48,19 +40,12 @@ jQuery plugins (all under js/plugins/ and js/jqplot/ unless noted otherwise)
 dataTables (plugins/dataTables)
     MIT License. Copyright SpryMedia Ltd.
 
-flot + jquery.flot.tooltip (plugins/flot)
-    MIT License. Copyright IOLA and Ole Laursen (core); MIT for the
-    tooltip plugin.
-
 jqPlot (js/jqplot/*)
     Dual-licensed MIT / GPLv2. Copyright Chris Leonello. Used here under
     the MIT grant.
 
 ColorPicker / jqcolorpicker (plugins/colorpicker)
     MIT License. Copyright Martijn W. van der Lee.
-
-Superfish + Supersubs (plugins/superfish)
-    Dual-licensed MIT / GPL. Copyright Joel Birch.
 
 jQuery UI Timepicker Addon (plugins/timepicker)
     Dual-licensed MIT / GPL. Copyright Trent Richardson.
@@ -89,10 +74,6 @@ metisMenu (plugins/metisMenu)
 
 bgiframe (plugins/bgiframe)
     MIT License. Copyright Brandon Aaron.
-
-morris.js + raphael.js (plugins/morris)
-    MIT License. Copyright Olly Smith (morris.js) and Dmitry Baranovskiy /
-    Sencha Labs (raphael.js).
 
 PHP libraries
 -------------

@@ -32,9 +32,6 @@
 <script type="text/javascript" src="js/plugins/filedownload/jquery.fileDownload.js"></script>
 <script type="text/javascript" src="js/plugins/colorpicker/jquery.colorpicker.js"></script>
 
-<!-- CKEDITOR -->
-<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
-
 <!-- FILE UPLOAD -->
 <script src="js/plugins/fileupload/js/jquery.fileupload.js"></script>
 <script src="js/plugins/fileupload/js/jquery.fileupload-process.js"></script>

@@ -38,9 +38,6 @@
 <script type="text/javascript" src="js/plugins/dataTables/jquery.dataTables.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
 
-<!-- CKEDITOR -->
-<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
-
 <!-- FILE UPLOAD -->
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="js/plugins/fileupload/js/jquery.fileupload-process.js"></script>

@@ -6,6 +6,13 @@ class ControllerAdminCommonHeader extends Controller {
 		$secure = isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], array('on', '1'));
 
 		$this->data['base']        = $secure ? HTTPS_PUBLIC : HTTP_PUBLIC;
+
+		// on its own host (setting.admin_host) the page's base is that host:
+		// the CSP (base-uri 'self') refuses another one, and the public files
+		// (js/, css/) are there too, it's the same installation
+		if (trim((string) $this->config->get('setting.admin_host')) !== '') {
+			$this->data['base'] = url_with_host($this->data['base'], trim($this->config->get('setting.admin_host')));
+		}
 		$this->data['title']       = $this->document->getTitle();
 		$this->data['description'] = $this->document->getDescription();
 		$this->data['keywords']    = $this->document->getKeywords();

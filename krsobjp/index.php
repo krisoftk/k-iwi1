@@ -61,6 +61,13 @@ $registry->set('db', $db);
 $config->set('config_url', HTTP_SERVER);
 $config->set('config_ssl', HTTPS_SERVER);
 
+// The admin's own host (setting.admin_host) serves only the admin: a page of
+// the site there would share the admin's origin again
+if (is_admin_host($config->get('setting.admin_host'))) {
+	http_response_code(404);
+	exit;
+}
+
 // Url
 $url = new Url($config->get('config_url'), $config->get('setting.use_ssl') ? $config->get('config_ssl') : $config->get('config_url'));
 $registry->set('url', $url);

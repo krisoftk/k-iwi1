@@ -103,7 +103,8 @@ class ControllerAdminCommonLogin extends Controller {
 	// address in it: after the login we only go back to a page of this site,
 	// otherwise the user (and the token at the end of the URL) would end up elsewhere.
 	private function isLocalUrl($url) {
-		return strpos($url, HTTPS_SERVER) === 0 || strpos($url, HTTP_SERVER) === 0;
+		// the admin's base URLs (on setting.admin_host if set)
+		return strpos($url, $this->config->get('config_ssl')) === 0 || strpos($url, $this->config->get('config_url')) === 0;
 	}
 
 	private function attemptLogin() {

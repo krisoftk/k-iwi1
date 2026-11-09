@@ -335,6 +335,22 @@ before deploying to production in general):
 - **Keep `setting.error_display = "0"`** (the default) in `config/config.ini`:
   PHP errors go to `logs/error.txt` instead of being printed to visitors, with
   the server's paths. Turn it on only on a development machine.
+- **Serve the admin from a host of its own** (e.g. `admin.example.com`):
+  with site and admin on the same host, a script injected in a page of the
+  site could use the session of an administrator who opens that page to
+  act in the admin. On different hosts the browser keeps them apart. Point
+  the new host to the same installation (same DocumentRoot `krsobjp`, with
+  its certificate), check that `https://admin.example.com/admin/` opens,
+  then set it in Admin > System > Settings or in `config/config.ini`:
+
+  ```ini
+  setting.admin_host = "admin.example.com"
+  ```
+
+  From then on the admin answers only on that host (under `/admin/` of the
+  site it's gone) and the site never answers there; site and admin have
+  separate logins. If you lock yourself out (e.g. the new host doesn't
+  work yet), remove that line from `config/config.ini`.
 - **Behind a reverse proxy or load balancer** (nginx, HAProxy, Cloudflare, a
   cloud load balancer...) K-iwi gets plain http from the proxy's address: list
   the proxy in `setting.trusted_proxies` (IPs or networks, comma-separated,

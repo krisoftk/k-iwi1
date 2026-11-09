@@ -64,6 +64,18 @@ $registry->set('db', $db);
 $config->set('config_url', HTTP_SERVER);
 $config->set('config_ssl', HTTPS_SERVER);
 
+// Admin on a host of its own (setting.admin_host, see is_admin_host()):
+// on any other host it doesn't exist, and its links use that host
+if (trim((string) $config->get('setting.admin_host')) !== '') {
+	if (!is_admin_host($config->get('setting.admin_host'))) {
+		http_response_code(404);
+		exit;
+	}
+
+	$config->set('config_url', url_with_host(HTTP_SERVER, trim($config->get('setting.admin_host'))));
+	$config->set('config_ssl', url_with_host(HTTPS_SERVER, trim($config->get('setting.admin_host'))));
+}
+
 // Url
 $url = new Url($config->get('config_url'), $config->get('setting.use_ssl') ? $config->get('config_ssl') : $config->get('config_url'));
 $registry->set('url', $url);

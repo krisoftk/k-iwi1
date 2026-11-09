@@ -117,6 +117,35 @@ function apply_trusted_proxies($list) {
 	}
 }
 
+// Admin on a host of its own (setting.admin_host, e.g. admin.example.com).
+// Site and admin on the same host share the browser's same-origin rules: a
+// script injected in a page of the site could open the admin's pages with
+// the session of an administrator and act for them. On different hosts the
+// browser keeps them apart (separate cookies, no reading across origins).
+// With the setting on, the admin answers only on its host and the site
+// never on it, so the separation doesn't depend on the web server's setup.
+// The host is compared without the port unless the setting has one.
+function is_admin_host($adminHost) {
+	$request = strtolower(isset($_SERVER['HTTP_HOST']) ? trim($_SERVER['HTTP_HOST']) : '');
+	$adminHost = strtolower(trim((string) $adminHost));
+
+	if (strpos($adminHost, ':') === false) {
+		$request = preg_replace('/:\d+$/', '', $request);
+	}
+
+	return $adminHost !== '' && $request === $adminHost;
+}
+
+// "https://www.example.com/sub/" + "admin.example.com" -> "https://admin.example.com/sub/"
+function url_with_host($url, $host) {
+	return preg_replace('#^(https?://)[^/]+#i', '${1}' . $host, $url);
+}
+
+// a host name (or IP address), optionally with a port
+function is_host_name($host) {
+	return (bool) preg_match('/^(?=.{1,253}(:|$))[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*(:\d{1,5})?$/i', $host);
+}
+
 // "10.0.0.5, 172.16.0.0/12" -> array of valid entries (invalid ones dropped)
 function trusted_proxy_list($list) {
 	$networks = array();

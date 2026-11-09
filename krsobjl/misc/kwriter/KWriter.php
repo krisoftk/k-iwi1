@@ -46,10 +46,15 @@ class KWriter {
 		'Comments' => ''
 	);
 	
+	private $columns_type = array();
+	
 	// CVS setting
 	private $delimiter = ',';
 	private $enclosure = '"';
-	private $lineEnding = '\r\n';
+	private $lineEnding = "\r\n";
+	
+	// CSV injection: see setFormulaGuard()
+	private $formulaGuard = true;
 	
 	public function __construct($type = null, $workbookDefault = null) {
 		if (isset($type)) {
@@ -107,6 +112,16 @@ class KWriter {
 		$this->lineEnding = $lineEnding;
 	}
 	
+	// A CSV cell starting with = + - @ (or a tab / carriage return) is run as
+	// a formula by Excel and LibreOffice: exported data typed by someone
+	// (e.g. a customer called =HYPERLINK(...)) would run on the computer of
+	// whoever opens the file. Such cells get a leading apostrophe, which the
+	// spreadsheet shows as text; numbers (e.g. -5) are left alone. On by
+	// default; turn it off only for files read by programs, not people.
+	public function setFormulaGuard($on) {
+		$this->formulaGuard = (bool) $on;
+	}
+	
 	public function create($filename) {
 		$this->filename = $filename;
 		
@@ -129,10 +144,12 @@ class KWriter {
 	public function insertRow($row, $columns = null) {
 		switch ($this->type) {
 			case self::CSV:
-				if (isset($this->enclosure) || $this->enclosure != "") {
-					fputcsv($this->handle, $row, $this->delimiter, $this->enclosure);
+				$row = array_map(array($this, 'csvValue'), $row);
+				
+				if ($this->enclosure !== null && $this->enclosure !== '') {
+					fputcsv($this->handle, $row, $this->delimiter, $this->enclosure, '', $this->lineEnding);
 				} else {
-					fwrite($this->handle, implode($row, $this->delimiter)."\n");
+					fwrite($this->handle, implode($this->delimiter, $row) . $this->lineEnding);
 				}
 			break;
 			
@@ -164,7 +181,7 @@ class KWriter {
 		$output .= "<Generator><![CDATA[KriFramework by Krisoft S.r.l - http://www.krisoft.it]]></Generator>\n";
 		
 		foreach ($this->doc_prop as $propname => $propval) {
-			$output .= "<" . $propname . ">" . $propval . "</" . $propname . ">\n";
+			$output .= "<" . $propname . ">" . $this->xml($propval) . "</" . $propname . ">\n";
 		}
 		$output .= "<Created>" . gmdate("Y-m-d\TH:i:s\Z") . "</Created>\n";
 		
@@ -192,7 +209,7 @@ class KWriter {
 	    
 	    $this->workbookIsOpen = true;
 	    
-	    $output .= sprintf("<Worksheet ss:Name=\"%s\">\n", $name);
+	    $output .= sprintf("<Worksheet ss:Name=\"%s\">\n", $this->xml($this->sheetName($name)));
 	    
 	    $output .= "<Table>\n";
 	    
@@ -216,12 +233,40 @@ class KWriter {
 	}
 	
 	private function createXlsCell($item, $type = 'String') {
-        $item = str_replace('&#039;', '&apos;', htmlspecialchars($item, ENT_QUOTES));
+        $type = ($type === self::COLUMN_NUMBER && is_numeric(trim((string) $item))) ? self::COLUMN_NUMBER : self::COLUMN_STRING;
         
-        $output = sprintf("<Cell><Data ss:Type=\"%s\">%s</Data></Cell>\n", $type, trim($item));
+        $output = sprintf("<Cell><Data ss:Type=\"%s\">%s</Data></Cell>\n", $type, $this->xml(trim((string) $item)));
         
         return $output;
     }
+	
+	// Values often come from Request (already escaped) or from the database
+	// escaped the same way: the entities are decoded first, so the file has
+	// "Rossi & Figli" and not "Rossi &amp; Figli" (as esc() does for pages).
+	private function decode($value) {
+		return html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+	}
+	
+	private function xml($value) {
+		return htmlspecialchars($this->decode($value), ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE, 'UTF-8');
+	}
+	
+	private function csvValue($value) {
+		$value = $this->decode($value);
+		
+		if ($this->formulaGuard && $value !== '' && !is_numeric($value) && strpbrk($value[0], "=+-@\t\r") !== false) {
+			$value = "'" . $value;
+		}
+		
+		return $value;
+	}
+	
+	// Excel: at most 31 characters, none of []:*?/\
+	private function sheetName($name) {
+		$name = trim(str_replace(array('[', ']', ':', '*', '?', '/', '\\'), ' ', $this->decode($name)));
+		
+		return $name === '' ? 'Sheet' : preg_replace('/^(.{31}).+$/us', '$1', $name);
+	}
 	
 	private function createXlsFooter() {
 		$output = "</Table>\n</Worksheet>\n";

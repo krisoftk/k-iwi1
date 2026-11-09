@@ -14,8 +14,12 @@
 // Version
 define('VERSION', '1.0');
 
-// Configuration
-require_once('globals.php');
+// Configuration: globals.php is written by the installer, so a new
+// installation doesn't have it yet (require_once would stop with a fatal
+// error instead of sending to the installer)
+if (is_file(__DIR__ . '/globals.php')) {
+	require_once(__DIR__ . '/globals.php');
+}
 
 // Install
 if (!defined('DIR_PUBLIC')) {

@@ -17,7 +17,7 @@ function create_menu($menu, $labels, $level = false) {
 	foreach ($menu as $item) {
 		if ($html_menu == '') {
 			if ($level) {
-				$html_menu = '<ul class="nav nav-second-level" id="side-menu">';
+				$html_menu = '<ul class="nav nav-second-level">';
 			} else {
 				$html_menu = '<ul class="nav" id="side-menu">';
 			}
@@ -30,7 +30,7 @@ function create_menu($menu, $labels, $level = false) {
 			$arrow = '<span class="fa arrow"></span>';
 		}
 		
-		$href = 'href="#"';
+		$href = ' href="#"';
 		if (isset($item['link'])) {
 			$href = ' href="' . $item['link'] . '"';
 		}

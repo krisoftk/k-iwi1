@@ -15,9 +15,14 @@ class SessionDB implements SessionHandlerInterface, SessionUpdateTimestampHandle
 
 	public $data = array();
 
-	public function __construct() {
+	// $time: setting.timeout, the inactivity after which the user is logged
+	// out (Auth::auth_check_timeout uses half of gc_maxlifetime), as for
+	// SessionCookie. It used to be fixed at one hour here.
+	public function __construct($time = 900) {
+		$time = ((int) $time > 0) ? (int) $time : 900;
+
 		if (!session_id()) {
-			ini_set('session.gc_maxlifetime', 2 * 60 * 60);
+			ini_set('session.gc_maxlifetime', $time * 2);
 			ini_set('session.gc_probability', 100);
 
 			session_set_save_handler($this);

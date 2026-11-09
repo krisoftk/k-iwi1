@@ -127,7 +127,7 @@ $registry->set('response', $response);
 
 // Session
 if ($config->get('setting.use_session_db') == '1') {
-	$session = new SessionDB();
+	$session = new SessionDB($config->get('setting.timeout'));
 } else {
 	$session = new SessionCookie($config->get('setting.timeout'));
 }

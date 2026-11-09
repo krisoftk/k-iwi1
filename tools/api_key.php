@@ -43,12 +43,12 @@ function ensure_api_keys_table($db) {
 	));
 
 	if ($created) {
-		echo "Creata la tabella krs_api_keys.\n";
+		echo "Created the krs_api_keys table.\n";
 	}
 }
 
 function usage() {
-	fwrite(STDERR, "Uso:\n  php tools/api_key.php create <username> [descrizione]\n  php tools/api_key.php list\n  php tools/api_key.php revoke <id>\n");
+	fwrite(STDERR, "Usage:\n  php tools/api_key.php create <username> [description]\n  php tools/api_key.php list\n  php tools/api_key.php revoke <id>\n");
 	exit(1);
 }
 
@@ -71,12 +71,12 @@ switch ($command) {
 		$stmt->execute();
 
 		if (!($user = $stmt->fetch(KPDO::FETCH_ASSOC))) {
-			fwrite(STDERR, "Utente $username non trovato.\n");
+			fwrite(STDERR, "User $username not found.\n");
 			exit(1);
 		}
 
 		if (empty($user['ACTIVATION'])) {
-			fwrite(STDERR, "Attenzione: l'utente $username e' disabilitato, la chiave non funzionera' finche' non viene riattivato.\n");
+			fwrite(STDERR, "Warning: user $username is disabled, the key won't work until the user is enabled again.\n");
 		}
 
 		$key = bin2hex(random_bytes(32));
@@ -95,8 +95,8 @@ switch ($command) {
 		$stmt->bindParam(":created", $created, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
 
-		echo "API key creata (id " . $db->lastInsertId() . ") per l'utente $username.\n";
-		echo "Copiala ora, non verra' piu' mostrata:\n\n" . $key . "\n";
+		echo "API key created (id " . $db->lastInsertId() . ") for user $username.\n";
+		echo "Copy it now, it won't be shown again:\n\n" . $key . "\n";
 		break;
 
 	case 'list':
@@ -105,10 +105,10 @@ switch ($command) {
 		$stmt->bindTable("krs_users", "krs_users", "u");
 		$stmt->execute();
 
-		printf("%-5s %-15s %-10s %-8s %-20s %-20s %s\n", 'ID', 'UTENTE', 'CHIAVE', 'ATTIVA', 'CREATA', 'ULTIMO USO', 'DESCRIZIONE');
+		printf("%-5s %-15s %-10s %-8s %-20s %-20s %s\n", 'ID', 'USER', 'KEY', 'ACTIVE', 'CREATED', 'LAST USED', 'DESCRIPTION');
 
 		while (($row = $stmt->fetch(KPDO::FETCH_ASSOC))) {
-			printf("%-5s %-15s %-10s %-8s %-20s %-20s %s\n", $row['ID'], $row['USERNAME'], $row['KEY_PREFIX'] . '...', $row['ACTIVE'] ? 'si' : 'no', $row['CREATED'], $row['LAST_USED'] ? $row['LAST_USED'] : '-', $row['DESCRIPTION']);
+			printf("%-5s %-15s %-10s %-8s %-20s %-20s %s\n", $row['ID'], $row['USERNAME'], $row['KEY_PREFIX'] . '...', $row['ACTIVE'] ? 'yes' : 'no', $row['CREATED'], $row['LAST_USED'] ? $row['LAST_USED'] : '-', $row['DESCRIPTION']);
 		}
 		break;
 
@@ -126,7 +126,7 @@ switch ($command) {
 		$stmt->bindParam(":id", $id, KPDO::TYPE_INTEGER);
 		$stmt->execute();
 
-		echo $stmt->rowCount() ? "API key $id revocata.\n" : "Nessuna API key con id $id.\n";
+		echo $stmt->rowCount() ? "API key $id revoked.\n" : "No API key with id $id.\n";
 		break;
 
 	default:

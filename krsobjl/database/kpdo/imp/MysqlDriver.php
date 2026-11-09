@@ -56,6 +56,30 @@ class MysqlDriver implements iDriverDB {
 			}
 			
 			$this->link->set_charset("utf8");
+
+			$this->safeSqlMode();
+		}
+	}
+
+	// The bound values are escaped with backslashes (real_escape_string) and
+	// quoted with single quotes: a server whose sql_mode has
+	// NO_BACKSLASH_ESCAPES would read \' as a backslash followed by the end of
+	// the string (SQL injection), one with ANSI_QUOTES would take the double
+	// quotes of the queries for identifiers. Both are removed from this
+	// connection only, the server's setting stays as it is.
+	private function safeSqlMode() {
+		$result = $this->link->query("SELECT @@SESSION.sql_mode");
+
+		if (!$result) {
+			return;
+		}
+
+		$row = $result->fetch_row();
+		$modes = array_filter(explode(',', (string) $row[0]));
+		$safe = array_diff($modes, array('NO_BACKSLASH_ESCAPES', 'ANSI_QUOTES', 'ANSI'));
+
+		if (count($safe) !== count($modes)) {
+			$this->link->query("SET SESSION sql_mode = '" . $this->link->real_escape_string(implode(',', $safe)) . "'");
 		}
 	}
 	

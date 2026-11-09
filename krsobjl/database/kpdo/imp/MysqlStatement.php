@@ -179,26 +179,20 @@ class MysqlStatement implements iStatement {
 			}
 
 			switch ($parameter["type"]) {
+				// Text, dates and times: a string literal escaped by the server's
+				// own function (it knows the connection charset) in single quotes,
+				// which stay a string even with ANSI_QUOTES in sql_mode (double
+				// quotes would become an identifier there). addslashes() didn't
+				// know the charset. See also MysqlDriver: NO_BACKSLASH_ESCAPES is
+				// removed from the session, or the backslashes would stop escaping.
 				case KPDO::TYPE_VARCHAR:
-					$value = '"'.addslashes((string) $parameter["value"]).'"';
-				break;
 				case KPDO::TYPE_CHAR:
-					$value = '"'.addslashes((string) $parameter["value"]).'"';
-				break;
 				case KPDO::TYPE_TEXT:
-					$value = '"'.addslashes((string) $parameter["value"]).'"';
-				break;
 				case KPDO::TYPE_DATE:
-					$value = '"'.addslashes((string) $parameter["value"]).'"';
-				break;
 				case KPDO::TYPE_DATETIME:
-					$value = '"'.addslashes((string) $parameter["value"]).'"';
-				break;
 				case KPDO::TYPE_TIME:
-					$value = '"'.addslashes((string) $parameter["value"]).'"';
-				break;
 				case KPDO::TYPE_TIMESTAMP:
-					$value = "'".addslashes((string) $parameter["value"])."'";
+					$value = "'" . $this->link->real_escape_string((string) $parameter["value"]) . "'";
 				break;
 				default:
 					$value = $this->numericLiteral($param, $parameter["value"]);

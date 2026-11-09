@@ -195,14 +195,17 @@ class ODBCStatement implements iStatement {
 			}
 
 			switch ($parameter["type"]) {
+				// Standard SQL string literal: the quote is doubled. Backslashes
+				// escape nothing there, so addslashes() (used before for times and
+				// timestamps) left the quote open.
 				case KPDO::TYPE_VARCHAR:
-					$value = "'".str_replace("'", "''", (string) $parameter["value"])."'";
-				break;
+				case KPDO::TYPE_CHAR:
+				case KPDO::TYPE_TEXT:
+				case KPDO::TYPE_DATE:
+				case KPDO::TYPE_DATETIME:
 				case KPDO::TYPE_TIME:
-					$value = "'".addslashes((string) $parameter["value"])."'";
-				break;
 				case KPDO::TYPE_TIMESTAMP:
-					$value = "'".addslashes((string) $parameter["value"])."'";
+					$value = "'" . str_replace("'", "''", (string) $parameter["value"]) . "'";
 				break;
 				default:
 					$value = $this->numericLiteral($param, $parameter["value"]);

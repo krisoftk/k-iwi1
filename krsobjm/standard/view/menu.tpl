@@ -27,7 +27,7 @@ function create_menu($menu, $labels) {
 		}
 		
 		if (isset($item['children'])) {
-			$html_menu .= create_menu($item['children']);
+			$html_menu .= create_menu($item['children'], $labels);
 		}
 		
 		$html_menu .= "</li>";

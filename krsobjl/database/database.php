@@ -2,14 +2,6 @@
 require_once 'utility_db.php';
 
 /*
- * KSQL LIBRARY
- */
-require_once 'ksql/AdapterDB.php';
-require_once 'ksql/iKsql.php';
-require_once 'ksql/Ksql.php';
-require_once 'ksql/imp/MysqlKsql.php';
-
-/*
  * KPDO LIBRARY
  */
 require_once 'kpdo/iDriverDB.php';

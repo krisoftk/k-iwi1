@@ -7,8 +7,6 @@ class UtilityDB
 	const SELECT_DB_module = 'SELECT d.ID AS DATABASE_ID FROM t:krs_databases, t:krs_modules WHERE d.MODULE_ID = m.ID AND m.NAME = :name';
 	const SELECT_DB_id = 'SELECT TYPE, IP, PORT, USERNAME, PASSWORD, NAME FROM t:krs_databases WHERE ID = :id';
 	
-	private static $connection_boot;
-	
 	static function getDBfromModule($module) {
 		try {
 			global $db;
@@ -155,94 +153,6 @@ class UtilityDB
 		}
 
 		throw new KPDOException("Tipo $name non trovato in krs_types");
-	}
-
-	/* LEGACY */
-	
-	static function get_connection_boot_DB() {
-		if (!isset(UtilityDB::$connection_boot)) {
-			$config = UtilityConfiguration::getConfiguration();
-	
-			$driver = $config["database.driver"];
-			$host = $config["database.host"];
-			$port = $config["database.port"];
-			$username = $config[ "database.user" ];
-			$password = $config["database.password"];
-			$database = $config["database.name"];
-				
-			if ($database == '') {
-				$database = "krs_framework";
-			}
-				
-			try {
-				UtilityDB::$connection_boot = new KPDO($driver, $host, $port, $username, $password, $database);
-			} catch (KPDOException $e) {
-				// the reason (user, host, server message) goes to the log, not to the visitor
-				trigger_error('Cannot connect to the framework database: ' . $e->getMessage(), E_USER_WARNING);
-				http_response_code(500);
-
-				exit();
-			}
-		}
-	
-		return UtilityDB::$connection_boot;
-	}
-	
-	static function getDBfromTable_KSQL($table) {
-		try {
-			$db = UtilityDB::get_connection_boot_DB();
-
-			$stmt = $db->prepare(UtilityDB::SELECT_TABLE_name);
-			$stmt->bindTable("krs_tables", "krs_tables");
-			$stmt->bindParam(":name", $table, KPDO::TYPE_VARCHAR);
-
-			$stmt->execute();
-
-			if ($stmt->rowCount() == 0) {
-				echo "Tabella $table non trovata";
-				return FALSE;
-			} else {
-				$table_info = $stmt->fetch();
-
-				$conn_db = UtilityDB::get_connection_DB_KSQL($table_info['DATABASE_ID']);
-					
-				return $conn_db;
-			}
-		} catch (KPDOException $e) {
-			trigger_error((string) $e, E_USER_WARNING);
-			return FALSE;
-		}
-	}
-	
-	static function get_connection_DB_KSQL($database_id) {
-		try {
-			$db = UtilityDB::get_connection_boot_DB();
-				
-			$stmt = $db->prepare(UtilityDB::SELECT_DB_id);
-			$stmt->bindTable("krs_databases", "krs_databases");
-			$stmt->bindParam(":id", $database_id, KPDO::TYPE_INTEGER);
-	
-			$stmt->execute();
-				
-			$database_info = $stmt->fetch();
-
-			$db2 = AdapterDB::createIstance($database_info['TYPE']);
-			$db2->driver = $database_info['TYPE'];
-			$db2->ip = $database_info['IP'];
-			$db2->port = $database_info['PORT'];
-			$db2->user = $database_info['USERNAME'];
-			$db2->pass = $database_info['PASSWORD'];
-			$db2->database = $database_info['NAME'];
-				
-			if ($db2->connect()) {
-				return $db2;
-			} else {
-				return NULL;
-			}
-		} catch (KPDOException $e) {
-			trigger_error((string) $e, E_USER_WARNING);
-			return FALSE;
-		}
 	}
 }
 ?>

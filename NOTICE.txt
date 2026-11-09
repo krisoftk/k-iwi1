@@ -56,14 +56,6 @@ jqPlot (js/jqplot/*)
     Dual-licensed MIT / GPLv2. Copyright Chris Leonello. Used here under
     the MIT grant.
 
-jsTree 0.9.9 (plugins/jstree)
-    Dual-licensed MIT / GPL. Copyright Ivan Bozhanov (vakata.com).
-    Bundled libs inside plugins/jstree/lib/:
-      - jquery.cookie.js: dual MIT / GPL, Copyright Klaus Hartl.
-      - jquery.hotkeys.js: same license as jQuery (MIT).
-      - sarissa.js: GPLv2+ / LGPLv2.1+ / Apache License 2.0+, Copyright
-        Manos Batsis.
-
 ColorPicker / jqcolorpicker (plugins/colorpicker)
     MIT License. Copyright Martijn W. van der Lee.
 

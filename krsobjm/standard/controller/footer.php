@@ -2,7 +2,6 @@
 class ControllerStandardFooter extends Controller {
 	
 	protected function index() {
-		$this->load->model('common/image');
 		
 		$id_body = "#content";
 		$id_info = "#info";

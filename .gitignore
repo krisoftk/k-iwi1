@@ -27,12 +27,6 @@ Thumbs.db
 *.swp
 *~
 
-# Images uploaded through the file manager and their thumbnails (the folder
-# and its .htaccess are versioned instead)
-krsobjp/image/data/*
-!krsobjp/image/data/.gitkeep
-krsobjp/image/cache/
-
 # Copies of config.ini made by Admin > Settings before every save
 # (they contain the database password)
 config/backup/

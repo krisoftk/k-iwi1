@@ -9,13 +9,11 @@
 // HTTP
 define('HTTP_SERVER', 'http://localhost/');
 define('HTTP_PUBLIC', 'http://localhost/');
-define('HTTP_IMAGE', 'http://localhost/image/');
 define('HTTP_THEMES', 'http://localhost/themes/admin/');
 
 // HTTPS
 define('HTTPS_SERVER', 'https://localhost/');
 define('HTTPS_PUBLIC', 'https://localhost/');
-define('HTTPS_IMAGE', 'https://localhost/image/');
 define('HTTPS_THEMES', 'https://localhost/themes/admin/');
 
 //INDEX
@@ -28,7 +26,6 @@ define('DIR_TEMPLATE', '/path/to/k-iwi/krsobjm/admin/view/themes/');
 define('DIR_PUBLIC', '/path/to/k-iwi/krsobjp/');
 define('DIR_JAVASCRIPT', '/path/to/k-iwi/krsobjp/js/');
 define('DIR_CSS', '/path/to/k-iwi/krsobjp/css/');
-define('DIR_IMAGE', '/path/to/k-iwi/krsobjp/image/');
 define('DIR_THEMES', '/path/to/k-iwi/krsobjp/themes/admin/');
 define('DIR_LOGS', '/path/to/k-iwi/logs/');
 define('DIR_CONFIG', '/path/to/k-iwi/config/');

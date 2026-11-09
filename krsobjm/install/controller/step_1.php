@@ -330,13 +330,11 @@ class ControllerInstallStep1 extends Controller {
 		$output .= '// HTTP' . "\n";
 		$output .= 'define(\'HTTP_SERVER\', \'' . HTTP_SERVER . '\');' . "\n";
 		$output .= 'define(\'HTTP_PUBLIC\', \'' . HTTP_SERVER . '\');' . "\n";
-		$output .= 'define(\'HTTP_IMAGE\', \'' . HTTP_SERVER . 'image/\');' . "\n";
 		$output .= 'define(\'HTTP_THEMES\', \'' . HTTP_SERVER . 'themes/admin/\');' . "\n\n";
 
 		$output .= '// HTTPS' . "\n";
 		$output .= 'define(\'HTTPS_SERVER\', \'' . HTTPS_SERVER . '\');' . "\n";
 		$output .= 'define(\'HTTPS_PUBLIC\', \'' . HTTPS_SERVER . '\');' . "\n";
-		$output .= 'define(\'HTTPS_IMAGE\', \'' . HTTPS_SERVER . 'image/\');' . "\n";
 		$output .= 'define(\'HTTPS_THEMES\', \'' . HTTPS_SERVER . 'themes/admin/\');' . "\n\n";
 		
 		$output .= '//INDEX' . "\n";
@@ -349,7 +347,6 @@ class ControllerInstallStep1 extends Controller {
 		$output .= 'define(\'DIR_PUBLIC\', \'' . DIR_BASE . 'krsobjp/\');' . "\n";
 		$output .= 'define(\'DIR_JAVASCRIPT\', \'' . DIR_BASE . 'krsobjp/js/\');' . "\n";
 		$output .= 'define(\'DIR_CSS\', \'' . DIR_BASE . 'krsobjp/css/\');' . "\n";
-		$output .= 'define(\'DIR_IMAGE\', \'' . DIR_BASE . 'krsobjp/image/\');' . "\n";
 		$output .= 'define(\'DIR_THEMES\', \'' . DIR_BASE . 'krsobjp/themes/admin/\');' . "\n";
 		$output .= 'define(\'DIR_LOGS\', \'' . DIR_BASE . 'logs/\');' . "\n";
 		$output .= 'define(\'DIR_CONFIG\', \'' . DIR_BASE . 'config/\');' . "\n";
@@ -367,13 +364,11 @@ class ControllerInstallStep1 extends Controller {
 		$output .= '// HTTP' . "\n";
 		$output .= 'define(\'HTTP_SERVER\', \'' . HTTP_SERVER . '\');' . "\n";
 		$output .= 'define(\'HTTP_PUBLIC\', \'' . HTTP_SERVER . '\');' . "\n";
-		$output .= 'define(\'HTTP_IMAGE\', \'' . HTTP_SERVER . 'image/\');' . "\n";
 		$output .= 'define(\'HTTP_THEMES\', \'' . HTTP_SERVER . 'themes/\');' . "\n\n";
 		
 		$output .= '// HTTPS' . "\n";
 		$output .= 'define(\'HTTPS_SERVER\', \'' . HTTPS_SERVER . '\');' . "\n";
 		$output .= 'define(\'HTTPS_PUBLIC\', \'' . HTTPS_SERVER . '\');' . "\n";
-		$output .= 'define(\'HTTPS_IMAGE\', \'' . HTTPS_SERVER . 'image/\');' . "\n";
 		$output .= 'define(\'HTTPS_THEMES\', \'' . HTTPS_SERVER . 'themes/\');' . "\n\n";
 		
 		$output .= '//INDEX' . "\n";
@@ -386,7 +381,6 @@ class ControllerInstallStep1 extends Controller {
 		$output .= 'define(\'DIR_PUBLIC\', \'' . DIR_BASE . 'krsobjp/\');' . "\n";
 		$output .= 'define(\'DIR_JAVASCRIPT\', \'' . DIR_BASE . 'krsobjp/js/\');' . "\n";
 		$output .= 'define(\'DIR_CSS\', \'' . DIR_BASE . 'krsobjp/css/\');' . "\n";
-		$output .= 'define(\'DIR_IMAGE\', \'' . DIR_BASE . 'krsobjp/image/\');' . "\n";
 		$output .= 'define(\'DIR_THEMES\', \'' . DIR_BASE . 'krsobjp/themes/\');' . "\n";
 		$output .= 'define(\'DIR_LOGS\', \'' . DIR_BASE . 'logs/\');' . "\n";
 		$output .= 'define(\'DIR_CONFIG\', \'' . DIR_BASE . 'config/\');' . "\n";

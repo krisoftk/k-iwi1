@@ -11,5 +11,4 @@ require_once 'document.php';
 require_once 'language.php';
 require_once 'user.php';
 require_once 'mail.php';
-require_once 'image.php';
 ?>

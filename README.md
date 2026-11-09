@@ -29,7 +29,6 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
 - PHP 8.0 or higher (developed and tested on PHP 8.4), with these extensions:
   - `mysqli` for MySQL/MariaDB, or `pdo_odbc` for any other ODBC compliant
     database (Oracle, PostgreSQL, SQL Server...);
-  - `gd` (optional) for the image thumbnails of the file manager;
   - `zlib` (optional) for output compression (`setting.compression`).
 - Database server: MySQL or MariaDB (tested on MariaDB 11.8), or any other
   ODBC compliant database.
@@ -57,10 +56,6 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
    The folders outside `krsobjp` also ship an `.htaccess` that denies any
    access, as a safety net if the DocumentRoot points to the project root by
    mistake.
-
-   The web server needs write access to `krsobjp/image/`: the file manager
-   saves the uploaded images in `image/data/` and their thumbnails in
-   `image/cache/`. Its `.htaccess` blocks the execution of any script there.
 
 2. **Create an empty database** in your database engine. With MySQL/MariaDB
    use the `utf8mb4` charset (e.g. `CREATE DATABASE kiwi CHARACTER SET

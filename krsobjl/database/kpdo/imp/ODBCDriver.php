@@ -128,7 +128,7 @@ class ODBCDriver implements iDriverDB {
 			$row = $result->fetch(PDO::FETCH_NUM);
 			return $row[0];
 		} catch (PDOException $e) {
-			echo $e;
+			trigger_error($e->getMessage(), E_USER_WARNING);
 			return FALSE;
 		}
 	}
@@ -261,7 +261,7 @@ class ODBCDriver implements iDriverDB {
 			$this->exec("SET SCHEMA = " . $schema);
 			$this->database = $schema;
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 		}
 	}
 	

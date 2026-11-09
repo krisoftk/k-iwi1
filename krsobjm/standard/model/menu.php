@@ -78,7 +78,7 @@ class ModelStandardMenu extends Model {
 			return $array_menu;
 			
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 		}
 	}
 	
@@ -260,7 +260,7 @@ class ModelStandardMenu extends Model {
 			}
 			return $this->generete_path_module($stmt_modules, $map['MODULE_ID']) . "/" . $prog['PROG'] . $suffix;
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 		}
 	}
 	
@@ -276,7 +276,7 @@ class ModelStandardMenu extends Model {
 				return $module['NAME'];
 			}
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 		}
 	}
 	

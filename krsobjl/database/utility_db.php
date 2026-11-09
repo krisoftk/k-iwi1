@@ -20,7 +20,7 @@ class UtilityDB
 			$stmt->execute();
 		
 			if (($module != "") && ($stmt->rowCount() == 0)) {
-				echo "Modulo $module non trovato";
+				trigger_error("Module $module not found", E_USER_WARNING);
 				return FALSE;
 			} else {
 				$table_info = $stmt->fetch();
@@ -28,7 +28,7 @@ class UtilityDB
 				return $conn_db;
 			}
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 			return FALSE;
 		}
 	}
@@ -43,7 +43,7 @@ class UtilityDB
 			$stmt_mod->execute();
 
 			if (($stmt_mod->rowCount() == 0) && ($module!="")) {
-				echo "Modulo $module non trovato";
+				trigger_error("Module $module not found", E_USER_WARNING);
 				return FALSE;
 			} else {
 					if (!$module==""){
@@ -69,7 +69,7 @@ class UtilityDB
 					}
 			}
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 			return FALSE;
 		}
 	}
@@ -90,7 +90,7 @@ class UtilityDB
 							
 			return $db2;
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 			return FALSE;
 		}
 	}
@@ -177,9 +177,10 @@ class UtilityDB
 			try {
 				UtilityDB::$connection_boot = new KPDO($driver, $host, $port, $username, $password, $database);
 			} catch (KPDOException $e) {
-				echo "Configurare il file per la prima installazione ed accertarsi che i dati inseriti siano corretti.\n<BR>";
-				echo $e;
-	
+				// the reason (user, host, server message) goes to the log, not to the visitor
+				trigger_error('Cannot connect to the framework database: ' . $e->getMessage(), E_USER_WARNING);
+				http_response_code(500);
+
 				exit();
 			}
 		}
@@ -208,7 +209,7 @@ class UtilityDB
 				return $conn_db;
 			}
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 			return FALSE;
 		}
 	}
@@ -239,7 +240,7 @@ class UtilityDB
 				return NULL;
 			}
 		} catch (KPDOException $e) {
-			echo $e;
+			trigger_error((string) $e, E_USER_WARNING);
 			return FALSE;
 		}
 	}

@@ -3,6 +3,20 @@ class ControllerInstallStep1 extends Controller {
 	private $error = array();
 	
 	public function index() {
+		// Second lock after the one of krsobjp/install/index.php: this
+		// controller must never run on an installation (it would insert the
+		// base data again, admin/admin user included), whatever the way it is
+		// reached. Same criterion: globals.php defines DIR_PUBLIC.
+		$globals = DIR_PUBLIC . 'globals.php';
+
+		if (is_file($globals) && strpos(file_get_contents($globals), "define('DIR_PUBLIC'") !== false) {
+			http_response_code(403);
+
+			$this->response->setOutput('K-iwi is already installed.');
+
+			return;
+		}
+
 		$this->install();
 		
 		$this->template = 'install/view/themes/default/step_1.tpl';

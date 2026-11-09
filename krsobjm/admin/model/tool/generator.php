@@ -126,10 +126,12 @@ class ModelAdminToolGenerator extends Model {
 			foreach ($data['fields'] as $field) {
 				if (isset($field['field_search_check'])) {
 					
-					// "starts with" filter with a bound parameter, not concatenated
+					// "starts with" filter with a bound parameter, not concatenated;
+					// % and _ typed by the user are searched as they are, not as LIKE
+					// wildcards (backslash is the escape character of LIKE in MySQL)
 					$filters_query .= 'if (!empty($data[\'filter_' . $field['field'] . '\'])) {
 						$implode[] = "' . $field['field'] . ' LIKE :filter_' . $field['field'] . '";
-						$params[\'filter_' . $field['field'] . '\'] = $data[\'filter_' . $field['field'] . '\'] . \'%\';
+						$params[\'filter_' . $field['field'] . '\'] = addcslashes($data[\'filter_' . $field['field'] . '\'], \'%_\\\\\') . \'%\';
 					}';
 				}
 			}

@@ -12,11 +12,12 @@ class ModelAdminUserUser extends Model {
 
 		try {
 			$hash = $this->hashPassword($data['password']);
+			$language = $this->hasLanguage($data);
 
 			$stmt = $db->prepare('INSERT INTO t:users
 				(FIRSTNAME, LASTNAME, USERNAME, EMAIL, SALT, PASSWORD, REGISTER_DATA, LAST_VISIT_DATA, ACTIVATION, LANGUAGE)
 				VALUES
-				(:firstname, :lastname, :username, :email, :salt, :password, :register_data, :last_visit_data, :activation, :language)');
+				(:firstname, :lastname, :username, :email, :salt, :password, :register_data, :last_visit_data, :activation, ' . ($language ? ':language' : 'NULL') . ')');
 			$stmt->bindTable('users', 'krs_users');
 			$stmt->bindParam('firstname', $data['firstname'], KPDO::TYPE_VARCHAR);
 			$stmt->bindParam('lastname', $data['lastname'], KPDO::TYPE_VARCHAR);
@@ -28,7 +29,11 @@ class ModelAdminUserUser extends Model {
 			$stmt->bindParam('register_data', $registerDate, KPDO::TYPE_VARCHAR);
 			$stmt->bindParam('last_visit_data', $registerDate, KPDO::TYPE_VARCHAR);
 			$stmt->bindParam('activation', $data['status'], KPDO::TYPE_VARCHAR);
-			$stmt->bindParam('language', $data['language'], KPDO::TYPE_VARCHAR);
+
+			if ($language) {
+				$stmt->bindParam('language', $data['language'], KPDO::TYPE_VARCHAR);
+			}
+
 			$stmt->execute();
 
 			$userId = $db->lastInsertId();
@@ -53,8 +58,10 @@ class ModelAdminUserUser extends Model {
 		$db = UtilityDB::getDBfromTable('krs_users');
 
 		try {
+			$language = $this->hasLanguage($data);
+
 			$stmt = $db->prepare('UPDATE t:users
-				SET FIRSTNAME = :firstname, LASTNAME = :lastname, USERNAME = :username, EMAIL = :email, ACTIVATION = :activation, LANGUAGE = :language
+				SET FIRSTNAME = :firstname, LASTNAME = :lastname, USERNAME = :username, EMAIL = :email, ACTIVATION = :activation, LANGUAGE = ' . ($language ? ':language' : 'NULL') . '
 				WHERE ID = :id');
 			$stmt->bindTable('users', 'krs_users');
 			$stmt->bindParam('firstname', $data['firstname'], KPDO::TYPE_VARCHAR);
@@ -62,7 +69,11 @@ class ModelAdminUserUser extends Model {
 			$stmt->bindParam('username', $data['username'], KPDO::TYPE_VARCHAR);
 			$stmt->bindParam('email', $data['email'], KPDO::TYPE_VARCHAR);
 			$stmt->bindParam('activation', $data['status'], KPDO::TYPE_VARCHAR);
-			$stmt->bindParam('language', $data['language'], KPDO::TYPE_VARCHAR);
+
+			if ($language) {
+				$stmt->bindParam('language', $data['language'], KPDO::TYPE_VARCHAR);
+			}
+
 			$stmt->bindParam('id', $userId, KPDO::TYPE_VARCHAR);
 			$stmt->execute();
 
@@ -149,6 +160,13 @@ class ModelAdminUserUser extends Model {
 		$stmt->bindTable('users', 'krs_users');
 		$stmt->bindParam('id', $userId, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
+	}
+
+	// "Default" in the form (empty value) is stored as NULL, like the users
+	// who never chose and those of a deleted language (see
+	// ModelAdminLocalisationLanguage): KPDO would turn null into ''.
+	private function hasLanguage($data) {
+		return isset($data['language']) && $data['language'] !== '';
 	}
 
 	// The other ways a user logs in: PIN / RFID tag (krs_users_auth) and API

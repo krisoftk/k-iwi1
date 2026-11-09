@@ -289,6 +289,12 @@ class Auth {
 				$stmt_user->execute();
 		
 				$user = $stmt_user->fetch(KPDO::FETCH_ASSOC);
+
+				// deleted user: no details (before, an array with only GROUPS)
+				if (!$user) {
+					return false;
+				}
+
 				$user['GROUPS'] = $this->getGroups($user_id);
 				return $user;
 			}

@@ -16,7 +16,16 @@ class User {
 		$this->auth = $registry->get('auth');
 
 		if (isset($this->session->data['user_id'])) {
-			$this->details = $this->auth->auth_get_details($this->session->data['user_id']);
+			$details = $this->auth->auth_get_details($this->session->data['user_id']);
+
+			// The user is read again at every request: one deleted or disabled
+			// by an admin (ACTIVATION) since the login loses the session right
+			// away, as the login itself would refuse them now.
+			if ($details && !empty($details['ID']) && !empty($details['ACTIVATION'])) {
+				$this->details = $details;
+			} else {
+				unset($this->session->data['user_id']);
+			}
 		}
 	}
 

@@ -29,7 +29,7 @@
                         	<a href="#" id="link-change-password"><i class="fa fa-key fa-fw"></i> <?php echo $text_change_password; ?></a>
                         </li>
                         <li>
-                        	<a href="<?php echo $action_logout; ?>"><i class="fa fa-sign-out fa-fw"></i> <?php echo $text_logout; ?></a>
+                        	<a href="#" onclick="actionKAJAX('<?php echo $action_logout; ?>', null, null, 'post'); return false;"><i class="fa fa-sign-out fa-fw"></i> <?php echo $text_logout; ?></a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->

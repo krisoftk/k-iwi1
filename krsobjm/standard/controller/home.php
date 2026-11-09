@@ -37,14 +37,6 @@ class ControllerStandardHome extends Controller {
 			$this->document->addStyle('css/plugins/ui/readmon/jquery-ui.min.css');
 		}
 		
-		// CSS File Tree
-		$file_tree = DIR_THEMES . $this->config->get('framework.theme') . '/css/filetree/jquery.filetree.css';
-		if (file_exists($file_tree)) {
-			$this->document->addStyle(makePath('css/filetree/jquery.filetree.css'));
-		} else {
-			$this->document->addStyle('css/plugins/filetree/jquery.filetree.css');
-		}
-		
 		// CSS File Upload
 		$upload = DIR_THEMES . $this->config->get('framework.theme') . '/css/fileupload/jquery.fileupload.css';
 		if (file_exists($upload)) {
@@ -66,22 +58,6 @@ class ControllerStandardHome extends Controller {
 			$this->document->addStyle(makePath('css/fixedheadertable/jquery.fixedheadertable.css'));
 		} else {
 			$this->document->addStyle('css/plugins/fixedheadertable/jquery.fixedheadertable.css');
-		}
-		
-		// CSS Time Picker
-		$timepicker_addon = DIR_THEMES . $this->config->get('framework.theme') . '/css/timepicker/jquery-ui-timepicker-addon.css';
-		if (file_exists($timepicker_addon)) {
-			$this->document->addStyle(makePath('css/timepicker/jquery-ui-timepicker-addon.css'));
-		} else {
-			$this->document->addStyle('css/plugins/timepicker/jquery-ui-timepicker-addon.css');
-		}
-		
-		// CSS Two Side Multi Select
-		$twosidedmultiselect = DIR_THEMES . $this->config->get('framework.theme') . '/css/twosidedmultiselect/jquery.twosidedmultiselect.css';
-		if (file_exists($twosidedmultiselect)) {
-			$this->document->addStyle(makePath('css/twosidedmultiselect/jquery.twosidedmultiselect.css'));
-		} else {
-			$this->document->addStyle('css/plugins/twosidedmultiselect/jquery.twosidedmultiselect.css');
 		}
 		
 		// CSS Color picker

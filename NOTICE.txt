@@ -49,15 +49,9 @@ jqPlot (js/jqplot/*)
 ColorPicker / jqcolorpicker (plugins/colorpicker)
     MIT License. Copyright Martijn W. van der Lee.
 
-jQuery UI Timepicker Addon (plugins/timepicker)
-    Dual-licensed MIT / GPL. Copyright Trent Richardson.
-
 Bootstrap Datetimepicker (plugins/datetimepicker)
     MIT License. Copyright Jonathan Peterson. Patched: .size() replaced by
     .length (removed in jQuery 3).
-
-fileTree (plugins/filetree)
-    Dual-licensed MIT / GPL. Copyright 2008 A Beautiful Site, LLC.
 
 jQuery File Upload (plugins/fileupload)
     MIT License. Copyright Sebastian Tschan (blueimp).
@@ -75,9 +69,6 @@ printElement (plugins/printElement)
 metisMenu (plugins/metisMenu)
     MIT License (metisMenu by Jonathan Pearson; the bundled copy has no
     header, license confirmed from the upstream project).
-
-bgiframe (plugins/bgiframe)
-    MIT License. Copyright Brandon Aaron.
 
 PHP libraries
 -------------

@@ -14,10 +14,7 @@
 <!-- old plugins and modules still use APIs removed in jQuery 3 -->
 <script type="text/javascript" src="js/jquery-migrate-3.5.2.min.js"></script>
 <script type="text/javascript" src="js/plugins/ui/jquery-ui-1.14.2.min.js"></script>
-<script type="text/javascript" src="js/plugins/timepicker/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="js/plugins/fixedheadertable/jquery.fixedheadertable.js"></script>
-<script type="text/javascript" src="js/plugins/bgiframe/jquery.bgiframe.js"></script>
-<script type="text/javascript" src="js/plugins/filetree/jquery.filetree.js"></script>
 <script type="text/javascript" src="js/plugins/printElement/jquery.printElement.js"></script>
 <script type="text/javascript" src="js/plugins/tabs/jquery.tabs.js"></script>
 <script type="text/javascript" src="js/plugins/filedownload/jquery.fileDownload.js"></script>

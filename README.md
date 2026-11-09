@@ -62,7 +62,9 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
    saves the uploaded images in `image/data/` and their thumbnails in
    `image/cache/`. Its `.htaccess` blocks the execution of any script there.
 
-2. **Create an empty database** in your database engine.
+2. **Create an empty database** in your database engine. With MySQL/MariaDB
+   use the `utf8mb4` charset (e.g. `CREATE DATABASE kiwi CHARACTER SET
+   utf8mb4`), the one K-iwi connects with and creates its tables in.
 
 3. **Edit `config/config.ini`** and set the parameters of the `[database]`
    section according to the database created in the previous step. The

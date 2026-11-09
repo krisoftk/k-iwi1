@@ -55,7 +55,9 @@ class MysqlDriver implements iDriverDB {
 				$this->selectSchema($database);
 			}
 			
-			$this->link->set_charset("utf8");
+			// utf8mb4, not utf8: in MySQL "utf8" is the 3-byte form, which
+			// can't carry emoji and other 4-byte characters (the query fails)
+			$this->link->set_charset("utf8mb4");
 
 			$this->safeSqlMode();
 		}
@@ -316,7 +318,9 @@ class MysqlDriver implements iDriverDB {
 		
 		$query = substr($query, 0, -1);
 		
-		$query .= ") ENGINE=InnoDB";
+		// the tables made by K-iwi hold any character, whatever the
+		// database's default charset
+		$query .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 		
 		return $this->exec($query);
 	}

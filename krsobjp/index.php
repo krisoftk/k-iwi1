@@ -151,7 +151,10 @@ if (isset($request->server['HTTP_X_API_KEY'])) {
 } elseif (isset($request->post['api_key'])) {
 	$user->loginByApiKey($request->post['api_key']);
 } elseif (isset($request->get['api_key'])) {
-	$user->loginByApiKey($request->get['api_key']);
+	// Not in the URL: it would end up in the web server's access logs,
+	// in proxies and in the browser history. A key sent there is treated as
+	// an invalid one (401), so whoever still uses it notices.
+	$user->loginByApiKey('');
 }
 
 // Language: the one chosen by the user (krs_users.LANGUAGE), otherwise

@@ -114,8 +114,9 @@ php tools/api_key.php revoke <id>
 The key is printed only once, when it's created. On installations made before
 API keys existed, the first run also creates the `krs_api_keys` table.
 
-Send the key in the `X-API-KEY` header (preferred), or as an `api_key` POST or
-GET field. To expose an API from a module, extend `ApiController`: it checks
+Send the key in the `X-API-KEY` header (preferred) or as an `api_key` POST
+field. A key in the URL (`?api_key=`) is refused with a 401: it would end up
+in the web server's access logs, in proxies and in the browser history. To expose an API from a module, extend `ApiController`: it checks
 the HTTP method and that the request really came with a key (not with a
 browser session cookie), and answers with a standard JSON
 `{ "result", "stato", "id", "msg" }`:
@@ -143,7 +144,7 @@ a key, typically from cron with a dedicated "system" user; it passes the same
 key on to every job it starts:
 
 ```cron
-*/5 * * * * curl -s "https://yourserver/index.php?route=common/scheduler&api_key=<key>" > /dev/null
+*/5 * * * * curl -s -H "X-API-KEY: <key>" "https://yourserver/index.php?route=common/scheduler" > /dev/null
 ```
 
 The scheduler starts each job with a request to this same installation,

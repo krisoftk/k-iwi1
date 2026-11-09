@@ -2,14 +2,14 @@
 class ControllerCommonScheduler extends Controller { 
 	private $error = array();
 	
-	// Called by cron with the API key of a system user:
-	//   https://host/krsobjp/index.php?route=common/scheduler&api_key=<key>
+	// Called by cron with the API key of a system user, in the header:
+	//   curl -s -H "X-API-KEY: <key>" "https://host/index.php?route=common/scheduler"
 	// The same key is passed to the jobs, which are normal routes and so go
 	// through the login check of the public bootstrap like any other request.
 	public function index() {		
 		if (!$this->user->isApiAuthenticated()) {
 			http_response_code(401);
-			$this->response->setOutput('Lo scheduler va chiamato con una API key valida.');
+			$this->response->setOutput('The scheduler must be called with a valid API key (X-API-KEY header).');
 			return;
 		}
 

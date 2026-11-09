@@ -7,7 +7,8 @@
  * not with a browser's session cookie, otherwise an external site could
  * call the API on behalf of the logged-in user (CSRF).
  *
- * Key: X-API-KEY header (recommended), or the 'api_key' POST/GET field.
+ * Key: X-API-KEY header (recommended), or the 'api_key' POST field. Never
+ * in the URL (it would end up in the access logs): a GET api_key is refused.
  * Standard JSON response:
  *   { "result": bool, "stato": "ok|warning|duplicato|errore|auth", "id": int, "msg": string }
  *

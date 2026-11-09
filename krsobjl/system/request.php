@@ -39,7 +39,9 @@ class Request {
 			return $clean;
 		}
 
-		return htmlspecialchars($value, ENT_COMPAT);
+		// ENT_QUOTES: the single quote too, otherwise a value printed in a
+		// single-quoted attribute or JavaScript string could close it
+		return htmlspecialchars($value, ENT_QUOTES);
 	}
 }
 ?>

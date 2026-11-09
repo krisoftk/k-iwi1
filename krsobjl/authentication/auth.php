@@ -54,6 +54,21 @@ class Auth {
 
 		$db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC);
 
+		// Request escapes the single quote too (&#039;) since 1.0: usernames
+		// saved before kept a plain '. Same for the password, which was hashed
+		// as it arrived: it is checked in the old form too and hashed again.
+		$legacyQuote = false;
+
+		if (!$db_user && strpos($username, '&#039;') !== false) {
+			$legacy = str_replace('&#039;', "'", $username);
+
+			$stmt_user->bindParam(":username", $legacy, KPDO::TYPE_VARCHAR);
+			$stmt_user->execute();
+
+			$db_user = $stmt_user->fetch(KPDO::FETCH_ASSOC);
+			$username = $legacy;
+		}
+
 		if (!$db_user) {
 			// Unknown user: a hash is computed anyway, so the response takes
 			// the same time and doesn't reveal which usernames exist (bcrypt
@@ -65,7 +80,14 @@ class Auth {
 			return false;
 		}
 
-		if ($username != $db_user['USERNAME'] || !$this->verify_password($db_user, $password)) {
+		$valid = $this->verify_password($db_user, $password);
+
+		if (!$valid && strpos($password, '&#039;') !== false && $this->verify_password($db_user, str_replace('&#039;', "'", $password))) {
+			$valid = true;
+			$legacyQuote = true;
+		}
+
+		if ($username != $db_user['USERNAME'] || !$valid) {
 			$this->record_failed_login($username, $ip);
 
 			return false;
@@ -79,7 +101,7 @@ class Auth {
 			return false;
 		}
 
-		if (!password_get_info($db_user['PASSWORD'])['algo'] || password_needs_rehash($db_user['PASSWORD'], PASSWORD_DEFAULT)) {
+		if ($legacyQuote || !password_get_info($db_user['PASSWORD'])['algo'] || password_needs_rehash($db_user['PASSWORD'], PASSWORD_DEFAULT)) {
 			$hash = self::hash_password($password);
 			$salt = '';
 

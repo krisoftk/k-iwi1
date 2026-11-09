@@ -308,8 +308,11 @@ class ControllerInstallStep1 extends Controller {
 		$stmt->execute();
 		// end create menu standard
 		
-		// start insert language default
-		$stmt = $this->db->prepare("INSERT INTO t:krs_languages (NAME, CODE, LOCALE, IMAGE, DIRECTORY, FILENAME, SORT_ORDER, STATUS) VALUES ('Italiano', 'it_IT', 'it_IT.UTF-8,it_IT,italian', 'ita.png', 'italian', 'italian', '0', '1')");
+		// start insert languages: the two shipped with K-iwi; English is the
+		// default of config/config.ini (setting.language = "en_GB")
+		$stmt = $this->db->prepare("INSERT INTO t:krs_languages (NAME, CODE, LOCALE, IMAGE, DIRECTORY, FILENAME, SORT_ORDER, STATUS) VALUES
+			('English', 'en_GB', 'en_GB.UTF-8,en_GB,english', '', 'english', 'english', '0', '1'),
+			('Italiano', 'it_IT', 'it_IT.UTF-8,it_IT,italian', 'ita.png', 'italian', 'italian', '1', '1')");
 		$stmt->bindTable("krs_languages", "krs_languages");
 		$stmt->execute();
 		// end insert language default

@@ -1,6 +1,6 @@
 <?php
 interface iDownload {
 	
-	public function download($file);
+	public function download($file, $baseDir, $mimeType = null, $name = null);
 	
 }

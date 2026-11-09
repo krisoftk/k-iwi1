@@ -7,7 +7,7 @@ if (!function_exists('kiwi_menu')) {
 		$html = '';
 
 		foreach ($menu as $item) {
-			$title = $labels->get($item['title']);
+			$title = esc($labels->get($item['title']));
 			$link = !empty($item['link']) ? $item['link'] : '';
 
 			if (empty($item['children'])) {

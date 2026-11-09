@@ -27,7 +27,7 @@
 					<?php if ($extensions): ?>
 					<?php foreach ($extensions as $extension): ?>
 					<tr>
-						<td class="left"><?php echo $extension['name']; ?></td>
+						<td class="left"><?php echo esc($extension['name']); ?></td>
 						<td class="right">
 							<?php foreach ($extension['action'] as $action): ?>
 							[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]

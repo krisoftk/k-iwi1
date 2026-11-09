@@ -36,9 +36,9 @@
 						<?php foreach ($users as $user): ?>
 						<tr>
 							<td style="text-align: center;"><input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>"<?php echo $user['selected'] ? ' checked="checked"' : ''; ?> /></td>
-							<td class="left"><?php echo $user['username']; ?></td>
+							<td class="left"><?php echo esc($user['username']); ?></td>
 							<td class="left"><?php echo $user['status']; ?></td>
-							<td class="left"><?php echo $user['date_added']; ?></td>
+							<td class="left"><?php echo esc($user['date_added']); ?></td>
 							<td class="right">
 								<?php foreach ($user['action'] as $action): ?>
 								[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]

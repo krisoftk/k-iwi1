@@ -25,14 +25,14 @@
 					<tr>
 						<td><span class="required">*</span> <?php echo $entry_name; ?></td>
 						<td>
-							<input type="text" name="name" value="<?php echo $name; ?>" />
+							<input type="text" name="name" value="<?php echo esc($name); ?>" />
 							<?php if ($error_name): ?><span class="error"><?php echo $error_name; ?></span><?php endif; ?>
 						</td>
 					</tr>
 					<tr>
 						<td><span class="required">*</span> <?php echo $entry_code; ?><br /><small class="muted"><?php echo $help_code; ?></small></td>
 						<td>
-							<input type="text" name="code" value="<?php echo $code; ?>" />
+							<input type="text" name="code" value="<?php echo esc($code); ?>" />
 							<?php if ($error_code): ?><span class="error"><?php echo $error_code; ?></span><?php endif; ?>
 						</td>
 					</tr>
@@ -42,7 +42,7 @@
 							<?php if ($editing): ?>
 							<strong><?php echo $directory; ?></strong>
 							<?php else: ?>
-							<input type="text" name="directory" value="<?php echo $directory; ?>" />
+							<input type="text" name="directory" value="<?php echo esc($directory); ?>" />
 							<?php endif; ?>
 							<?php if ($error_directory): ?><span class="error"><?php echo $error_directory; ?></span><?php endif; ?>
 						</td>
@@ -50,7 +50,7 @@
 					<tr>
 						<td><?php echo $entry_locale; ?><br /><small class="muted"><?php echo $help_locale; ?></small></td>
 						<td>
-							<input type="text" name="locale" value="<?php echo $locale; ?>" size="40" />
+							<input type="text" name="locale" value="<?php echo esc($locale); ?>" size="40" />
 							<?php if ($error_locale): ?><span class="error"><?php echo $error_locale; ?></span><?php endif; ?>
 						</td>
 					</tr>

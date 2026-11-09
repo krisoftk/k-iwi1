@@ -338,7 +338,7 @@ class ModelAdminToolGenerator extends Model {
 			    
 				$head_fields .= '<th class="text-left"><?php echo $text_' . $field['field'] . '; ?></th>';
 				
-				$body_fields .= '<td class="text-left"><?php echo $' . strtolower($table['NAME']) . '[\'' . $field['field'] . '\']; ?></td>';
+				$body_fields .= '<td class="text-left"><?php echo esc($' . strtolower($table['NAME']) . '[\'' . $field['field'] . '\']); ?></td>';
 			}
 		}
 		
@@ -358,7 +358,7 @@ class ModelAdminToolGenerator extends Model {
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label class="control-label" for="input-' . $field['field'] . '"><?php echo $text_' . $field['field'] . '; ?></label>
-								<input type="text" name="filter_' . $field['field'] . '" value="<?php echo $filter_' . $field['field'] . '; ?>" placeholder="<?php echo $text_' . $field['field'] . '; ?>" id="input-' . $field['field'] . '" class="form-control" />
+								<input type="text" name="filter_' . $field['field'] . '" value="<?php echo esc($filter_' . $field['field'] . '); ?>" placeholder="<?php echo $text_' . $field['field'] . '; ?>" id="input-' . $field['field'] . '" class="form-control" />
 						  	</div>
 						</div>
 					</div>';
@@ -402,7 +402,7 @@ class ModelAdminToolGenerator extends Model {
 			$body_update .= '<td><form action="<?php echo $action_update; ?>" method="post">';
 			foreach ($data['fields'] as $field) {
 				if (isset($field['key_check'])) {
-					$body_update .= '<input type="hidden" name="' . $field['field'] . '" value="<?php echo $' . strtolower($table['NAME']) . '[\'' . $field['field'] . '\']; ?>" />';
+					$body_update .= '<input type="hidden" name="' . $field['field'] . '" value="<?php echo esc($' . strtolower($table['NAME']) . '[\'' . $field['field'] . '\']); ?>" />';
 				}
 			}
 			$body_update .= '<input class="update" type="submit" value="<?php echo $button_edit; ?>" /></form></td>';
@@ -429,7 +429,7 @@ class ModelAdminToolGenerator extends Model {
 			$body_delete .= '<td><form action="<?php echo $action_delete; ?>" method="post">';
 			foreach ($data['fields'] as $field) {
 				if (isset($field['key_check'])) {
-					$body_delete .= '<input type="hidden" name="' . $field['field'] . '" value="<?php echo $' . strtolower($table['NAME']) . '[\'' . $field['field'] . '\']; ?>" />';
+					$body_delete .= '<input type="hidden" name="' . $field['field'] . '" value="<?php echo esc($' . strtolower($table['NAME']) . '[\'' . $field['field'] . '\']); ?>" />';
 				}
 			}
 			$body_delete .= '<input class="delete" type="submit" value="<?php echo $button_delete; ?>" /></form></td>';
@@ -475,7 +475,7 @@ class ModelAdminToolGenerator extends Model {
 						},
 						select: function(event, ui) {
 							$(this).parent().find(\'span\').remove();
-							$(this).after(\'<span>\' + ui.item.label + \'</span>\');
+							$(this).after($(\'<span>\').text(ui.item.label));
 						}
 					});
 				//--></script>';
@@ -541,7 +541,7 @@ class ModelAdminToolGenerator extends Model {
 							<div class="form-group">
 								<label class="col-sm-2 control-label" for="' . $field['field'] . '"><?php echo $text_' . $field['field'] . '; ?></label>
 								<div class="col-sm-10">
-									<input type="text" name="' . $field['field'] . '" value="<?php echo $' . $field['field'] . '; ?>" placeholder="<?php echo $text_' . $field['field'] . '; ?>" id="' . $field['field'] . '" class="form-control" />
+									<input type="text" name="' . $field['field'] . '" value="<?php echo esc($' . $field['field'] . '); ?>" placeholder="<?php echo $text_' . $field['field'] . '; ?>" id="' . $field['field'] . '" class="form-control" />
 								</div>
 							</div>
 						</div>
@@ -552,7 +552,7 @@ class ModelAdminToolGenerator extends Model {
 			$field_hidden = '';
 			foreach ($data['fields'] as $field) {
 				if (isset($field['key_check'])) {
-					$field_hidden .= '<input type="hidden" name="' . $field['field'] . '" value="<?php echo $' . $field['field'] . '; ?>"/>';
+					$field_hidden .= '<input type="hidden" name="' . $field['field'] . '" value="<?php echo esc($' . $field['field'] . '); ?>"/>';
 				}
 			}
 			
@@ -582,7 +582,7 @@ class ModelAdminToolGenerator extends Model {
 						},
 						select: function(event, ui) {
 							$(this).parent().find(\'span\').remove();
-							$(this).after(\'<span>\' + ui.item.label + \'</span>\');
+							$(this).after($(\'<span>\').text(ui.item.label));
 						}
 					});';
 			

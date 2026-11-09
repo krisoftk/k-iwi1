@@ -35,8 +35,8 @@
 						<?php foreach ($user_groups as $user_group): ?>
 						<tr>
 							<td style="text-align: center;"><input type="checkbox" name="selected[]" value="<?php echo $user_group['user_group_id']; ?>"<?php echo $user_group['selected'] ? ' checked="checked"' : ''; ?> /></td>
-							<td class="left"><?php echo $user_group['name']; ?></td>
-							<td class="left"><?php echo $user_group['module_name']; ?></td>
+							<td class="left"><?php echo esc($user_group['name']); ?></td>
+							<td class="left"><?php echo esc($user_group['module_name']); ?></td>
 							<td class="right">
 								<?php foreach ($user_group['action'] as $action): ?>
 								[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]

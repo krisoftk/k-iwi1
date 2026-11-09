@@ -179,6 +179,16 @@ needs write access there while you use it. It's a development tool: on a
 production server keep `krsobjm/` read-only and copy the generated module in
 with the rest of the code.
 
+### Printing data
+
+Print every value that comes from the database with `esc()`, e.g.
+`<?php echo esc($row['NAME']); ?>`, and use `json_encode()` for a value inside
+JavaScript. The input escaping of `Request` only covers what comes from
+K-iwi's own forms: data written by other programs, imports or APIs would
+otherwise run as HTML in the page (XSS). `esc()` doesn't escape twice the
+values Request already escaped. The generator does this for you; modules
+generated before this version should be generated again, or changed by hand.
+
 ## JavaScript libraries
 
 The pages load jQuery 3.7.1 together with jQuery Migrate 3.5.2, which brings

@@ -24,7 +24,7 @@
 						<td>
 							<select name="prog_id">
 								<?php foreach ($progs as $prog): ?>
-								<option value="<?php echo $prog['ID']; ?>"<?php echo ($prog_id == $prog['ID']) ? ' selected="selected"' : ''; ?>><?php echo $prog['TITLE'] . '/' . $prog['PROG']; ?></option>
+								<option value="<?php echo $prog['ID']; ?>"<?php echo ($prog_id == $prog['ID']) ? ' selected="selected"' : ''; ?>><?php echo esc($prog['TITLE'] . '/' . $prog['PROG']); ?></option>
 								<?php endforeach; ?>
 							</select>
 						</td>
@@ -32,20 +32,20 @@
 					<tr>
 						<td><span class="required">*</span> <?php echo $entry_name; ?></td>
 						<td>
-							<input type="text" name="name" value="<?php echo $name; ?>" />
+							<input type="text" name="name" value="<?php echo esc($name); ?>" />
 							<?php if ($error_name): ?><span class="error"><?php echo $error_name; ?></span><?php endif; ?>
 						</td>
 					</tr>
 					<tr>
 						<td><span class="required">*</span> <?php echo $entry_url; ?></td>
 						<td>
-							<input type="text" name="url" value="<?php echo $url; ?>" />
+							<input type="text" name="url" value="<?php echo esc($url); ?>" />
 							<?php if ($error_url): ?><span class="error"><?php echo $error_url; ?></span><?php endif; ?>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $entry_description; ?></td>
-						<td><input type="text" name="description" value="<?php echo $description; ?>" /></td>
+						<td><input type="text" name="description" value="<?php echo esc($description); ?>" /></td>
 					</tr>
 				</table>
 			</form>

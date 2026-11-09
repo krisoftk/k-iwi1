@@ -18,7 +18,7 @@
 		}
 	?>
 <?php } else { ?>
-	<?php echo $user['FIRSTNAME'] . ' ' . $user['LASTNAME']; ?>
+	<?php echo esc($user['FIRSTNAME'] . ' ' . $user['LASTNAME']); ?>
 	<form name="flogin" method="post" action="<?php echo $logout ?>">
 		<input id="login" type="BUTTON" value="<?php echo $button_logout; ?>" onClick="javascript:actionKAJAX(flogin.action, $(flogin).serialize(), null, flogin.method)">
 	</form>

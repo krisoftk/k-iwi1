@@ -82,7 +82,7 @@
 								<select id="databases" name="database_id">
 									<option value="0"><?php echo $text_select; ?></option>
 									<?php foreach ($databases as $database): ?>
-									<option value="<?php echo $database['id']; ?>"<?php echo ($database['id'] == $database_id) ? ' selected="selected"' : ''; ?>><?php echo $database['name']; ?></option>
+									<option value="<?php echo $database['id']; ?>"<?php echo ($database['id'] == $database_id) ? ' selected="selected"' : ''; ?>><?php echo esc($database['name']); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<?php if ($error_database_id): ?><span class="error"><?php echo $error_database_id; ?></span><?php endif; ?>

@@ -21,9 +21,9 @@ function create_menu($menu, $labels) {
 		$html_menu .= "<li>";
 		
 		if (isset($item['link'])) {
-			$html_menu .= '<a href="' . $item['link'] . '">' . $labels->get($item['title']) . "</a>";
+			$html_menu .= '<a href="' . $item['link'] . '">' . esc($labels->get($item['title'])) . "</a>";
 		} else {
-			$html_menu .= '<a>' . $labels->get($item['title']) . "</a>";
+			$html_menu .= '<a>' . esc($labels->get($item['title'])) . "</a>";
 		}
 		
 		if (isset($item['children'])) {

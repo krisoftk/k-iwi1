@@ -37,8 +37,8 @@
 						<tr>
 							<td style="text-align: center;"><input type="checkbox" name="selected[]" value="<?php echo $report['report_id']; ?>"<?php echo $report['selected'] ? ' checked="checked"' : ''; ?> /></td>
 							<td class="left"><?php echo $report['prog_id']; ?></td>
-							<td class="left"><?php echo $report['name']; ?></td>
-							<td class="left"><?php echo $report['description']; ?></td>
+							<td class="left"><?php echo esc($report['name']); ?></td>
+							<td class="left"><?php echo esc($report['description']); ?></td>
 							<td class="right">
 								<?php foreach ($report['action'] as $action): ?>
 								[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]

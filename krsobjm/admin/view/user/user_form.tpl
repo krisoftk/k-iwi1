@@ -27,27 +27,27 @@
 						<tr>
 							<td><span class="required">*</span> <?php echo $entry_username; ?></td>
 							<td>
-								<input type="text" name="username" value="<?php echo $username; ?>" />
+								<input type="text" name="username" value="<?php echo esc($username); ?>" />
 								<?php if ($error_username): ?><span class="error"><?php echo $error_username; ?></span><?php endif; ?>
 							</td>
 						</tr>
 						<tr>
 							<td><span class="required">*</span> <?php echo $entry_firstname; ?></td>
 							<td>
-								<input type="text" name="firstname" value="<?php echo $firstname; ?>" />
+								<input type="text" name="firstname" value="<?php echo esc($firstname); ?>" />
 								<?php if ($error_firstname): ?><span class="error"><?php echo $error_firstname; ?></span><?php endif; ?>
 							</td>
 						</tr>
 						<tr>
 							<td><span class="required">*</span> <?php echo $entry_lastname; ?></td>
 							<td>
-								<input type="text" name="lastname" value="<?php echo $lastname; ?>" />
+								<input type="text" name="lastname" value="<?php echo esc($lastname); ?>" />
 								<?php if ($error_lastname): ?><span class="error"><?php echo $error_lastname; ?></span><?php endif; ?>
 							</td>
 						</tr>
 						<tr>
 							<td><?php echo $entry_email; ?></td>
-							<td><input type="text" name="email" value="<?php echo $email; ?>" /></td>
+							<td><input type="text" name="email" value="<?php echo esc($email); ?>" /></td>
 						</tr>
 						<tr>
 							<td><?php echo $entry_password; ?></td>
@@ -111,7 +111,7 @@
 								<td class="left">
 									<select name="usergroups[<?php echo $usergroupRow; ?>]">
 										<?php foreach ($all_usergroups as $usergroup): ?>
-										<option value="<?php echo $usergroup['ID']; ?>"<?php echo ($selectedGroupId == $usergroup['ID']) ? ' selected="selected"' : ''; ?>><?php echo $usergroup['NAME']; ?> -- <?php echo $usergroup['MODULE_NAME']; ?></option>
+										<option value="<?php echo $usergroup['ID']; ?>"<?php echo ($selectedGroupId == $usergroup['ID']) ? ' selected="selected"' : ''; ?>><?php echo esc($usergroup['NAME']); ?> -- <?php echo esc($usergroup['MODULE_NAME']); ?></option>
 										<?php endforeach; ?>
 									</select>
 								</td>
@@ -143,7 +143,7 @@ function addUsergroup() {
 	var options = '';
 
 	<?php foreach ($all_usergroups as $usergroup): ?>
-	options += '<option value="<?php echo $usergroup['ID']; ?>"><?php echo $usergroup['NAME']; ?> -- <?php echo $usergroup['MODULE_NAME']; ?></option>';
+	options += '<option value="<?php echo $usergroup['ID']; ?>"><?php echo esc($usergroup['NAME']); ?> -- <?php echo esc($usergroup['MODULE_NAME']); ?></option>';
 	<?php endforeach; ?>
 
 	var row = '<tbody id="usergroup-row' + usergroupRow + '">' +

@@ -35,7 +35,7 @@ function create_menu($menu, $labels, $level = false) {
 			$href = ' href="' . $item['link'] . '"';
 		}
 		
-		$html_menu .= '<a' . $href . '>' . $labels->get($item['title']) . $arrow .'</a>';
+		$html_menu .= '<a' . $href . '>' . esc($labels->get($item['title'])) . $arrow .'</a>';
 		
 		if (isset($item['children'])) {
 			$html_menu .= create_menu($item['children'], $labels, true);

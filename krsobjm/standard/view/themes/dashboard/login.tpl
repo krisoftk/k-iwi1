@@ -52,7 +52,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 		
-			<?php echo $user['FIRSTNAME'] . ' ' . $user['LASTNAME']; ?>
+			<?php echo esc($user['FIRSTNAME'] . ' ' . $user['LASTNAME']); ?>
 			<form id="form_login">
 				<input id="login" type="BUTTON" value="<?php echo $button_logout; ?>" onClick="javascript:actionKAJAX('<?php echo $logout ?>', null, null, 'post')">
 			</form>

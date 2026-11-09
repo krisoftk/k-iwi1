@@ -69,6 +69,17 @@ function initializeKAJAX($body, $info, $loader, $csrf = null) {
 	'; 
 }
 
+// Text to print in a page (an HTML element or a quoted attribute). Every
+// value from the database goes through here: the input escaping of Request
+// only covers what comes from K-iwi's forms, not the data written by other
+// programs, imports or APIs, which would otherwise run as HTML (XSS). The
+// entities are decoded first, so the values Request already escaped aren't
+// escaped twice ("Rossi &amp; Figli" shows as "Rossi & Figli", not
+// "&amp;amp;"). For a value inside JavaScript use json_encode().
+function esc($value) {
+	return htmlspecialchars(html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
 // CSRF protection of the site: a random token per session, which every
 // POST made with the session cookie must send back, in the X-CSRF-Token
 // header (KAJAX and jQuery do it on their own, see kajax.js) or in a

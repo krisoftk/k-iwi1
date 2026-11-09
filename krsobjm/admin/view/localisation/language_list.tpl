@@ -39,9 +39,9 @@
 						<?php foreach ($languages as $language): ?>
 						<tr>
 							<td style="text-align: center;"><input type="checkbox" name="selected[]" value="<?php echo $language['language_id']; ?>"<?php echo $language['selected'] ? ' checked="checked"' : ''; ?> /></td>
-							<td class="left"><?php echo $language['name']; ?></td>
-							<td class="left"><?php echo $language['code']; ?></td>
-							<td class="left"><?php echo $language['directory']; ?></td>
+							<td class="left"><?php echo esc($language['name']); ?></td>
+							<td class="left"><?php echo esc($language['code']); ?></td>
+							<td class="left"><?php echo esc($language['directory']); ?></td>
 							<td class="left"><?php echo $language['files']; ?></td>
 							<td class="left"><?php echo $language['status']; ?></td>
 							<td class="right">

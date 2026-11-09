@@ -52,10 +52,6 @@ $config->load('config');
 $db = new KPDO($config->get('database.driver'), $config->get('database.host'), $config->get('database.port'), $config->get('database.user'), $config->get('database.password'), $config->get('database.name'));
 $registry->set('db', $db);
 
-// Persistence
-$persistence = new Persistence($registry);
-$registry->set('persistence', $persistence);
-
 // Settings
 $config->set('config_url', HTTP_SERVER);
 $config->set('config_ssl', HTTPS_SERVER);

@@ -61,8 +61,19 @@ class ModelAdminUserGroup extends Model {
 		$stmt->execute();
 	}
 
+	// The mappings go too: left behind, a new group that got the same ID
+	// back (a partial restore, old MySQL versions after a restart) would
+	// silently inherit its module (e.g. admin access) and its permissions.
 	public function deleteUserGroup($groupId) {
 		$db = UtilityDB::getDBfromTable('krs_usergroups');
+
+		foreach (array('krs_progs_usergroups_map' => 'GROUP_ID', 'krs_usergroups_modules_map' => 'USERGROUP_ID', 'krs_user_usergroup_map' => 'GROUP_ID') as $table => $column) {
+			$stmt = $db->prepare('DELETE FROM t:map WHERE ' . $column . ' = :group_id');
+			$stmt->bindTable('map', $table);
+			$stmt->bindParam('group_id', $groupId, KPDO::TYPE_INTEGER);
+			$stmt->execute();
+		}
+
 		$stmt = $db->prepare('DELETE FROM t:usergroups WHERE ID = :id');
 		$stmt->bindTable('usergroups', 'krs_usergroups');
 		$stmt->bindParam('id', $groupId, KPDO::TYPE_VARCHAR);

@@ -33,6 +33,11 @@ class ModelAdminUserUser extends Model {
 
 			$userId = $db->lastInsertId();
 
+			// an ID can come back (a partial restore, old MySQL versions after
+			// a restart): the new user mustn't inherit a PIN, tag or API key
+			// left by a deleted user with the same ID
+			$this->deleteCredentials($db, $userId);
+
 			$this->saveUserGroups($db, $userId, $data['usergroups']);
 			$this->saveUserModule($db, $userId, $data['module']);
 
@@ -138,10 +143,28 @@ class ModelAdminUserUser extends Model {
 		$stmt->bindParam('user_id', $userId, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
 
+		$this->deleteCredentials($db, $userId);
+
 		$stmt = $db->prepare('DELETE FROM t:users WHERE ID = :id');
 		$stmt->bindTable('users', 'krs_users');
 		$stmt->bindParam('id', $userId, KPDO::TYPE_VARCHAR);
 		$stmt->execute();
+	}
+
+	// The other ways a user logs in: PIN / RFID tag (krs_users_auth) and API
+	// keys. Installations made before the API keys may not have that table
+	// yet: nothing to delete there.
+	private function deleteCredentials($db, $userId) {
+		foreach (array('krs_users_auth', 'krs_api_keys') as $table) {
+			try {
+				$stmt = $db->prepare('DELETE FROM t:credentials WHERE USER_ID = :user_id');
+				$stmt->bindTable('credentials', $table);
+				$stmt->bindParam('user_id', $userId, KPDO::TYPE_INTEGER);
+				$stmt->execute();
+			} catch (KPDOException $e) {
+				// table missing
+			}
+		}
 	}
 
 	public function getUser($userId) {

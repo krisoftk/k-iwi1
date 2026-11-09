@@ -486,6 +486,14 @@ abstract class Install {
 	}
 
 	protected function deleteGroups() {
+		// users stay (they may belong to other groups), their membership of
+		// these groups doesn't
+		$stmt = $this->db->prepare("DELETE FROM t:krs_user_usergroup_map WHERE GROUP_ID IN (SELECT USERGROUP_ID FROM t:krs_usergroups_modules_map WHERE MODULE_ID = :module )");
+		$stmt->bindTable("krs_user_usergroup_map", "krs_user_usergroup_map");
+		$stmt->bindTable("krs_usergroups_modules_map", "krs_usergroups_modules_map");
+		$stmt->bindParam("module", $this->module_id, KPDO::TYPE_VARCHAR);
+		$stmt->execute();
+
 		$stmt = $this->db->prepare("DELETE FROM t:krs_progs_usergroups_map WHERE GROUP_ID IN (SELECT USERGROUP_ID FROM t:krs_usergroups_modules_map WHERE MODULE_ID = :module )");
 		$stmt->bindTable("krs_progs_usergroups_map", "krs_progs_usergroups_map");
 		$stmt->bindTable("krs_usergroups_modules_map", "krs_usergroups_modules_map");
@@ -586,6 +594,20 @@ abstract class Install {
 		$stmt_user_group->bindTable("krs_users_modules_map", "krs_users_modules_map");
 		$stmt_user_group->bindParam('module_id', $this->module_id, KPDO::TYPE_INTEGER);
 		$stmt_user_group->execute();
+
+		// their PIN / RFID tags and API keys (the table of the keys may be
+		// missing on installations made before them)
+		foreach (array('krs_users_auth', 'krs_api_keys') as $table) {
+			try {
+				$stmt_credentials = $this->db->prepare("DELETE FROM t:credentials WHERE USER_ID IN (SELECT USER_ID FROM t:krs_users_modules_map WHERE MODULE_ID = :module_id)");
+				$stmt_credentials->bindTable("credentials", $table);
+				$stmt_credentials->bindTable("krs_users_modules_map", "krs_users_modules_map");
+				$stmt_credentials->bindParam('module_id', $this->module_id, KPDO::TYPE_INTEGER);
+				$stmt_credentials->execute();
+			} catch (KPDOException $e) {
+				// table missing
+			}
+		}
 		
 		$stmt_user = $this->db->prepare("DELETE FROM t:krs_users_t WHERE ID IN (SELECT USER_ID FROM t:krs_users_modules_map WHERE MODULE_ID = :module_id)");
 		$stmt_user->bindTable("krs_users_t", "krs_users");

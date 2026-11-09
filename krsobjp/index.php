@@ -48,6 +48,11 @@ $registry->set('config', $config);
 
 $config->load('config');
 
+// Behind a reverse proxy listed in setting.trusted_proxies: real client
+// address and https from its X-Forwarded-* headers (before Request,
+// the session and anything else reads $_SERVER)
+apply_trusted_proxies($config->get('setting.trusted_proxies'));
+
 // Database
 $db = new KPDO($config->get('database.driver'), $config->get('database.host'), $config->get('database.port'), $config->get('database.user'), $config->get('database.password'), $config->get('database.name'));
 $registry->set('db', $db);

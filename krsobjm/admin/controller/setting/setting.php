@@ -37,6 +37,7 @@ class ControllerAdminSettingSetting extends Controller {
 		'setting.login_max_attempts_ip'   => array('type' => 'int', 'optional' => true, 'min' => 1, 'max' => 100000),
 		'setting.login_max_attempts_user' => array('type' => 'int', 'optional' => true, 'min' => 1, 'max' => 100000),
 		'setting.scheduler_ssl_verify'  => array('type' => 'bool', 'optional' => true),
+		'setting.trusted_proxies'       => array('type' => 'proxies', 'optional' => true),
 		'report.time_expire'            => array('type' => 'int', 'min' => 1, 'max' => 86400),
 		'report.base_url'               => array('type' => 'url'),
 		// empty = entry hidden from the Help menu
@@ -244,6 +245,15 @@ class ControllerAdminSettingSetting extends Controller {
 			case 'url':
 				if (!preg_match('#^https?://[^\s]+$#i', $value)) {
 					return $this->language->get('error_url');
+				}
+				break;
+			case 'proxies':
+				// every entry must be an IP or a network: a typo silently
+				// dropped would leave the proxy untrusted
+				foreach (explode(',', $value) as $entry) {
+					if (!is_ip_network(trim($entry))) {
+						return sprintf($this->language->get('error_proxies'), htmlspecialchars(trim($entry), ENT_QUOTES, 'UTF-8'));
+					}
 				}
 				break;
 		}

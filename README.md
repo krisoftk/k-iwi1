@@ -335,6 +335,22 @@ before deploying to production in general):
 - **Keep `setting.error_display = "0"`** (the default) in `config/config.ini`:
   PHP errors go to `logs/error.txt` instead of being printed to visitors, with
   the server's paths. Turn it on only on a development machine.
+- **Behind a reverse proxy or load balancer** (nginx, HAProxy, Cloudflare, a
+  cloud load balancer...) K-iwi gets plain http from the proxy's address: list
+  the proxy in `setting.trusted_proxies` (IPs or networks, comma-separated,
+  also from Admin > System > Settings), so its `X-Forwarded-Proto` and
+  `X-Forwarded-For` headers give https (Secure session cookie, HSTS) and the
+  real client address (login limits, logs). The headers are believed only
+  when the request comes from a listed proxy, and the proxy must overwrite
+  them, not pass on the client's own:
+
+  ```ini
+  setting.trusted_proxies = "10.0.0.5, 172.16.0.0/12"
+  ```
+
+  Doing it in the web server instead works too (Apache `mod_remoteip` and
+  `SetEnvIf X-Forwarded-Proto https HTTPS=on`, nginx `set_real_ip_from` and
+  `fastcgi_param HTTPS on`): then leave the setting empty.
 - **Site POST requests carry a CSRF token**: every POST made with the session
   cookie must send back the session's token, or it's refused ("The page has
   expired"). KAJAX and jQuery's `$.ajax` add it on their own (`X-CSRF-Token`

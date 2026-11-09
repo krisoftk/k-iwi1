@@ -69,6 +69,119 @@ function initializeKAJAX($body, $info, $loader, $csrf = null) {
 	'; 
 }
 
+// Reverse proxies and load balancers (setting.trusted_proxies in config.ini,
+// a comma-separated list of IPs or CIDR networks): behind one, the request
+// reaches PHP in plain http from the proxy's address, so K-iwi would see
+// every client as the proxy and every page as http (no Secure cookie, no
+// HSTS). Only when the request really comes from a listed proxy are its
+// X-Forwarded-Proto and X-Forwarded-For headers believed: anyone else could
+// send them to fake an address. Called by both index.php before anything
+// reads $_SERVER. The Host header is never used (the URLs are in
+// globals.php).
+function apply_trusted_proxies($list) {
+	$proxies = trusted_proxy_list($list);
+	$remote = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+
+	if (!$proxies || !ip_in_networks($remote, $proxies)) {
+		return;
+	}
+
+	$_SERVER['KIWI_PROXY_ADDR'] = $remote;
+
+	if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+		$proto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'])[0]));
+
+		if ($proto === 'https') {
+			$_SERVER['HTTPS'] = 'on';
+			$_SERVER['SERVER_PORT'] = 443;
+		} elseif ($proto === 'http') {
+			unset($_SERVER['HTTPS']);
+		}
+	}
+
+	// Each proxy appends the address it received the request from: walking
+	// from the right, the first one that isn't a trusted proxy is the
+	// client (what's further left was written by the client and can be made up).
+	if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		foreach (array_reverse(array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']))) as $ip) {
+			if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+				break;
+			}
+
+			if (!ip_in_networks($ip, $proxies)) {
+				$_SERVER['REMOTE_ADDR'] = $ip;
+
+				break;
+			}
+		}
+	}
+}
+
+// "10.0.0.5, 172.16.0.0/12" -> array of valid entries (invalid ones dropped)
+function trusted_proxy_list($list) {
+	$networks = array();
+
+	foreach (explode(',', (string) $list) as $entry) {
+		$entry = trim($entry);
+
+		if ($entry !== '' && is_ip_network($entry)) {
+			$networks[] = $entry;
+		}
+	}
+
+	return $networks;
+}
+
+// an IP address, or an IP/prefix network, IPv4 or IPv6
+function is_ip_network($entry) {
+	$parts = explode('/', $entry, 2);
+
+	if (!filter_var($parts[0], FILTER_VALIDATE_IP)) {
+		return false;
+	}
+
+	if (!isset($parts[1])) {
+		return true;
+	}
+
+	$max = (strpos($parts[0], ':') !== false) ? 128 : 32;
+
+	return ctype_digit($parts[1]) && (int) $parts[1] <= $max;
+}
+
+function ip_in_networks($ip, $networks) {
+	$address = @inet_pton($ip);
+
+	if ($address === false) {
+		return false;
+	}
+
+	foreach ($networks as $network) {
+		$parts = explode('/', $network, 2);
+		$base = @inet_pton($parts[0]);
+
+		if ($base === false || strlen($base) !== strlen($address)) {
+			continue;
+		}
+
+		$bits = isset($parts[1]) ? (int) $parts[1] : strlen($base) * 8;
+		$bytes = intdiv($bits, 8);
+		$rest = $bits % 8;
+
+		if (substr($address, 0, $bytes) !== substr($base, 0, $bytes)) {
+			continue;
+		}
+
+		if ($rest && ((ord($address[$bytes]) ^ ord($base[$bytes])) & (0xFF << (8 - $rest)) & 0xFF)) {
+			continue;
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 // Text to print in a page (an HTML element or a quoted attribute). Every
 // value from the database goes through here: the input escaping of Request
 // only covers what comes from K-iwi's forms, not the data written by other

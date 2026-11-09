@@ -48,6 +48,11 @@ $registry->set('config', $config);
 
 $config->load('config');
 
+// Behind a reverse proxy listed in setting.trusted_proxies: real client
+// address and https from its X-Forwarded-* headers (before Request,
+// the session and anything else reads $_SERVER)
+apply_trusted_proxies($config->get('setting.trusted_proxies'));
+
 //Theme
 $config->set('framework.theme', $config->get('framework.theme_admin'));
 

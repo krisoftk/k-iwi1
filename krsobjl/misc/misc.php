@@ -11,6 +11,9 @@ require_once 'kdownload/KDownload.php';
 require_once 'kreader/KReader.php';
 require_once 'kwriter/KWriter.php';
 
+/* LIBRARY KPDF */
+require_once 'kpdf/KPdf.php';
+
 /* LIBRARY KZIP */
 require_once 'kzip/KZip.php';
 

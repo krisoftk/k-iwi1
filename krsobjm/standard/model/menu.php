@@ -151,11 +151,17 @@ class ModelStandardMenu extends Model {
 	}
 
 	// Route a program opens (module path + PROG), as the menu builds it; ''
-	// if it can't be built. Used by Admin > User Groups too.
+	// if it can't be built. Used by Admin > User Groups too. A PROG can carry
+	// parameters ("tabellone&tabella=VAT"): they belong to the link, not to
+	// the route, so they are left out.
 	public function prog_route($prog) {
 		$db = UtilityDB::getDBfromTable("krs_progs");
 
-		return $db ? (string) $this->generete_path_prog($prog, $db) : '';
+		return $db ? $this->route_only($this->generete_path_prog($prog, $db)) : '';
+	}
+
+	private function route_only($path) {
+		return (string) preg_replace('/[&?].*$/s', '', (string) $path);
 	}
 
 	// Level a method needs (Auth::PERM_*), or null if any logged-in user can
@@ -207,7 +213,7 @@ class ModelStandardMenu extends Model {
 		$stmt_progs->execute();
 
 		while (($prog = $stmt_progs->fetch(KPDO::FETCH_ASSOC))) {
-			$path = $this->generete_path_prog($prog, $db);
+			$path = $this->route_only($this->generete_path_prog($prog, $db));
 
 			if ($path && realpath((new Action($path))->getFile()) === $requestedFile) {
 				$progs[] = $prog;

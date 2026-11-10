@@ -8,11 +8,7 @@ require_once 'kdownload/iDownload.php';
 require_once 'kdownload/KDownload.php';
 
 /* LIBRARY KREADER AND KWRITER */
-// KReader depends on the third-party PHPExcel library (class
-// PHPExcel_Reader_IReadFilter), which isn't included in this distribution:
-// the require is disabled so it doesn't stop the whole framework from
-// starting. To enable it again, add PHPExcel and uncomment the line below.
-// require_once 'kreader/KReader.php';
+require_once 'kreader/KReader.php';
 require_once 'kwriter/KWriter.php';
 
 /* LIBRARY KZIP */

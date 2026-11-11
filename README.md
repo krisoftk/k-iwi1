@@ -29,7 +29,9 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
 - PHP 8.0 or higher (developed and tested on PHP 8.4), with these extensions:
   - `mysqli` for MySQL/MariaDB, or `pdo_odbc` for any other ODBC compliant
     database (Oracle, PostgreSQL, SQL Server...);
-  - `zlib` (optional) for output compression (`setting.compression`).
+  - `zlib` and `iconv` (both in standard PHP builds) for ZIP archives,
+    spreadsheets and PDF files, and for output compression
+    (`setting.compression`).
 - Database server: MySQL or MariaDB (tested on MariaDB 11.8), or any other
   ODBC compliant database.
 
@@ -237,6 +239,25 @@ otherwise run as HTML in the page (XSS). `esc()` doesn't escape twice the
 values Request already escaped. The generator does this for you; modules
 generated before this version should be generated again, or changed by hand.
 
+## ZIP, spreadsheets and PDF
+
+Three libraries of `krsobjl/misc`, written in plain PHP (no extension besides
+zlib and iconv), available to every module:
+
+- **KZip** reads and writes ZIP archives with the methods of `ZipArchive`
+  (`open`, `addFile`, `addFromString`, `getFromName`, `extractTo`, `close`),
+  so `new ZipArchive` can become `new KZip`. `extractTo()` never writes
+  outside the target folder.
+- **KReader** reads XLSX, XLS (Excel 97-2003), CSV and the XML spreadsheets
+  written by **KWriter**, recognising the format from the content. A callback
+  gets each row; `$worksheet->getCellByColumnAndRow($column, $row)
+  ->getCalculatedValue()` gives a value (numbers as floats, dates as Excel
+  serial numbers, formulas with the result saved in the file).
+- **KPdf** fills in pre-printed forms: text placed in millimetres over a
+  background image (JPEG, or PNG without transparency), header and footer on
+  every page, rows split into pages by `fillBody()`, Courier and Helvetica
+  with accents and the euro sign.
+
 ## JavaScript libraries
 
 The pages load jQuery 3.7.1 together with jQuery Migrate 3.5.2, which brings
@@ -266,6 +287,18 @@ change the new connection is tried first: if it fails nothing is saved. A copy
 of the previous file goes to `config/backup/` (the last 10, ignored by git
 because they contain the database password) and can be reopened in the
 editor.
+
+`database.sql_mode` sets the MySQL/MariaDB `sql_mode` of K-iwi's
+connections (empty or missing: the server's). Modules written for servers
+without the strict mode, which insert rows leaving out NOT NULL columns or
+write `''` into numeric columns, need it off:
+
+```ini
+database.sql_mode = "NO_ENGINE_SUBSTITUTION"
+```
+
+`NO_BACKSLASH_ESCAPES` and `ANSI_QUOTES` are always left out, whatever the
+setting: the escaping of the query parameters depends on it.
 
 The links of the admin's **Help** menu come from the `[help]` section of
 `config/config.ini` (`help.framework`, `help.documentation`, `help.support`,

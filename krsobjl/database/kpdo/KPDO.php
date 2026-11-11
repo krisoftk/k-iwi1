@@ -3,6 +3,14 @@ class KPDO implements iKPDO {
 	
 	private $driver;
 	
+	// sql_mode of the MySQL connections opened from now on, e.g. from the
+	// database.sql_mode setting, e.g. "NO_ENGINE_SUBSTITUTION" to turn off the
+	// strict mode for applications written for servers without it; null or ""
+	// keep the server's. NO_BACKSLASH_ESCAPES and ANSI_QUOTES are always left out.
+	public static function setSqlMode($mode) {
+		MysqlDriver::$sqlMode = trim((string) $mode) === '' ? null : (string) $mode;
+	}
+	
 	public function __construct($driver, $host, $port, $username, $password, $database = NULL) {
 		switch (strtolower($driver)) {
 			case "mysql":

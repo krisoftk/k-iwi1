@@ -14,6 +14,7 @@ class ControllerAdminSettingSetting extends Controller {
 		'database.user'                 => array('type' => 'text', 'required' => true),
 		'database.password'             => array('type' => 'password'),
 		'database.name'                 => array('type' => 'text', 'required' => true),
+		'database.sql_mode'             => array('type' => 'text', 'optional' => true),
 		'framework.theme'               => array('type' => 'select'),
 		'framework.theme_admin'         => array('type' => 'select'),
 		'framework.title_page'          => array('type' => 'text'),

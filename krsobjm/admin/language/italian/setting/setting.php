@@ -34,6 +34,7 @@ $_['entry_database_port']                 = 'Porta';
 $_['entry_database_user']                 = 'Utente';
 $_['entry_database_password']             = 'Password';
 $_['entry_database_name']                 = 'Nome del database';
+$_['entry_database_sql_mode']             = 'Modalità SQL';
 $_['entry_framework_theme']               = 'Tema del sito';
 $_['entry_framework_theme_admin']         = 'Tema dell\'admin';
 $_['entry_framework_title_page']          = 'Titolo della pagina';
@@ -69,6 +70,7 @@ $_['entry_help_vendor']                   = 'Link al sito dell\'autore';
 // Help
 $_['help_database_port']                  = 'Vuota per la porta standard.';
 $_['help_database_password']              = 'Non viene mai mostrata.';
+$_['help_database_sql_mode']              = 'sql_mode di MySQL/MariaDB per le connessioni di K-iwi. Vuoto = quella del server. NO_ENGINE_SUBSTITUTION toglie la modalità strict, per applicazioni scritte per server senza.';
 $_['help_setting_use_session_db']         = 'Cambiandola tutti gli utenti, tu compreso, dovranno rifare il login.';
 $_['help_setting_error_display']          = 'Solo su una macchina di sviluppo: mostra ai visitatori gli errori con i percorsi del server.';
 $_['help_setting_file_log']               = 'Nome del file nella cartella dei log.';

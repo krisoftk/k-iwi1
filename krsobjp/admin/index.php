@@ -60,7 +60,8 @@ apply_trusted_proxies($config->get('setting.trusted_proxies'));
 //Theme
 $config->set('framework.theme', $config->get('framework.theme_admin'));
 
-// Database
+// Database (database.sql_mode, if set, for every MySQL connection)
+KPDO::setSqlMode($config->get('database.sql_mode'));
 $db = new KPDO($config->get('database.driver'), $config->get('database.host'), $config->get('database.port'), $config->get('database.user'), $config->get('database.password'), $config->get('database.name'));
 $registry->set('db', $db);
 

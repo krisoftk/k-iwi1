@@ -22,6 +22,9 @@ class MysqlDriver implements iDriverDB {
 	
 	private $result;
 	
+	// set by KPDO::setSqlMode(); null keeps the server's sql_mode
+	public static $sqlMode = null;
+	
 	public function __construct($driver, $host, $port, $username, $password, $database = NULL) {
 		$this->driver = $driver;
 		$this->host = $host;
@@ -68,19 +71,28 @@ class MysqlDriver implements iDriverDB {
 	// NO_BACKSLASH_ESCAPES would read \' as a backslash followed by the end of
 	// the string (SQL injection), one with ANSI_QUOTES would take the double
 	// quotes of the queries for identifiers. Both are removed from this
-	// connection only, the server's setting stays as it is.
+	// connection only, the server's setting stays as it is. A sql_mode
+	// configured with KPDO::setSqlMode() replaces the server's, with the same
+	// two modes left out.
 	private function safeSqlMode() {
-		$result = $this->link->query("SELECT @@SESSION.sql_mode");
+		if (self::$sqlMode !== null) {
+			$modes = array_filter(array_map('trim', explode(',', strtoupper(self::$sqlMode))), function ($mode) {
+				return preg_match('/^[A-Z_]+$/', $mode);
+			});
+		} else {
+			$result = $this->link->query("SELECT @@SESSION.sql_mode");
 
-		if (!$result) {
-			return;
+			if (!$result) {
+				return;
+			}
+
+			$row = $result->fetch_row();
+			$modes = array_filter(explode(',', (string) $row[0]));
 		}
 
-		$row = $result->fetch_row();
-		$modes = array_filter(explode(',', (string) $row[0]));
 		$safe = array_diff($modes, array('NO_BACKSLASH_ESCAPES', 'ANSI_QUOTES', 'ANSI'));
 
-		if (count($safe) !== count($modes)) {
+		if (self::$sqlMode !== null || count($safe) !== count($modes)) {
 			$this->link->query("SET SESSION sql_mode = '" . $this->link->real_escape_string(implode(',', $safe)) . "'");
 		}
 	}

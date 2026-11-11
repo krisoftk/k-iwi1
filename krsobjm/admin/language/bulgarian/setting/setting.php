@@ -26,6 +26,7 @@ $_['entry_database_port'] = 'Порт';
 $_['entry_database_user'] = 'Потребител';
 $_['entry_database_password'] = 'Парола';
 $_['entry_database_name'] = 'Име на базата данни';
+$_['entry_database_sql_mode'] = 'SQL режим';
 $_['entry_framework_theme'] = 'Тема на сайта';
 $_['entry_framework_theme_admin'] = 'Тема на административния панел';
 $_['entry_framework_title_page'] = 'Заглавие на страницата';
@@ -59,6 +60,7 @@ $_['entry_help_support'] = 'Връзка „Форум за поддръжка�
 $_['entry_help_vendor'] = 'Връзка към сайта на автора';
 $_['help_database_port'] = 'Оставете празно за стандартния порт.';
 $_['help_database_password'] = 'Паролата никога не се показва.';
+$_['help_database_sql_mode'] = 'sql_mode на MySQL/MariaDB за връзките на K-iwi. Празно = този на сървъра. NO_ENGINE_SUBSTITUTION изключва строгия режим, за приложения, писани за сървъри без него.';
 $_['help_setting_use_session_db'] = 'При промяна всички потребители, включително вие, ще трябва да влязат отново.';
 $_['help_setting_error_display'] = 'Само за среда за разработка: показва на посетителите грешките заедно с пътищата на сървъра.';
 $_['help_setting_file_log'] = 'Име на файла в папката за журнали.';

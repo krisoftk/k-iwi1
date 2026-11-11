@@ -22,6 +22,58 @@ if (window.jQuery) {
 	});
 }
 
+// The same token in the forms posted the classic way (a print opened in a
+// new tab, an export, an upload through an iframe): a hidden csrf_token
+// field is added when they are sent, by the user or by form.submit(), only
+// if they post to this site.
+(function () {
+	if (!window.HTMLFormElement || !document.addEventListener) {
+		return;
+	}
+
+	function addToken(form) {
+		var target;
+
+		if (!window.KAJAX_CSRF || !(form instanceof HTMLFormElement) || (form.getAttribute('method') || '').toLowerCase() !== 'post') {
+			return;
+		}
+
+		try {
+			target = new URL(form.getAttribute('action') || '', window.location.href);
+		} catch (e) {
+			return;
+		}
+
+		if (target.origin !== window.location.origin) {
+			return;
+		}
+
+		var field = form.querySelector('input[name="csrf_token"]');
+
+		if (!field) {
+			field = document.createElement('input');
+			field.type = 'hidden';
+			field.name = 'csrf_token';
+			form.appendChild(field);
+		}
+
+		field.value = window.KAJAX_CSRF;
+	}
+
+	document.addEventListener('submit', function (event) {
+		addToken(event.target);
+	}, true);
+
+	// form.submit() sends without a submit event
+	var submit = HTMLFormElement.prototype.submit;
+
+	HTMLFormElement.prototype.submit = function () {
+		addToken(this);
+
+		return submit.apply(this, arguments);
+	};
+})();
+
 function initializeKAJAX(body, info, loader) {
 	div_body = body;
 	div_information = info;

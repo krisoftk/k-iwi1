@@ -398,8 +398,10 @@ before deploying to production in general):
 - **Site POST requests carry a CSRF token**: every POST made with the session
   cookie must send back the session's token, or it's refused ("The page has
   expired"). KAJAX and jQuery's `$.ajax` add it on their own (`X-CSRF-Token`
-  header); a module that posts a plain HTML form, or uploads through an
-  iframe, has to add a `csrf_token` field with the value of
+  header), and `kajax.js` adds a `csrf_token` field to the plain HTML forms
+  posted to the site (prints opened in a new tab, uploads through an iframe),
+  also when the code calls `form.submit()`. A page that doesn't load
+  `kajax.js` has to add the field itself, with the value of
   `csrf_token($this->session)`. Calls made with an API key don't need it.
 
 Enjoy!

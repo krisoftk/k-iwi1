@@ -120,6 +120,45 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
    http://yourserver/
    ```
 
+## Upgrading from an older version
+
+A database of an installation made before 1.0 (0.6 and the versions with the
+same `krs_` tables) is upgraded in place, without the installer:
+
+```
+php tools/upgrade.php --database=<name>            # report only
+php tools/upgrade.php --database=<name> --apply    # report and upgrade
+```
+
+The report lists what would change and what needs a decision; nothing is
+written without `--apply`. The upgrade adds the new columns, keys and tables
+of 1.0, converts the `krs_` tables to `utf8mb4` (`--all-tables` converts the
+tables of the modules too), and removes the old sessions. The IDs of users,
+groups, programs and menus don't change, so the tables of the modules that
+refer to them keep working, and the users keep their passwords: the old
+salted sha1 hashes become bcrypt at the first login.
+
+Before converting a `latin1` table it checks whether the text in it is really
+latin1 or UTF-8 saved into latin1 columns (common with old programs): the
+latter is kept byte for byte, so accented letters don't turn into `Ã¨`; a
+table with both is left alone and reported.
+
+It also reports the controllers that no program points to (1.0 refuses them,
+see [Security](#security)), the programs pointing to missing controllers,
+the users without a group, and the permissions with only some levels, since
+in 1.0 `EXECUTION_ENABLED` means "delete".
+
+Host, user and password come from `config/config.ini`, the database is the
+one given. Try it on a copy first, and take a backup before running it on the
+real database. A copy keeps the name of the original in `krs_databases`, so
+the framework running on it would still use the original:
+`--repoint=<original>` makes those rows name the copy, and without it
+`--apply` refuses to start.
+
+Each row of `krs_databases` also carries the user and password the framework
+opens those tables with (not the ones of `config.ini`): the report tries
+them, without printing them, and tells if they can't open the database.
+
 ## API keys and the scheduler
 
 Every route of the user side requires a login. Machine-to-machine callers

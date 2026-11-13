@@ -276,6 +276,12 @@ for the files its templates point to through `makePath()` or a
 `themes/<name>/...` link, so a half-installed theme shows what's missing. A
 `preview.jpg` (or `.png`) in the public folder is shown as its preview.
 
+In the templates, `makePath('css/kiwi.css')` gives the URL of a theme file and
+`publicPath('js/gui/gui_control.js')` the path of a file of the shared public
+folder (`krsobjp/`); both add `?v=` and the file's modification time, so after
+an update the browsers download the new CSS and JavaScript by themselves
+instead of keeping the cached copy.
+
 The site ships four themes: `kiwi` (the look of the admin — same palette,
 fonts and collapsible sidebar, light and dark — on top of Bootstrap 3, so the
 pages made by the generator need no changes), `dashboard`, `dashboard_2.0`

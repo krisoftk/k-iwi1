@@ -11,4 +11,4 @@
 --></script>
 
 <!-- GUI CONTROL -->
-<script type="text/javascript" src="js/gui/gui_control.js"></script>
+<script type="text/javascript" src="<?php echo publicPath('js/gui/gui_control.js'); ?>"></script>

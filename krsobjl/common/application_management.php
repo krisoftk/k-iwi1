@@ -33,6 +33,20 @@ function makePath($path) {
 	return $url;
 }
 
+// The same cache-busting for the files of the public folder shared by all
+// the themes (js/ajax/kajax.js, js/gui/gui_control.js...): the path stays
+// relative, as before, with "?v=" and the file's modification time; a
+// file that isn't found comes back unchanged.
+function publicPath($path) {
+	$file = defined('DIR_PUBLIC') ? DIR_PUBLIC . $path : '';
+
+	if ($file !== '' && is_file($file)) {
+		return $path . '?v=' . filemtime($file);
+	}
+
+	return $path;
+}
+
 function getCurrentAction() {
 	if (!isset($_SESSION['prog'])) {
 		$prog = '"' . _HOMEPAGE . '"';
@@ -61,7 +75,7 @@ function initializeKAJAX($body, $info, $loader, $csrf = null) {
 	$loader = ($loader == null)? 'null' : '\'' . $loader . '\'';
 	
 	return '
-	<script type="text/javascript" src="js/ajax/kajax.js"></script>
+	<script type="text/javascript" src="' . publicPath('js/ajax/kajax.js') . '"></script>
 	<script type="text/javascript">
 		window.KAJAX_CSRF = ' . json_encode($csrf) . ';
 		initializeKAJAX(' . $body . ', ' . $info . ', ' . $loader . ');

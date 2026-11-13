@@ -147,6 +147,10 @@ It also reports the controllers that no program points to (1.0 refuses them,
 see [Security](#security)), the programs pointing to missing controllers,
 the users without a group, and the permissions with only some levels, since
 in 1.0 `EXECUTION_ENABLED` means "delete".
+`--sync-programs=<module>` registers the programs that the module's installer
+lists and the database lacks (they are given to no group: assign them in
+Admin > User Groups); the installer is only read, through
+`Install::definitions()`, not run.
 
 Host, user and password come from `config/config.ini`, the database is the
 one given. Try it on a copy first, and take a backup before running it on the

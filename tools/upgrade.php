@@ -13,6 +13,11 @@
  *                     on the copy would read and write the original.
  *   --all-tables      converts to utf8mb4 the tables of the modules too, not
  *                     only the krs_ ones.
+ *   --sync-programs=<module>[,<module>...]
+ *                     registers the programs that the installer of the module
+ *                     (installation/install.php) lists and the database
+ *                     lacks. They are given to no group: that's a choice to
+ *                     make in Admin > User Groups.
  *
  * The IDs of users, groups, programs and menus stay the same, so the tables
  * of the modules that refer to them keep working, and so do the passwords:
@@ -38,10 +43,10 @@ require_once dirname(__DIR__) . '/krsobjp/globals.php';
 require_once DIR_LIBRARY . 'common/application_management.php';
 require_once DIR_LIBRARY . 'common/bootstrap.php';
 
-$options = getopt('', array('database:', 'apply', 'repoint:', 'all-tables', 'help'));
+$options = getopt('', array('database:', 'apply', 'repoint:', 'all-tables', 'sync-programs:', 'help'));
 
 if (isset($options['help']) || empty($options['database'])) {
-	fwrite(STDERR, "Usage:\n  php tools/upgrade.php --database=<name> [--apply] [--repoint=<name>] [--all-tables]\n");
+	fwrite(STDERR, "Usage:\n  php tools/upgrade.php --database=<name> [--apply] [--repoint=<name>] [--all-tables] [--sync-programs=<module>[,<module>]]\n");
 	exit(1);
 }
 
@@ -49,6 +54,14 @@ $schema = (string) $options['database'];
 $apply = isset($options['apply']);
 $repoint = isset($options['repoint']) ? (string) $options['repoint'] : null;
 $allTables = isset($options['all-tables']);
+$syncModules = isset($options['sync-programs']) ? array_filter(explode(',', implode(',', (array) $options['sync-programs']))) : array();
+
+foreach ($syncModules as $module) {
+	if (!preg_match('/^[A-Za-z0-9_]+$/', $module)) {
+		fwrite(STDERR, "Module names may contain only letters, digits and _.\n");
+		exit(1);
+	}
+}
 
 if (!preg_match('/^[A-Za-z0-9_$]+$/', $schema) || ($repoint !== null && !preg_match('/^[A-Za-z0-9_$]+$/', $repoint))) {
 	fwrite(STDERR, "Database names may contain only letters, digits, _ and \$.\n");
@@ -494,6 +507,85 @@ if ($noGroup) {
 }
 
 // ---------------------------------------------------------------------------
+// routes of the programs --sync-programs adds (in report mode they don't
+// exist yet, but the check of the controllers counts them)
+$pendingRoutes = array();
+
+if ($syncModules) {
+	section('Programs from the installers');
+
+	require_once DIR_LIBRARY . 'system/install.php';
+
+	foreach ($syncModules as $module) {
+		$moduleId = value($db, "SELECT ID FROM krs_modules WHERE NAME = :name AND PARENT_ID = 0", array(':name' => $module));
+		$file = DIR_MODULE . $module . '/installation/install.php';
+
+		if (!$moduleId) {
+			fail("module $module is not in the database");
+			continue;
+		}
+
+		if (!is_file($file)) {
+			fail("module $module has no installer ($file)");
+			continue;
+		}
+
+		require_once $file;
+
+		$class = str_replace('_', '', $module . 'install');
+
+		if (!class_exists($class, false) || !is_subclass_of($class, 'Install')) {
+			fail("$file doesn't define the class $class");
+			continue;
+		}
+
+		$registry = new Registry();
+		$registry->set('db', $db);
+		$registry->set('config', $config);
+
+		$definitions = (new $class($registry))->definitions();
+		$added = array();
+
+		foreach ($definitions['progs'] as $prog) {
+			list($title, $route, $pattern) = array_pad(array_values((array) $prog), 3, '');
+
+			$exists = value($db, "SELECT COUNT(*) FROM krs_progs p JOIN krs_progs_modules_map pm ON pm.PROG_ID = p.ID WHERE pm.MODULE_ID = :module_id AND p.PROG = :prog", array(':module_id' => (int) $moduleId, ':prog' => (string) $route));
+
+			if ($exists) {
+				continue;
+			}
+
+			if ($apply) {
+				// as Install::createProg()
+				$stmt = $db->prepare("INSERT INTO krs_progs (TITLE, PROG, PUBLISHED, ORDERING, PATTERN) VALUES (:title, :prog, 1, 1, :pattern)");
+				$stmt->bindParam(':title', $title, KPDO::TYPE_VARCHAR);
+				$stmt->bindParam(':prog', $route, KPDO::TYPE_VARCHAR);
+				$stmt->bindParam(':pattern', $pattern, KPDO::TYPE_VARCHAR);
+				$stmt->execute();
+
+				$progId = (int) $db->lastInsertId();
+				$moduleId = (int) $moduleId;
+
+				$stmt = $db->prepare("INSERT INTO krs_progs_modules_map (MODULE_ID, PROG_ID) VALUES (:module_id, :prog_id)");
+				$stmt->bindParam(':module_id', $moduleId, KPDO::TYPE_INTEGER);
+				$stmt->bindParam(':prog_id', $progId, KPDO::TYPE_INTEGER);
+				$stmt->execute();
+			} else {
+				$pendingRoutes[] = preg_replace('/[&?].*$/s', '', $module . '/' . $route . ($pattern === '' ? '.php' : ''));
+			}
+
+			$added[] = $route;
+		}
+
+		if ($added) {
+			change("module $module: " . count($added) . " program(s) registered, given to no group: " . implode(', ', $added));
+		} else {
+			ok("module $module: every program of the installer is registered (" . count($definitions['progs']) . ")");
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
 section('Modules, groups and programs');
 
 $modulePaths = array();
@@ -585,6 +677,12 @@ foreach (rows($db, "SELECT p.ID, p.PROG, p.PATTERN, pm.MODULE_ID FROM krs_progs 
 		$controllerProgs[$file] = true;
 	} elseif (is_dir(DIR_MODULE . $modulePaths[$prog['MODULE_ID']])) {
 		$broken[] = $route;
+	}
+}
+
+foreach ($pendingRoutes as $route) {
+	if (($file = realpath((new Action($route))->getFile()))) {
+		$controllerProgs[$file] = true;
 	}
 }
 

@@ -14,6 +14,9 @@ abstract class Install {
 	protected $progsgroups;
 	protected $progs;
 	protected $menuItems;
+
+	// true while definitions() runs install(): startInstall() writes nothing
+	private $definitionsOnly = false;
 	
 	public function __construct($registry) {
 		$this->registry = $registry;
@@ -621,8 +624,35 @@ abstract class Install {
 		$stmt_user_module->execute();
 	}
 	
+	// What install() would create (programs, menu items, groups, ...),
+	// without creating it: tools/upgrade.php reads the programs of a module
+	// installed before 1.0 from here. Only for installers that leave the
+	// writing to startInstall(), as the generated ones do.
+	public function definitions() {
+		$this->definitionsOnly = true;
+
+		try {
+			if (method_exists($this, 'install')) {
+				$this->install();
+			}
+		} finally {
+			$this->definitionsOnly = false;
+		}
+
+		return array(
+			'module'    => $this->module,
+			'progs'     => (array) $this->progs,
+			'menuItems' => (array) $this->menuItems,
+			'groups'    => (array) $this->groups,
+		);
+	}
+
 	protected function startInstall() {
+		if ($this->definitionsOnly) {
+			return true;
+		}
 		
+
 		if (file_exists(DIR_CONFIG . $this->module . '/config.ini')) {
 			$this->config->load($this->module . '/config');	
 		}

@@ -35,6 +35,19 @@ their licenses are listed in [NOTICE.txt](NOTICE.txt).
 
 ## Release log
 
+- **1.0.1** (2026-11-13) — fixes.
+  - Plain HTML forms posted to the site (a print in a new tab, an export, an
+    upload through an iframe) get the CSRF token too, so they are no longer
+    refused as expired.
+  - The shared scripts (`kajax.js`, `gui_control.js`,
+    `bootstrap-security.js`) are loaded with `?v=` and their modification
+    time, so after an update the browsers don't keep the old copy;
+    `publicPath()` does it in the templates, like `makePath()` for the
+    theme files.
+  - Programs whose PROG carries parameters (`list&type=x`) are matched to
+    their controller for the permissions.
+  - A program tied to no module (used only as a permission flag) no longer
+    fills the error log with warnings on every page.
 - **1.0.0** (2026-11-09) — first public release.
   - MVC framework for business software: a user side (site) and an admin,
     MySQL/MariaDB or ODBC databases through KPDO (bound parameters, utf8mb4),

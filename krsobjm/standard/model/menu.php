@@ -54,8 +54,9 @@ class ModelStandardMenu extends Model {
 								// the item shows up only if the user can run what it opens,
 								// with the access level that route needs (e.g. "New" =
 								// write), the same check as krsobjp/index.php
-								if ($args ? !$user->hasPermission($prog['ID']) : !$this->can_run($user, $this->generete_path_prog($prog, $db))) { continue; }
-								$link = 'javascript:actionKAJAX(\'' . $this->url->link($this->generete_path_prog($prog, $db), $args, 'SSL') . '\', null, \'\', \'get\')';
+								$path = $this->generete_path_prog($prog, $db);
+								if ($path === '' || ($args ? !$user->hasPermission($prog['ID']) : !$this->can_run($user, $path))) { continue; }
+								$link = 'javascript:actionKAJAX(\'' . $this->url->link($path, $args, 'SSL') . '\', null, \'\', \'get\')';
 								$title = $menuitem['TITLE'];
 									
 							} else {
@@ -256,6 +257,12 @@ class ModelStandardMenu extends Model {
 			$stmt_progs_modules_map->execute();
 				
 			$map = $stmt_progs_modules_map->fetch(KPDO::FETCH_ASSOC);
+
+			// a program of no module (e.g. one used only as a permission
+			// flag) opens no route
+			if (!$map) {
+				return '';
+			}
 				
 			$stmt_modules = $db->prepare("SELECT * FROM t:krs_modules WHERE ID = :id");
 			$stmt_modules->bindTable("krs_modules", "krs_modules");
@@ -264,7 +271,9 @@ class ModelStandardMenu extends Model {
 			if($prog['PATTERN'] == '') {
 				$suffix = '.php';
 			}
-			return $this->generete_path_module($stmt_modules, $map['MODULE_ID']) . "/" . $prog['PROG'] . $suffix;
+			$module = $this->generete_path_module($stmt_modules, $map['MODULE_ID']);
+
+			return $module === '' ? '' : $module . "/" . $prog['PROG'] . $suffix;
 		} catch (KPDOException $e) {
 			trigger_error((string) $e, E_USER_WARNING);
 		}
@@ -276,8 +285,16 @@ class ModelStandardMenu extends Model {
 			$stmt_modules->execute();
 	
 			$module = $stmt_modules->fetch(KPDO::FETCH_ASSOC);
+
+			// a module that no longer exists ('' all the way up)
+			if (!$module) {
+				return '';
+			}
+
 			if ($module['PARENT_ID'] != 0) {
-				return $this->generete_path_module($stmt_modules, $module['PARENT_ID']) . "/" . $module['NAME'];
+				$parent = $this->generete_path_module($stmt_modules, $module['PARENT_ID']);
+
+				return $parent === '' ? '' : $parent . "/" . $module['NAME'];
 			} else {
 				return $module['NAME'];
 			}
